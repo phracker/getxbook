@@ -7,7 +7,11 @@
 #include <string.h>
 #include "util.c"
 
-#define usage "getgbook isbn"
+#define usage "getgbook - a google books downloader\n" \
+              "getgbook [-p|-a] isbn\n" \
+              "  -p print all available pages\n" \
+              "  -a download all available pages\n" \
+              "  otherwise, all pages given in stdin will be downloaded"
 
 #define hostname "books.google.com"
 
@@ -32,9 +36,10 @@ char *getgbookid(char *isbn)
 
 	bookid = malloc(sizeof(char *) * BOOKID_LEN);
 	if((buf = get(srv, "books.google.com", url)) == NULL)
-		fprintf(stderr,"Error downloading page\n");
+		return NULL;
 	else {
-		c = strstr(buf,"<dc:identifier>");
+		if((c = strstr(buf,"<dc:identifier>")) == NULL)
+			return NULL;
 		strncpy(bookid, c+15, BOOKID_LEN);
 		bookid[BOOKID_LEN] = '\0';
 		free(buf);
@@ -45,19 +50,27 @@ char *getgbookid(char *isbn)
 
 int main(int argc, char *argv[])
 {
-	int i;
 	char *bookid, isbn[16];
-	FILE *srv;
 
-	if(argc != 2)
+	if(argc < 2 || argc > 3 || !strncmp(argv[1], "-h", 2))
 		die("usage: " usage "\n");
+
+	if(!strncmp(argv[1], "-p", 2)) {
+		if(argc != 3) die("usage: " usage "\n");
+		printf("I'd love to print a list of available pages\n");
+		argv++;
+	} else if(!strncmp(argv[1], "-a", 2)) {
+		if(argc != 3) die("usage: " usage "\n");
+		printf("I'd love to download all available pages\n");
+		argv++;
+	} else {
+		printf("I'd love to download all pages from stdin\n");
+	}
 
 	strncpy(isbn,argv[1],16);
 
-	i = dial(hostname, "80");
-	srv = fdopen(i, "r+");
-
-	bookid = getgbookid(isbn);
+	if((bookid = getgbookid(isbn)) == NULL)
+		die("Could not find book\n");
 	printf("bookid is %s\n", bookid);
 
 	free(bookid);
