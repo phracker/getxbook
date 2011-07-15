@@ -61,7 +61,7 @@ char *get(FILE *srv, char *host, char *path) {
 	p+=4;
 	
 	i = l - (p - buf);
-	c = malloc(i);
+	c = malloc(i+1);
 	memcpy(c, p, i);
 	free(buf);
 
