@@ -1,5 +1,6 @@
 /* See COPYING file for copyright, license and warranty details. */
 
+#include <unistd.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>

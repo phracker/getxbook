@@ -45,9 +45,8 @@ char *getgbookid(char *isbn)
 
 int main(int argc, char *argv[])
 {
-	int i, s;
-	char *bookid, url[80], isbn[16];
-	char *curpage;
+	int i;
+	char *bookid, isbn[16];
 	FILE *srv;
 
 	if(argc != 2)
@@ -58,9 +57,7 @@ int main(int argc, char *argv[])
 	i = dial(hostname, "80");
 	srv = fdopen(i, "r+");
 
-	/* get google book id */
 	bookid = getgbookid(isbn);
-
 	printf("bookid is %s\n", bookid);
 
 	free(bookid);
