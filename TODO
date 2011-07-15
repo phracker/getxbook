@@ -1,0 +1,6 @@
+usage: getgbook [-p|-a] isbn
+  -p print all available pages
+  -a get all available pages
+  otherwise, get pages from stdin
+
+
