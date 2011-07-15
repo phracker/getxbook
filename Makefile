@@ -7,6 +7,8 @@ all: getgbook
 	@echo CC $<
 	@$(CC) -c -g $(CFLAGS) $<
 
+$(OBJ): util.c
+
 getgbook: $(OBJ)
 	@echo LD $@
 	@$(CC) -o $@ $(OBJ) $(LDFLAGS)
