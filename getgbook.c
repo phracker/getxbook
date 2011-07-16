@@ -103,31 +103,30 @@ char *getpageurl(char *bookid, char *pg)
 
 int main(int argc, char *argv[])
 {
-	char *bookid, *url, pg[16];
+	char *bookid, *url, pg[16], buf[1024];
 	int totalpages, i;
 
-	if(argc < 2 || argc > 3)
+	if(argc < 2 || argc > 3 ||
+	   (argv[1][0]=='-' && ((argv[1][1]!='p' && argv[1][1]!='a') || argc < 3)))
 		die(usage);
 
+	if((bookid = getbookid(argv[argc-1])) == NULL)
+		die("Could not find book\n");
+
+	if(!(totalpages = gettotalpages(bookid)))
+		die("Book has no pages\n");
+
 	if(argv[1][0] == '-') {
-		if((argv[1][1] != 'p' && argv[1][1] != 'a') || argc < 3)
-			die(usage);
-
-		if((bookid = getbookid(argv[2])) == NULL)
-			die("Could not find book\n");
-
-		if(!(totalpages = gettotalpages(bookid)))
-			die("Book has no pages\n");
-
 		/* note this isn't the best way, not least because it misses the
 		 * non PA pages. best is to crawl around the json grabbing everything
 		 * available, by starting on PP1, and filling in by going through
 		 * all pages in totalpages. then crawl through the pages struct. */
 		for(i=1; i<totalpages; i++) {
 			snprintf(pg, 16, "%s%d", "PA", i);
-			if((url = getpageurl(bookid, pg)) == NULL)
+			if((url = getpageurl(bookid, pg)) == NULL) {
+				fprintf(stderr, "%d failed\n", i);
 				continue;
-
+			}
 			if(argv[1][1] == 'a') {
 				strncat(pg, ".png", 16);
 				gettofile(url, pg);
@@ -135,11 +134,22 @@ int main(int argc, char *argv[])
 			} else
 				printf("%d\n", i);
 		}
-		free(bookid);
-		free(url);
 	} else {
-		fputs("Patience... (try -a in the meantime)\n", stderr);
+		while(fgets(buf, 1024, stdin)) {
+			sscanf(buf, "%d", &i);
+			snprintf(pg, 16, "%s%d", "PA", i);
+			if((url = getpageurl(bookid, pg)) == NULL) {
+				fprintf(stderr, "%d failed\n", i);
+				continue;
+			}
+			strncat(pg, ".png", 16);
+			gettofile(url, pg);
+			printf("Downloaded page %d\n", i);
+		}
 	}
+
+	free(bookid);
+	free(url);
 
 	return EXIT_SUCCESS;
 }
