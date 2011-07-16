@@ -19,8 +19,6 @@
               "  -a download all available pages\n" \
               "  otherwise, all pages in stdin will be downloaded\n"
 
-#define hostname "books.google.com"
-
 #define URLMAX 1024
 #define BOOKID_LEN 12
 
