@@ -43,7 +43,7 @@ char *getbookid(char *isbn)
 
 	bookid = malloc(sizeof(char *) * BOOKID_LEN);
 
-	if((buf = get("books.google.com", url)) == NULL)
+	if(!get("books.google.com", url, &buf))
 		return NULL;
 
 	if((c = strstr(buf,"<dc:identifier>")) == NULL)
@@ -62,7 +62,7 @@ char *getpageurl(char *bookid, char *pg)
 
 	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3", bookid, pg);
 
-	if((buf = get("books.google.com", url)) == NULL)
+	if(!get("books.google.com", url, &buf))
 		return NULL;
 
 	snprintf(m, 80, "\"pid\":\"%s\"", pg);
@@ -105,10 +105,12 @@ int main(int argc, char *argv[])
 		printf("bookid is %s\n", bookid);
 
 		strncpy(pg, "PA2", 12);
-		if((url = getpageurl(bookid, pg)) != NULL)
-			printf("page %s url is %s\n", pg, url);
-		else
+		if((url = getpageurl(bookid, pg)) == NULL)
 			fprintf(stderr, "Could not find page %s\n", pg);
+		else {
+			printf("page %s url is %s\n", pg, url);
+			gettofile(url, "test.png");
+		}
 	}
 
 	free(bookid);

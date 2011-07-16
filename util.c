@@ -34,7 +34,7 @@ static int dial(char *host, char *port) {
 	return srv;
 }
 
-char *get(char *host, char *path) {
+int get(char *host, char *path, char **gotbuf) {
 	size_t l, res;
 	int fd, i;
 	char *buf, *c, *p;
@@ -44,30 +44,57 @@ char *get(char *host, char *path) {
 	srv = fdopen(fd, "r+");
 
 	fprintf(srv, "GET %s HTTP/1.0\r\nUser-Agent: getgbook-"VERSION" (not mozilla)\r\nHost: %s\r\n\r\n", path, host);
-
 	fflush(srv);
 
-	l=0;
-
 	buf = malloc(sizeof(char *) * 4096);
-	for(i=0; (res = read(fd, buf+l, 4096)) > 0; l+=res, i++)
+	for(i=0, l=0; (res = read(fd, buf+l, 4096)) > 0; l+=res, i++)
 		buf = realloc(buf, sizeof(char *) * (l+4096));
 
 	/* check that it's a 200 */
 	if(strncmp(buf+9, "200 ", 4)) {
 		free(buf);
-		return NULL;
+		return 0;
 	}
 
 	/* exclude header */
 	for(p = buf; *p && *(p+1) && *(p+2) && *(p+3); p++)
 		if(!strncmp(p, "\r\n\r\n", 4)) break;
 	p+=4;
-	
+
 	i = l - (p - buf);
 	c = malloc(i+1);
 	memcpy(c, p, i);
 	free(buf);
 
-	return c;
+	*gotbuf = c;
+
+	return i;
+}
+
+int gettofile(char *url, char *savepath) {
+	char *buf = 0;
+	FILE *f;
+	size_t i, l;
+
+	if(!(l = get("books.google.com", url, &buf))) {
+		fprintf(stderr, "Could not download %s\n", url);
+		return 1;
+	}
+
+	if((f = fopen(savepath, "w")) == NULL) {
+		fprintf(stderr, "Could not create file %s\n", savepath);
+		return 1;
+	}
+
+	for(i=0; i < l; i+=512)
+		if(!fwrite(buf+i, l-i > 512 ? 512 : l-i, 1, f)) {
+			fprintf(stderr, "Error writing file %s\n", savepath);
+			free(buf); fclose(f);
+			return 1;
+		}
+
+	free(buf);
+	fclose(f);
+
+	return 0;
 }
