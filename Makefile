@@ -5,7 +5,7 @@ all: getgbook
 
 .c.o:
 	@echo CC $<
-	@$(CC) -c -g -Wall $(CFLAGS) $<
+	@$(CC) -c -g -Wall -Werror $(CFLAGS) $<
 
 $(OBJ): util.c
 

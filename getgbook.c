@@ -63,7 +63,7 @@ int gettotalpages(char *bookid)
 
 	if((c = strstr(buf," pages</dc:format>")) == NULL)
 		return 0;
-	while(*c && *c != '>') *c--;
+	while(*c && *c != '>') c--;
 	sscanf(c+1, "%d ", &total);
 
 	return total;
@@ -94,7 +94,7 @@ Page *getpagedetail(char *bookid, char *pg)
 		free(buf); return page;
 	}
 
-	for(p=page->url, d=c+strlen(m)+8; *d && *d != '"'; *d++, *p++) {
+	for(p=page->url, d=c+strlen(m)+8; *d && *d != '"'; d++, p++) {
 		if(!strncmp(d, "\\u0026", 6)) {
 			*p = '&';
 			d+=5;
@@ -103,7 +103,7 @@ Page *getpagedetail(char *bookid, char *pg)
 	}
 	*p = '\0';
 
-	for(; *d; *d++) {
+	for(; *d; d++) {
 		if(*d == '}') {
 			break;
 		}
