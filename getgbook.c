@@ -26,7 +26,7 @@ typedef struct {
 	int num;
 	char url[URLMAX];
 	char name[80];
-} page;
+} Page;
 
 char *getbookid(char *isbn)
 {
@@ -69,10 +69,11 @@ int gettotalpages(char *bookid)
 	return total;
 }
 
-char *getpageurl(char *bookid, char *pg)
+Page *getpagedetail(char *bookid, char *pg)
 {
 	char url[URLMAX];
-	char *buf, *c, *d, m[80], *pageurl, *p;
+	char *buf, *c, *d, m[80], *p;
+	Page *page;
 
 	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3", bookid, pg);
 
@@ -80,13 +81,20 @@ char *getpageurl(char *bookid, char *pg)
 		return NULL;
 
 	snprintf(m, 80, "\"pid\":\"%s\"", pg);
-	if((c = strstr(buf,m)) == NULL)
-		return NULL;
-	if(strncmp(c+strlen(m)+1, "\"src\"", 5) != 0)
-		return NULL;
+	if((c = strstr(buf,m)) == NULL) {
+		free(buf); return NULL;
+	}
 
-	pageurl = malloc(sizeof(char *) * URLMAX);
-	for(p=pageurl, d=c+strlen(m)+8; *d && *d != '"'; *d++, *p++) {
+	page = malloc(sizeof(Page));
+	strncpy(page->name, pg, 80);
+	page->url[0] = '\0';
+	page->num = 0;
+
+	if(strncmp(c+strlen(m)+1, "\"src\"", 5) != 0) {
+		free(buf); return page;
+	}
+
+	for(p=page->url, d=c+strlen(m)+8; *d && *d != '"'; *d++, *p++) {
 		if(!strncmp(d, "\\u0026", 6)) {
 			*p = '&';
 			d+=5;
@@ -94,15 +102,26 @@ char *getpageurl(char *bookid, char *pg)
 			*p = *d;
 	}
 	*p = '\0';
-	free(buf);
 
-	return pageurl;
+	for(; *d; *d++) {
+		if(*d == '}') {
+			break;
+		}
+		if(!strncmp(d, "\"order\"", 7)) {
+			sscanf(d+8, "%d,", &(page->num));
+			break;
+		}
+	}
+
+	free(buf);
+	return page;
 }
 
 int main(int argc, char *argv[])
 {
-	char *bookid, *url, pg[16], buf[1024];
+	char *bookid, pg[16], buf[1024], n[80];
 	int totalpages, i;
+	Page *page;
 
 	if(argc < 2 || argc > 3 ||
 	   (argv[1][0]=='-' && ((argv[1][1]!='p' && argv[1][1]!='a') || argc < 3)))
@@ -111,43 +130,47 @@ int main(int argc, char *argv[])
 	if((bookid = getbookid(argv[argc-1])) == NULL)
 		die("Could not find book\n");
 
-	if(!(totalpages = gettotalpages(bookid)))
-		die("Book has no pages\n");
-
 	if(argv[1][0] == '-') {
 		/* note this isn't the best way, not least because it misses the
 		 * non PA pages. best is to crawl around the json grabbing everything
 		 * available, by starting on PP1, and filling in by going through
-		 * all pages in totalpages. then crawl through the pages struct. */
+		 * all pages in totalpages. */
+		if(!(totalpages = gettotalpages(bookid)))
+			die("Book has no pages\n");
+
 		for(i=1; i<totalpages; i++) {
 			snprintf(pg, 16, "%s%d", "PA", i);
-			if((url = getpageurl(bookid, pg)) == NULL) {
-				fprintf(stderr, "%d failed\n", i);
+			if((page = getpagedetail(bookid, pg)) == NULL || page->url[0] == '\0') {
+				fprintf(stderr, "%s failed\n", pg);
+				free(page);
 				continue;
 			}
 			if(argv[1][1] == 'a') {
-				strncat(pg, ".png", 16);
-				gettofile(url, pg);
-				printf("Downloaded page %d\n", i);
+				snprintf(n, 80, "%05d.png", page->num);
+				gettofile(page->url, n);
+				printf("Downloaded page %d\n", page->num);
 			} else
-				printf("%d\n", i);
+				printf("%d\n", page->num);
+			free(page);
 		}
 	} else {
+		/* todo: find the page based on its order number, rather than using PA%d */
 		while(fgets(buf, 1024, stdin)) {
 			sscanf(buf, "%d", &i);
 			snprintf(pg, 16, "%s%d", "PA", i);
-			if((url = getpageurl(bookid, pg)) == NULL) {
+			if((page = getpagedetail(bookid, pg)) == NULL || page->url[0] == '\0') {
 				fprintf(stderr, "%d failed\n", i);
+				free(page);
 				continue;
 			}
-			strncat(pg, ".png", 16);
-			gettofile(url, pg);
-			printf("Downloaded page %d\n", i);
+			snprintf(n, 80, "%05d.png", page->num);
+			gettofile(page->url, n);
+			printf("Downloaded page %d\n", page->num);
+			free(page);
 		}
 	}
 
 	free(bookid);
-	free(url);
 
 	return EXIT_SUCCESS;
 }

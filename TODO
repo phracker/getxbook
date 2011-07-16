@@ -1,3 +1,5 @@
+only dial once; use a global file handle for this (may need to be extern)
+
 use order to be able to use real page numbers (getpagecode)
 	to find this advance through click3 letter by letter until either } (none found) or strcmp "order"
 
