@@ -1,1 +1,11 @@
 use order to be able to use real page numbers (getpagecode)
+	to find this advance through click3 letter by letter until either } (none found) or strcmp "order"
+
+
+# once it is basically working #
+
+to be fast and efficient it's best to crank through all the json 1st, filling in an array of page structs as we go
+	this requires slightly fuller json support
+	could consider making a json reading module, ala confoo, to make ad-hoc memory structures from json
+
+to be super fast we could have 2 threads, one filling the pages structs and one consuming them. this would complicate the code rather, though

@@ -1,5 +1,11 @@
 /* See COPYING file for copyright, license and warranty details. */
 
+/* NOTE: there's now a new api that returns json.
+ * it requires https, which we don't yet support.
+ * https://www.googleapis.com/books/v1/volumes?q=isbn:1589235126
+ * https://www.googleapis.com/books/v1/volumes/jglfL_eVG4cC */
+
+
 #define VERSION "prealpha"
 
 #include <stdio.h>
@@ -19,40 +25,50 @@
 #define BOOKID_LEN 12
 
 typedef struct {
-	char *name;
-	char *code;
-} pgtype;
-
-pgtype pgtypes[] = {
-	{"cover", "PP"},
-	{"preface", "PR"},
-	{"page", "PA"},
-	{"postface", "PA"},
-};
+	int num;
+	char url[URLMAX];
+	char name[80];
+} page;
 
 char *getbookid(char *isbn)
 {
 	char url[URLMAX];
 	char *buf, *bookid, *c;
 
-	/* NOTE: new api returns json, and looks like this:
-	 * http://www.googleapis.com/books/v1/volumes?q=isbn:1589235126
-	 * (this needs https, which we don't yet support) */
-
 	snprintf(url, URLMAX, "/books/feeds/volumes?q=isbn:%s", isbn);
-
-	bookid = malloc(sizeof(char *) * BOOKID_LEN);
 
 	if(!get("books.google.com", url, &buf))
 		return NULL;
 
 	if((c = strstr(buf,"<dc:identifier>")) == NULL)
 		return NULL;
+	bookid = malloc(sizeof(char *) * BOOKID_LEN);
 	strncpy(bookid, c+15, BOOKID_LEN);
 	bookid[BOOKID_LEN] = '\0';
 	free(buf);
 
 	return bookid;
+}
+
+int gettotalpages(char *bookid)
+{
+	char url[URLMAX];
+	char *buf, *c;
+	int total;
+
+	snprintf(url, URLMAX, "/books/feeds/volumes/%s", bookid);
+
+	bookid = malloc(sizeof(char *) * BOOKID_LEN);
+
+	if(!get("books.google.com", url, &buf))
+		return 0;
+
+	if((c = strstr(buf," pages</dc:format>")) == NULL)
+		return 0;
+	while(*c && *c != '>') *c--;
+	sscanf(c+1, "%d ", &total);
+
+	return total;
 }
 
 char *getpageurl(char *bookid, char *pg)
@@ -88,6 +104,7 @@ char *getpageurl(char *bookid, char *pg)
 int main(int argc, char *argv[])
 {
 	char *bookid, *url, pg[16];
+	int totalpages;
 
 	if(argc < 2 || argc > 3)
 		die(usage);
@@ -102,6 +119,10 @@ int main(int argc, char *argv[])
 	} else {
 		if((bookid = getbookid(argv[1])) == NULL)
 			die("Could not find book\n");
+
+		if(!(totalpages = gettotalpages(bookid)))
+			die("Book has no pages\n");
+		printf("Book has %d pages\n", totalpages);
 
 		strncpy(pg, "PA2", 12);
 		if((url = getpageurl(bookid, pg)) == NULL)
