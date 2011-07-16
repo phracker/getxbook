@@ -40,7 +40,7 @@ char *get(char *host, char *path) {
 	char *buf, *c, *p;
 	FILE *srv;
 
-	fd = dial("books.google.com", "80");
+	fd = dial(host, "80");
 	srv = fdopen(fd, "r+");
 
 	fprintf(srv, "GET %s HTTP/1.0\r\nUser-Agent: getgbook-"VERSION" (not mozilla)\r\nHost: %s\r\n\r\n", path, host);
