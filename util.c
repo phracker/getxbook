@@ -71,14 +71,13 @@ int gettofile(char *url, char *savepath) {
 	}
 	if((f = fopen(savepath, "w")) == NULL) {
 		fprintf(stderr, "Could not create file %s\n", savepath);
-		return 1;
+		free(buf); return 1;
 	}
 
 	for(i=0; i < l; i+=512)
 		if(!fwrite(buf+i, l-i > 512 ? 512 : l-i, 1, f)) {
 			fprintf(stderr, "Error writing file %s\n", savepath);
-			free(buf); fclose(f);
-			return 1;
+			free(buf); fclose(f); return 1;
 		}
 
 	free(buf);
