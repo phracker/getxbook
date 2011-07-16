@@ -36,7 +36,7 @@ static int dial(char *host, char *port) {
 
 int get(char *host, char *path, char **buf) {
 	size_t l, res;
-	int fd, i;
+	int fd, i, p;
 	char h[1024] = "\0";
 	FILE *srv;
 
@@ -49,7 +49,7 @@ int get(char *host, char *path, char **buf) {
 
 	while(h[0] != '\r') {
 		fgets(h, 1024, srv);
-		if(sscanf(h, "HTTP/%d.%d %d", &i, &i, &l) == 3 && l != 200)
+		if(sscanf(h, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
 			return 1;
 	}
 

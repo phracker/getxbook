@@ -6,8 +6,6 @@
  * https://www.googleapis.com/books/v1/volumes/jglfL_eVG4cC */
 
 
-#define VERSION "prealpha"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
