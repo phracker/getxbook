@@ -60,7 +60,7 @@ char *getbookid(char *isbn)
 	return bookid;
 }
 
-char *getpageurl(char *bookid, char *pagetype, int pagenum)
+char *getpageurl(char *bookid, char *pg)
 {
 	char url[URLMAX];
 	int i, l;
@@ -70,12 +70,12 @@ char *getpageurl(char *bookid, char *pagetype, int pagenum)
 	i = dial("books.google.com", "80");
 	srv = fdopen(i, "r+");
 
-	snprintf(url, URLMAX, "/books?id=%s&pg=%s%i&jscmd=click3", bookid, pagetype, pagenum);
+	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3", bookid, pg);
 
 	if((buf = get(srv, "books.google.com", url)) == NULL)
 		return NULL;
 
-	snprintf(m, 80, "\"pid\":\"%s%i\"", pagetype, pagenum);
+	snprintf(m, 80, "\"pid\":\"%s\"", pg);
 	if((c = strstr(buf,m)) == NULL)
 		return NULL;
 	if(strncmp(c+strlen(m)+1, "\"src\"", 5) != 0)
@@ -92,7 +92,7 @@ char *getpageurl(char *bookid, char *pagetype, int pagenum)
 
 int main(int argc, char *argv[])
 {
-	char *bookid, *url;
+	char *bookid, *url, pg[12];
 
 	if(argc < 2 || argc > 3)
 		die(usage);
@@ -109,10 +109,11 @@ int main(int argc, char *argv[])
 			die("Could not find book\n");
 		printf("bookid is %s\n", bookid);
 
-		if((url = getpageurl(bookid, "PA", 2)) != NULL)
-			printf("page 2 url is %s\n", url);
+		strncpy(pg, "PA2", 12);
+		if((url = getpageurl(bookid, pg)) != NULL)
+			printf("page %s url is %s\n", pg, url);
 		else
-			fprintf(stderr, "Could not find page %s %i\n", "PA", 2);
+			fprintf(stderr, "Could not find page %s\n", pg);
 	}
 
 	free(bookid);
