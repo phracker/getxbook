@@ -87,7 +87,7 @@ char *getpageurl(char *bookid, char *pg)
 
 int main(int argc, char *argv[])
 {
-	char *bookid, *url, pg[12];
+	char *bookid, *url, pg[16];
 
 	if(argc < 2 || argc > 3)
 		die(usage);
@@ -102,14 +102,14 @@ int main(int argc, char *argv[])
 	} else {
 		if((bookid = getbookid(argv[1])) == NULL)
 			die("Could not find book\n");
-		printf("bookid is %s\n", bookid);
 
 		strncpy(pg, "PA2", 12);
 		if((url = getpageurl(bookid, pg)) == NULL)
 			fprintf(stderr, "Could not find page %s\n", pg);
 		else {
-			printf("page %s url is %s\n", pg, url);
-			gettofile(url, "test.png");
+			strncat(pg, ".png", 16);
+			gettofile(url, pg);
+			printf("Downloaded page %s\n", pg);
 		}
 	}
 
