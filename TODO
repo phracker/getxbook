@@ -9,3 +9,8 @@ to be fast and efficient it's best to crank through all the json 1st, filling in
 	could consider making a json reading module, ala confoo, to make ad-hoc memory structures from json
 
 to be super fast we could have 2 threads, one filling the pages structs and one consuming them. this would complicate the code rather, though
+
+NOTE: there's now a new api that returns json.
+it requires https, which we don't yet support.
+https://www.googleapis.com/books/v1/volumes?q=isbn:1589235126
+https://www.googleapis.com/books/v1/volumes/jglfL_eVG4cC

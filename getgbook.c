@@ -1,11 +1,4 @@
 /* See COPYING file for copyright, license and warranty details. */
-
-/* NOTE: there's now a new api that returns json.
- * it requires https, which we don't yet support.
- * https://www.googleapis.com/books/v1/volumes?q=isbn:1589235126
- * https://www.googleapis.com/books/v1/volumes/jglfL_eVG4cC */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
