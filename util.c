@@ -34,17 +34,20 @@ static int dial(char *host, char *port) {
 	return srv;
 }
 
-char *get(FILE *srv, char *host, char *path) {
+char *get(char *host, char *path) {
 	size_t l, res;
 	int fd, i;
 	char *buf, *c, *p;
+	FILE *srv;
+
+	fd = dial("books.google.com", "80");
+	srv = fdopen(fd, "r+");
 
 	fprintf(srv, "GET %s HTTP/1.0\r\nUser-Agent: getgbook-"VERSION" (not mozilla)\r\nHost: %s\r\n\r\n", path, host);
 
 	fflush(srv);
 
 	l=0;
-	fd = fileno(srv);
 
 	buf = malloc(sizeof(char *) * 4096);
 	for(i=0; (res = read(fd, buf+l, 4096)) > 0; l+=res, i++)

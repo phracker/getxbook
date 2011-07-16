@@ -33,12 +33,7 @@ pgtype pgtypes[] = {
 char *getbookid(char *isbn)
 {
 	char url[URLMAX];
-	int i;
-	FILE *srv;
 	char *buf, *bookid, *c;
-
-	i = dial("books.google.com", "80");
-	srv = fdopen(i, "r+");
 
 	/* NOTE: new api returns json, and looks like this:
 	 * http://www.googleapis.com/books/v1/volumes?q=isbn:1589235126
@@ -48,7 +43,7 @@ char *getbookid(char *isbn)
 
 	bookid = malloc(sizeof(char *) * BOOKID_LEN);
 
-	if((buf = get(srv, "books.google.com", url)) == NULL)
+	if((buf = get("books.google.com", url)) == NULL)
 		return NULL;
 
 	if((c = strstr(buf,"<dc:identifier>")) == NULL)
@@ -63,16 +58,12 @@ char *getbookid(char *isbn)
 char *getpageurl(char *bookid, char *pg)
 {
 	char url[URLMAX];
-	int i, l;
-	FILE *srv;
+	int l;
 	char *buf, *c, *d, m[80], *pageurl;
-
-	i = dial("books.google.com", "80");
-	srv = fdopen(i, "r+");
 
 	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3", bookid, pg);
 
-	if((buf = get(srv, "books.google.com", url)) == NULL)
+	if((buf = get("books.google.com", url)) == NULL)
 		return NULL;
 
 	snprintf(m, 80, "\"pid\":\"%s\"", pg);
