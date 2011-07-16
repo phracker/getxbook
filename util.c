@@ -54,7 +54,7 @@ int get(char *host, char *path, char **buf) {
 	}
 
 	*buf = malloc(sizeof(char *) * 4096);
-	for(i=0, l=0; (res = fread(*buf+l, 1, 4096, srv)) > 0; l+=res, i++)
+	for(l=0; (res = fread(*buf+l, 1, 4096, srv)) > 0; l+=res)
 		*buf = realloc(*buf, sizeof(char *) * (l+4096));
 
 	return l;
