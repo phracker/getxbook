@@ -7,18 +7,30 @@
 #include <string.h>
 #include "util.c"
 
-#define usage "getgbook - a google books downloader\n" \
-              "getgbook [-p|-a] isbn\n" \
+#define usage "getgbook " VERSION " - a google books downloader\n" \
+              "usage: getgbook [-p|-a] isbn\n" \
               "  -p print all available pages\n" \
               "  -a download all available pages\n" \
-              "  otherwise, all pages given in stdin will be downloaded"
+              "  otherwise, all pages in stdin will be downloaded\n"
 
 #define hostname "books.google.com"
 
 #define URLMAX 1024
 #define BOOKID_LEN 12
 
-char *getgbookid(char *isbn)
+typedef struct {
+	char *name;
+	char *code;
+} pgtype;
+
+pgtype pgtypes[] = {
+	{"cover", "PP"},
+	{"preface", "PR"},
+	{"page", "PA"},
+	{"postface", "PA"},
+};
+
+char *getbookid(char *isbn)
 {
 	char url[URLMAX];
 	int i;
@@ -35,44 +47,75 @@ char *getgbookid(char *isbn)
 	snprintf(url, URLMAX, "/books/feeds/volumes?q=isbn:%s", isbn);
 
 	bookid = malloc(sizeof(char *) * BOOKID_LEN);
+
 	if((buf = get(srv, "books.google.com", url)) == NULL)
 		return NULL;
-	else {
-		if((c = strstr(buf,"<dc:identifier>")) == NULL)
-			return NULL;
-		strncpy(bookid, c+15, BOOKID_LEN);
-		bookid[BOOKID_LEN] = '\0';
-		free(buf);
-	}
+
+	if((c = strstr(buf,"<dc:identifier>")) == NULL)
+		return NULL;
+	strncpy(bookid, c+15, BOOKID_LEN);
+	bookid[BOOKID_LEN] = '\0';
+	free(buf);
 
 	return bookid;
 }
 
+char *getpageurl(char *bookid, char *pagetype, int pagenum)
+{
+	char url[URLMAX];
+	int i, l;
+	FILE *srv;
+	char *buf, *c, *d, m[80], *pageurl;
+
+	i = dial("books.google.com", "80");
+	srv = fdopen(i, "r+");
+
+	snprintf(url, URLMAX, "/books?id=%s&pg=%s%i&jscmd=click3", bookid, pagetype, pagenum);
+
+	if((buf = get(srv, "books.google.com", url)) == NULL)
+		return NULL;
+
+	snprintf(m, 80, "\"pid\":\"%s%i\"", pagetype, pagenum);
+	if((c = strstr(buf,m)) == NULL)
+		return NULL;
+	if(strncmp(c+strlen(m)+1, "\"src\"", 5) != 0)
+		return NULL;
+	for(l=0, d=c+strlen(m)+8; *d && *d != '"'; *d++, l++);
+
+	pageurl = malloc(sizeof(char *) * l);
+	strncpy(pageurl, c+strlen(m)+8, l);
+	pageurl[l] = '\0';
+	free(buf);
+
+	return pageurl;
+}
+
 int main(int argc, char *argv[])
 {
-	char *bookid, isbn[16];
+	char *bookid, *url;
 
-	if(argc < 2 || argc > 3 || !strncmp(argv[1], "-h", 2))
-		die("usage: " usage "\n");
+	if(argc < 2 || argc > 3)
+		die(usage);
 
-	if(!strncmp(argv[1], "-p", 2)) {
-		if(argc != 3) die("usage: " usage "\n");
-		printf("I'd love to print a list of available pages\n");
-		argv++;
-	} else if(!strncmp(argv[1], "-a", 2)) {
-		if(argc != 3) die("usage: " usage "\n");
-		printf("I'd love to download all available pages\n");
-		argv++;
+	if(argv[1][0] == '-') {
+		if((argv[1][1] != 'p' && argv[1][1] != 'a') || argc < 3)
+			die(usage);
+
+		if((bookid = getbookid(argv[2])) == NULL)
+			die("Could not find book\n");
+		printf("bookid is %s\n", bookid);
 	} else {
-		printf("I'd love to download all pages from stdin\n");
+		if((bookid = getbookid(argv[1])) == NULL)
+			die("Could not find book\n");
+		printf("bookid is %s\n", bookid);
+
+		if((url = getpageurl(bookid, "PA", 2)) != NULL)
+			printf("page 2 url is %s\n", url);
+		else
+			fprintf(stderr, "Could not find page %s %i\n", "PA", 2);
 	}
 
-	strncpy(isbn,argv[1],16);
-
-	if((bookid = getgbookid(isbn)) == NULL)
-		die("Could not find book\n");
-	printf("bookid is %s\n", bookid);
-
 	free(bookid);
-	return 0;
+	free(url);
+	return EXIT_SUCCESS;
 }
