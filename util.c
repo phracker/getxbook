@@ -37,38 +37,31 @@ static int dial(char *host, char *port) {
 int get(char *host, char *path, char **gotbuf) {
 	size_t l, res;
 	int fd, i;
-	char *buf, *c, *p;
+	char *buf;
+	char h[1024] = "\0";
 	FILE *srv;
 
 	fd = dial(host, "80");
 	srv = fdopen(fd, "r+");
 
-	fprintf(srv, "GET %s HTTP/1.0\r\nUser-Agent: getgbook-"VERSION" (not mozilla)\r\nHost: %s\r\n\r\n", path, host);
+	fprintf(srv, "GET %s HTTP/1.0\r\nUser-Agent: getgbook-"VERSION \
+	             " (not mozilla)\r\nHost: %s\r\n\r\n", path, host);
 	fflush(srv);
 
-	buf = malloc(sizeof(char *) * 4096);
-	for(i=0, l=0; (res = read(fd, buf+l, 4096)) > 0; l+=res, i++)
-		buf = realloc(buf, sizeof(char *) * (l+4096));
-
-	/* check that it's a 200 */
-	if(strncmp(buf+9, "200 ", 4)) {
-		free(buf);
-		return 0;
+	/* process headers */
+	while(h[0] != '\r') {
+		fgets(h, 1024, srv);
+		if(sscanf(h, "HTTP/%d.%d %d", &i, &i, &l) == 3 && l != 200)
+			return 1;
 	}
 
-	/* exclude header */
-	for(p = buf; *p && *(p+1) && *(p+2) && *(p+3); p++)
-		if(!strncmp(p, "\r\n\r\n", 4)) break;
-	p+=4;
+	buf = malloc(sizeof(char *) * 4096);
+	for(i=0, l=0; (res = fread(buf+l, 1, 4096, srv)) > 0; l+=res, i++)
+		buf = realloc(buf, sizeof(char *) * (l+4096));
 
-	i = l - (p - buf);
-	c = malloc(i+1);
-	memcpy(c, p, i);
-	free(buf);
+	*gotbuf = buf;
 
-	*gotbuf = c;
-
-	return i;
+	return l;
 }
 
 int gettofile(char *url, char *savepath) {
@@ -80,7 +73,6 @@ int gettofile(char *url, char *savepath) {
 		fprintf(stderr, "Could not download %s\n", url);
 		return 1;
 	}
-
 	if((f = fopen(savepath, "w")) == NULL) {
 		fprintf(stderr, "Could not create file %s\n", savepath);
 		return 1;
