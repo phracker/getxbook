@@ -1,0 +1,3 @@
+use order to be able to use real page numbers (getpagecode)
+
+it appears cookies aren't actually needed. which is good

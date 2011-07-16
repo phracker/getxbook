@@ -58,8 +58,7 @@ char *getbookid(char *isbn)
 char *getpageurl(char *bookid, char *pg)
 {
 	char url[URLMAX];
-	int l;
-	char *buf, *c, *d, m[80], *pageurl;
+	char *buf, *c, *d, m[80], *pageurl, *p;
 
 	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3", bookid, pg);
 
@@ -71,11 +70,16 @@ char *getpageurl(char *bookid, char *pg)
 		return NULL;
 	if(strncmp(c+strlen(m)+1, "\"src\"", 5) != 0)
 		return NULL;
-	for(l=0, d=c+strlen(m)+8; *d && *d != '"'; *d++, l++);
 
-	pageurl = malloc(sizeof(char *) * l);
-	strncpy(pageurl, c+strlen(m)+8, l);
-	pageurl[l] = '\0';
+	pageurl = malloc(sizeof(char *) * URLMAX);
+	for(p=pageurl, d=c+strlen(m)+8; *d && *d != '"'; *d++, *p++) {
+		if(!strncmp(d, "\\u0026", 6)) {
+			*p = '&';
+			d+=5;
+		} else
+			*p = *d;
+	}
+	*p = '\0';
 	free(buf);
 
 	return pageurl;
