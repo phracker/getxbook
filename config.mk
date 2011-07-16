@@ -6,8 +6,8 @@ PREFIX = /usr/local
 
 # flags
 CFLAGS = -ansi -pedantic -Wall -Wextra -Werror -g -D_POSIX_C_SOURCE=200112L -DVERSION=\"$(VERSION)\"
-LDFLAGS = 
+LDFLAGS = -static
 
 # compiler and linker
-CC = cc
+CC = musl-gcc
 LD = ld
