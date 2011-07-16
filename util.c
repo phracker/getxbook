@@ -34,10 +34,9 @@ static int dial(char *host, char *port) {
 	return srv;
 }
 
-int get(char *host, char *path, char **gotbuf) {
+int get(char *host, char *path, char **buf) {
 	size_t l, res;
 	int fd, i;
-	char *buf;
 	char h[1024] = "\0";
 	FILE *srv;
 
@@ -48,18 +47,15 @@ int get(char *host, char *path, char **gotbuf) {
 	             " (not mozilla)\r\nHost: %s\r\n\r\n", path, host);
 	fflush(srv);
 
-	/* process headers */
 	while(h[0] != '\r') {
 		fgets(h, 1024, srv);
 		if(sscanf(h, "HTTP/%d.%d %d", &i, &i, &l) == 3 && l != 200)
 			return 1;
 	}
 
-	buf = malloc(sizeof(char *) * 4096);
-	for(i=0, l=0; (res = fread(buf+l, 1, 4096, srv)) > 0; l+=res, i++)
-		buf = realloc(buf, sizeof(char *) * (l+4096));
-
-	*gotbuf = buf;
+	*buf = malloc(sizeof(char *) * 4096);
+	for(i=0, l=0; (res = fread(*buf+l, 1, 4096, srv)) > 0; l+=res, i++)
+		*buf = realloc(*buf, sizeof(char *) * (l+4096));
 
 	return l;
 }
