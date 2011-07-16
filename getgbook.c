@@ -115,10 +115,6 @@ int main(int argc, char *argv[])
 
 		if((bookid = getbookid(argv[2])) == NULL)
 			die("Could not find book\n");
-		printf("bookid is %s\n", bookid);
-	} else {
-		if((bookid = getbookid(argv[1])) == NULL)
-			die("Could not find book\n");
 
 		if(!(totalpages = gettotalpages(bookid)))
 			die("Book has no pages\n");
@@ -132,9 +128,11 @@ int main(int argc, char *argv[])
 			gettofile(url, pg);
 			printf("Downloaded page %s\n", pg);
 		}
+		free(bookid);
+		free(url);
+	} else {
+		fputs("Patience... (try -a in the meantime)\n", stderr);
 	}
 
-	free(bookid);
-	free(url);
 	return EXIT_SUCCESS;
 }
