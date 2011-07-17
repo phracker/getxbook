@@ -52,7 +52,6 @@ Page *getpagedetail(char *bookid, char *pg)
 		return NULL;
 
 	snprintf(m, 80, "\"pid\":\"%s\"", pg);
-	printf("looking for the pid %s\n", m);
 	if((c = strstr(buf,m)) == NULL)
 		return NULL;
 
@@ -61,12 +60,10 @@ Page *getpagedetail(char *bookid, char *pg)
 	page->url[0] = '\0';
 	page->num = 0;
 
-	printf("looking for the src\n");
 	if(strncmp(c+strlen(m)+1, "\"src\"", 5) != 0) {
 		free(buf); return page;
 	}
 
-	printf("getting the order\n");
 	for(p=page->url, d=c+strlen(m)+8; *d && *d != '"'; d++, p++) {
 		if(!strncmp(d, "\\u0026", 6)) {
 			*p = '&';
