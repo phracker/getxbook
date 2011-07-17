@@ -5,7 +5,7 @@
 #include "util.c"
 
 #define usage "getgbook " VERSION " - a google books downloader\n" \
-              "usage: getgbook [-i ip] [-p|-a] isbn\n" \
+              "usage: getgbook [-i ip] [-p|-a] bookid\n" \
               "  -p print all available pages\n" \
               "  -a download all available pages\n" \
               "  -i appear from ip address\n" \
@@ -21,26 +21,6 @@ typedef struct {
 } Page;
 
 char extrahdr[1024] = "\0";
-
-char *getbookid(char *isbn)
-{
-	char url[URLMAX];
-	char *buf, *bookid, *c;
-
-	snprintf(url, URLMAX, "/books/feeds/volumes?q=isbn:%s", isbn);
-
-	if(!get("books.google.com", url, extrahdr, &buf))
-		return NULL;
-
-	if((c = strstr(buf,"<dc:identifier>")) == NULL)
-		return NULL;
-	bookid = malloc(sizeof(char *) * BOOKID_LEN);
-	strncpy(bookid, c+15, BOOKID_LEN);
-	bookid[BOOKID_LEN] = '\0';
-	free(buf);
-
-	return bookid;
-}
 
 int gettotalpages(char *bookid)
 {
@@ -126,8 +106,7 @@ int main(int argc, char *argv[])
 		argc-=2;
 	}
 
-	if((bookid = getbookid(argv[argc-1])) == NULL)
-		die("Could not find book\n");
+	bookid = argv[argc-1];
 
 	if(argv[1][0] == '-') {
 		/* note this isn't the best way, not least because it misses the
