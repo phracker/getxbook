@@ -19,26 +19,7 @@ typedef struct {
 	char name[80];
 } Page;
 
-int gettotalpages(char *bookid)
-{
-	char url[URLMAX];
-	char *buf, *c;
-	int total;
-
-	snprintf(url, URLMAX, "/books/feeds/volumes/%s", bookid);
-
-	bookid = malloc(sizeof(char *) * BOOKID_LEN);
-
-	if(!get("books.google.com", url, &buf))
-		return 0;
-
-	if(!(c = strstr(buf," pages</dc:format>")))
-		return 0;
-	while(*c && *c != '>') c--;
-	sscanf(c+1, "%d ", &total);
-
-	return total;
-}
+char pagecodes[][3] = { "PP", "PR", "PA", "PT", "\0" };
 
 Page *getpagedetail(char *bookid, char *pg)
 {
@@ -58,20 +39,18 @@ Page *getpagedetail(char *bookid, char *pg)
 	page = malloc(sizeof(Page));
 	strncpy(page->name, pg, 80);
 	page->url[0] = '\0';
-	page->num = 0;
+	page->num = -1;
 
-	if(strncmp(c+strlen(m)+1, "\"src\"", 5)) {
-		free(buf); return page;
+	if(!strncmp(c+strlen(m)+1, "\"src\"", 5)) {
+		for(p=page->url, d=c+strlen(m)+8; *d && *d != '"'; d++, p++) {
+			if(!strncmp(d, "\\u0026", 6)) {
+				*p = '&';
+				d+=5;
+			} else
+				*p = *d;
+		}
+		*p = '\0';
 	}
-
-	for(p=page->url, d=c+strlen(m)+8; *d && *d != '"'; d++, p++) {
-		if(!strncmp(d, "\\u0026", 6)) {
-			*p = '&';
-			d+=5;
-		} else
-			*p = *d;
-	}
-	*p = '\0';
 
 	for(; *d; d++) {
 		if(*d == '}') {
@@ -89,8 +68,8 @@ Page *getpagedetail(char *bookid, char *pg)
 
 int main(int argc, char *argv[])
 {
-	char *bookid, pg[16], buf[1024], n[80];
-	int totalpages, i;
+	char *bookid, pg[16], buf[1024], n[80], code[3];
+	int i, c;
 	Page *page;
 
 	if(argc < 2 || argc > 3 ||
@@ -100,17 +79,19 @@ int main(int argc, char *argv[])
 	bookid = argv[argc-1];
 
 	if(argv[1][0] == '-') {
-		/* note this isn't the best way, not least because it misses the
-		 * non PA pages. best is to crawl around the json grabbing everything
-		 * available, by starting on PP1, and filling in by going through
-		 * all pages in totalpages. */
-		if(!(totalpages = gettotalpages(bookid)))
-			die("Book has no pages\n");
-
-		for(i=1; i<=totalpages; i++) {
-			snprintf(pg, 16, "%s%d", "PA", i);
-			if(!(page = getpagedetail(bookid, pg)) || !page->url[0]) {
-				fprintf(stderr, "%s failed\n", pg);
+		strncpy(code, pagecodes[0], 3);
+		c = i =0;
+		while(++i) {
+			snprintf(pg, 16, "%s%d", code, i);
+			if(!(page = getpagedetail(bookid, pg))) {
+				/* no more pages with that code */
+				strncpy(code, pagecodes[++c], 3);
+				if(code[0] == '\0') break;
+				i=0;
+				continue;
+			}
+			if(!page->url[0]) {
+				fprintf(stderr, "%s not available\n", pg);
 				free(page);
 				continue;
 			}
@@ -118,7 +99,7 @@ int main(int argc, char *argv[])
 				snprintf(n, 80, "%05d.png", page->num);
 				gettofile("books.google.com", page->url, n);
 				printf("Downloaded page %d\n", page->num);
-			} else
+			} else if(page->num != -1)
 				printf("%d\n", page->num);
 			free(page);
 		}
