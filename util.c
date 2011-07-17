@@ -33,7 +33,7 @@ static int dial(char *host, char *port) {
 	return srv;
 }
 
-int get(char *host, char *path, char **buf) {
+int get(char *host, char *path, char *extrahdr, char **buf) {
 	size_t l, res;
 	int fd, i, p;
 	char h[1024] = "\0";
@@ -43,13 +43,13 @@ int get(char *host, char *path, char **buf) {
 	srv = fdopen(fd, "r+");
 
 	fprintf(srv, "GET %s HTTP/1.0\r\nUser-Agent: getgbook-"VERSION \
-	             " (not mozilla)\r\nHost: %s\r\n\r\n", path, host);
+	             " (not mozilla)\r\n%sHost: %s\r\n\r\n", path, extrahdr, host);
 	fflush(srv);
 
 	while(h[0] != '\r') {
 		fgets(h, 1024, srv);
 		if(sscanf(h, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
-			return 1;
+			return 0;
 	}
 
 	*buf = malloc(sizeof(char *) * 4096);
@@ -60,12 +60,12 @@ int get(char *host, char *path, char **buf) {
 	return l;
 }
 
-int gettofile(char *url, char *savepath) {
+int gettofile(char *host, char *url, char *extrahdr, char *savepath) {
 	char *buf = 0;
 	FILE *f;
 	size_t i, l;
 
-	if(!(l = get("books.google.com", url, &buf))) {
+	if(!(l = get(host, url, extrahdr, &buf))) {
 		fprintf(stderr, "Could not download %s\n", url);
 		return 1;
 	}

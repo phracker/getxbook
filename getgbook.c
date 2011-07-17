@@ -5,9 +5,10 @@
 #include "util.c"
 
 #define usage "getgbook " VERSION " - a google books downloader\n" \
-              "usage: getgbook [-p|-a] isbn\n" \
+              "usage: getgbook [-i ip] [-p|-a] isbn\n" \
               "  -p print all available pages\n" \
               "  -a download all available pages\n" \
+              "  -i appear from ip address\n" \
               "  otherwise, all pages in stdin will be downloaded\n"
 
 #define URLMAX 1024
@@ -19,6 +20,8 @@ typedef struct {
 	char name[80];
 } Page;
 
+char extrahdr[1024] = "\0";
+
 char *getbookid(char *isbn)
 {
 	char url[URLMAX];
@@ -26,7 +29,7 @@ char *getbookid(char *isbn)
 
 	snprintf(url, URLMAX, "/books/feeds/volumes?q=isbn:%s", isbn);
 
-	if(!get("books.google.com", url, &buf))
+	if(!get("books.google.com", url, extrahdr, &buf))
 		return NULL;
 
 	if((c = strstr(buf,"<dc:identifier>")) == NULL)
@@ -49,7 +52,7 @@ int gettotalpages(char *bookid)
 
 	bookid = malloc(sizeof(char *) * BOOKID_LEN);
 
-	if(!get("books.google.com", url, &buf))
+	if(!get("books.google.com", url, extrahdr, &buf))
 		return 0;
 
 	if((c = strstr(buf," pages</dc:format>")) == NULL)
@@ -68,7 +71,7 @@ Page *getpagedetail(char *bookid, char *pg)
 
 	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3", bookid, pg);
 
-	if(!get("books.google.com", url, &buf))
+	if(!get("books.google.com", url, extrahdr, &buf))
 		return NULL;
 
 	snprintf(m, 80, "\"pid\":\"%s\"", pg);
@@ -113,9 +116,15 @@ int main(int argc, char *argv[])
 	int totalpages, i;
 	Page *page;
 
-	if(argc < 2 || argc > 3 ||
-	   (argv[1][0]=='-' && ((argv[1][1]!='p' && argv[1][1]!='a') || argc < 3)))
+	if(argc < 2 || argc > 5 ||
+	   (argv[1][0]=='-' && ((argv[1][1]!='p' && argv[1][1]!='a' && argv[1][1] != 'i') || argc < 3)))
 		die(usage);
+
+	if(argv[1][0] == '-' && argv[1][1] == 'i') {
+		snprintf(extrahdr, 1024, "X-Forwarded-For: %s\r\n", argv[2]);
+		argv+=2;
+		argc-=2;
+	}
 
 	if((bookid = getbookid(argv[argc-1])) == NULL)
 		die("Could not find book\n");
@@ -137,7 +146,7 @@ int main(int argc, char *argv[])
 			}
 			if(argv[1][1] == 'a') {
 				snprintf(n, 80, "%05d.png", page->num);
-				gettofile(page->url, n);
+				gettofile("books.google.com", page->url, extrahdr, n);
 				printf("Downloaded page %d\n", page->num);
 			} else
 				printf("%d\n", page->num);
@@ -154,7 +163,7 @@ int main(int argc, char *argv[])
 				continue;
 			}
 			snprintf(n, 80, "%05d.png", page->num);
-			gettofile(page->url, n);
+			gettofile("books.google.com", page->url, extrahdr, n);
 			printf("Downloaded page %d\n", page->num);
 			free(page);
 		}
