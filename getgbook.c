@@ -139,7 +139,5 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	free(bookid);
-
 	return EXIT_SUCCESS;
 }
