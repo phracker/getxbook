@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 		if(!(totalpages = gettotalpages(bookid)))
 			die("Book has no pages\n");
 
-		for(i=1; i<totalpages; i++) {
+		for(i=1; i<=totalpages; i++) {
 			snprintf(pg, 16, "%s%d", "PA", i);
 			if((page = getpagedetail(bookid, pg)) == NULL || page->url[0] == '\0') {
 				fprintf(stderr, "%s failed\n", pg);
