@@ -32,7 +32,7 @@ int gettotalpages(char *bookid)
 	if(!get("books.google.com", url, &buf))
 		return 0;
 
-	if((c = strstr(buf," pages</dc:format>")) == NULL)
+	if(!(c = strstr(buf," pages</dc:format>")))
 		return 0;
 	while(*c && *c != '>') c--;
 	sscanf(c+1, "%d ", &total);
@@ -52,7 +52,7 @@ Page *getpagedetail(char *bookid, char *pg)
 		return NULL;
 
 	snprintf(m, 80, "\"pid\":\"%s\"", pg);
-	if((c = strstr(buf,m)) == NULL)
+	if(!(c = strstr(buf,m)))
 		return NULL;
 
 	page = malloc(sizeof(Page));
@@ -60,7 +60,7 @@ Page *getpagedetail(char *bookid, char *pg)
 	page->url[0] = '\0';
 	page->num = 0;
 
-	if(strncmp(c+strlen(m)+1, "\"src\"", 5) != 0) {
+	if(strncmp(c+strlen(m)+1, "\"src\"", 5)) {
 		free(buf); return page;
 	}
 
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 
 		for(i=1; i<=totalpages; i++) {
 			snprintf(pg, 16, "%s%d", "PT", i);
-			if((page = getpagedetail(bookid, pg)) == NULL || page->url[0] == '\0') {
+			if(!(page = getpagedetail(bookid, pg)) || !page->url[0]) {
 				fprintf(stderr, "%s failed\n", pg);
 				free(page);
 				continue;
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
 		while(fgets(buf, 1024, stdin)) {
 			sscanf(buf, "%d", &i);
 			snprintf(pg, 16, "%s%d", "PA", i);
-			if((page = getpagedetail(bookid, pg)) == NULL || page->url[0] == '\0') {
+			if(!(page = getpagedetail(bookid, pg)) || !page->url[0]) {
 				fprintf(stderr, "%d failed\n", i);
 				free(page);
 				continue;
