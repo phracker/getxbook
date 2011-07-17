@@ -72,9 +72,8 @@ Page *getpagedetail(char *bookid, char *pg)
 		return NULL;
 
 	snprintf(m, 80, "\"pid\":\"%s\"", pg);
-	if((c = strstr(buf,m)) == NULL) {
-		free(buf); return NULL;
-	}
+	if((c = strstr(buf,m)) == NULL)
+		return NULL;
 
 	page = malloc(sizeof(Page));
 	strncpy(page->name, pg, 80);
