@@ -5,10 +5,9 @@
 #include "util.c"
 
 #define usage "getgbook " VERSION " - a google books downloader\n" \
-              "usage: getgbook [-i ip] [-p|-a] bookid\n" \
+              "usage: getgbook [-p|-a] bookid\n" \
               "  -p print all available pages\n" \
               "  -a download all available pages\n" \
-              "  -i appear from ip address\n" \
               "  otherwise, all pages in stdin will be downloaded\n"
 
 #define URLMAX 1024
@@ -20,8 +19,6 @@ typedef struct {
 	char name[80];
 } Page;
 
-char extrahdr[1024] = "\0";
-
 int gettotalpages(char *bookid)
 {
 	char url[URLMAX];
@@ -32,7 +29,7 @@ int gettotalpages(char *bookid)
 
 	bookid = malloc(sizeof(char *) * BOOKID_LEN);
 
-	if(!get("books.google.com", url, extrahdr, &buf))
+	if(!get("books.google.com", url, &buf))
 		return 0;
 
 	if((c = strstr(buf," pages</dc:format>")) == NULL)
@@ -51,10 +48,11 @@ Page *getpagedetail(char *bookid, char *pg)
 
 	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3", bookid, pg);
 
-	if(!get("books.google.com", url, extrahdr, &buf))
+	if(!get("books.google.com", url, &buf))
 		return NULL;
 
 	snprintf(m, 80, "\"pid\":\"%s\"", pg);
+	printf("looking for the pid %s\n", m);
 	if((c = strstr(buf,m)) == NULL)
 		return NULL;
 
@@ -63,10 +61,12 @@ Page *getpagedetail(char *bookid, char *pg)
 	page->url[0] = '\0';
 	page->num = 0;
 
+	printf("looking for the src\n");
 	if(strncmp(c+strlen(m)+1, "\"src\"", 5) != 0) {
 		free(buf); return page;
 	}
 
+	printf("getting the order\n");
 	for(p=page->url, d=c+strlen(m)+8; *d && *d != '"'; d++, p++) {
 		if(!strncmp(d, "\\u0026", 6)) {
 			*p = '&';
@@ -96,15 +96,9 @@ int main(int argc, char *argv[])
 	int totalpages, i;
 	Page *page;
 
-	if(argc < 2 || argc > 5 ||
-	   (argv[1][0]=='-' && ((argv[1][1]!='p' && argv[1][1]!='a' && argv[1][1] != 'i') || argc < 3)))
+	if(argc < 2 || argc > 3 ||
+	   (argv[1][0]=='-' && ((argv[1][1]!='p' && argv[1][1]!='a') || argc < 3)))
 		die(usage);
-
-	if(argv[1][0] == '-' && argv[1][1] == 'i') {
-		snprintf(extrahdr, 1024, "X-Forwarded-For: %s\r\n", argv[2]);
-		argv+=2;
-		argc-=2;
-	}
 
 	bookid = argv[argc-1];
 
@@ -117,7 +111,7 @@ int main(int argc, char *argv[])
 			die("Book has no pages\n");
 
 		for(i=1; i<=totalpages; i++) {
-			snprintf(pg, 16, "%s%d", "PA", i);
+			snprintf(pg, 16, "%s%d", "PT", i);
 			if((page = getpagedetail(bookid, pg)) == NULL || page->url[0] == '\0') {
 				fprintf(stderr, "%s failed\n", pg);
 				free(page);
@@ -125,7 +119,7 @@ int main(int argc, char *argv[])
 			}
 			if(argv[1][1] == 'a') {
 				snprintf(n, 80, "%05d.png", page->num);
-				gettofile("books.google.com", page->url, extrahdr, n);
+				gettofile("books.google.com", page->url, n);
 				printf("Downloaded page %d\n", page->num);
 			} else
 				printf("%d\n", page->num);
@@ -142,7 +136,7 @@ int main(int argc, char *argv[])
 				continue;
 			}
 			snprintf(n, 80, "%05d.png", page->num);
-			gettofile("books.google.com", page->url, extrahdr, n);
+			gettofile("books.google.com", page->url, n);
 			printf("Downloaded page %d\n", page->num);
 			free(page);
 		}

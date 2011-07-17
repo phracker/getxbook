@@ -33,7 +33,7 @@ static int dial(char *host, char *port) {
 	return srv;
 }
 
-int get(char *host, char *path, char *extrahdr, char **buf) {
+int get(char *host, char *path, char **buf) {
 	size_t l, res;
 	int fd, i, p;
 	char h[1024] = "\0";
@@ -43,7 +43,7 @@ int get(char *host, char *path, char *extrahdr, char **buf) {
 	srv = fdopen(fd, "r+");
 
 	fprintf(srv, "GET %s HTTP/1.0\r\nUser-Agent: getgbook-"VERSION \
-	             " (not mozilla)\r\n%sHost: %s\r\n\r\n", path, extrahdr, host);
+	             " (not mozilla)\r\nHost: %s\r\n\r\n", path, host);
 	fflush(srv);
 
 	while(h[0] != '\r') {
@@ -60,12 +60,12 @@ int get(char *host, char *path, char *extrahdr, char **buf) {
 	return l;
 }
 
-int gettofile(char *host, char *url, char *extrahdr, char *savepath) {
+int gettofile(char *host, char *url, char *savepath) {
 	char *buf = 0;
 	FILE *f;
 	size_t i, l;
 
-	if(!(l = get(host, url, extrahdr, &buf))) {
+	if(!(l = get(host, url, &buf))) {
 		fprintf(stderr, "Could not download %s\n", url);
 		return 1;
 	}

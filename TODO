@@ -1,3 +1,5 @@
+order is prob available even for pages that don't have src. check this, and if so rewrite getpagedetails to set it even if no src (rather than just bailing)
+
 use order to be able to use real page numbers (getpagecode)
 	to find this advance through click3 letter by letter until either } (none found) or strcmp "order"
 
