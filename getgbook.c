@@ -11,7 +11,6 @@
               "  otherwise, all pages in stdin will be downloaded\n"
 
 #define URLMAX 1024
-#define BOOKID_LEN 12
 
 typedef struct {
 	int num;
