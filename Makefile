@@ -1,6 +1,8 @@
 # See COPYING file for copyright, license and warranty details.
 include config.mk
 
+NAME = getbooks
+
 SRC = getgbook.c
 LIB = util.o
 
@@ -34,4 +36,11 @@ uninstall:
 clean:
 	rm -f -- $(BIN) $(OBJ) util.a
 
-.PHONY: all clean install uninstall
+dist:
+	@mkdir -p $(NAME)-$(VERSION)
+	@cp $(SRC) util.h util.c Makefile config.mk $(NAME)-$(VERSION)
+	@tar c $(NAME)-$(VERSION) | gzip -c > $(NAME)-$(VERSION).tar.gz
+	@rm -rf $(NAME)-$(VERSION)
+	@echo $(NAME)-$(VERSION).tar.gz
+
+.PHONY: all clean install uninstall dist
