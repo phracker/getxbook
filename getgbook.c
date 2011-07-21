@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "util.c"
+#include "util.h"
 
 #define usage "getgbook " VERSION " - a google books downloader\n" \
               "usage: getgbook [-p|-a] bookid\n" \
@@ -73,16 +73,18 @@ int main(int argc, char *argv[])
 	Page *page;
 
 	if(argc < 2 || argc > 3 ||
-	   (argv[1][0]=='-' && ((argv[1][1]!='p' && argv[1][1]!='a') || argc < 3)))
-		die(usage);
+	   (argv[1][0]=='-' && ((argv[1][1]!='p' && argv[1][1]!='a') || argc < 3))) {
+		fputs(usage, stdout);
+		return 1;
+	}
 
 	bookid = argv[argc-1];
 
 	if(argv[1][0] == '-') {
 		strncpy(code, pagecodes[0], 3);
-		c = i =0;
+		c = i = 0;
 		while(++i) {
-			snprintf(pg, 16, "%s%d", code, i);
+			snprintf(pg, 15, "%s%d", code, i);
 			if(!(page = getpagedetail(bookid, pg))) {
 				/* no more pages with that code */
 				strncpy(code, pagecodes[++c], 3);
@@ -100,16 +102,14 @@ int main(int argc, char *argv[])
 				gettofile("books.google.com", page->url, n);
 				printf("Downloaded page %d\n", page->num);
 			} else if(page->num != -1)
-				printf("%d\n", page->num);
+				printf("%s %d\n", page->name, page->num);
 			free(page);
 		}
 	} else {
-		/* todo: find the page based on its order number, rather than using PA%d */
 		while(fgets(buf, 1024, stdin)) {
-			sscanf(buf, "%d", &i);
-			snprintf(pg, 16, "%s%d", "PA", i);
+			sscanf(buf, "%15s", pg);
 			if(!(page = getpagedetail(bookid, pg)) || !page->url[0]) {
-				fprintf(stderr, "%d failed\n", i);
+				fprintf(stderr, "%s failed\n", pg);
 				free(page);
 				continue;
 			}

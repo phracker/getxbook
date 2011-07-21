@@ -1,11 +1,32 @@
-use order to be able to use real page numbers (getpagecode)
-	to find this advance through click3 letter by letter until either } (none found) or strcmp "order"
+make sure i'm checking all lib calls that could fail
 
+make sure all arrays are used within bounds
+
+
+getgbooktxt (different program as it gets from html pages, which getgbook doesn't any more)
+
+getabook
+
+getbnbook
+
+openlibrary.org?
 
 # once it is basically working #
+
+try supporting 3xx in get, if it can be done in a few lines
+ by getting Location line, freeing buf, and returning a new
+ iteration.
+
+add https support to get
 
 to be fast and efficient it's best to crank through all the json 1st, filling in an array of page structs as we go
 	this requires slightly fuller json support
 	could consider making a json reading module, ala confoo, to make ad-hoc memory structures from json
 
-to be super fast we could have 2 threads, one filling the pages structs and one consuming them. this would complicate the code rather, though
+write helper scripts like trymissing
+
+write some little tests
+
+have file extension be determined by file type, rather than assuming png
+
+think about whether default functionality should be dl all, rather than -a

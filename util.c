@@ -1,13 +1,11 @@
 /* See COPYING file for copyright, license and warranty details. */
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-
-void die(char *msg) {
-	fputs(msg, stderr);
-	exit(EXIT_FAILURE);
-}
 
 /* plundered from suckless' sic */
 static int dial(char *host, char *port) {
@@ -18,8 +16,10 @@ static int dial(char *host, char *port) {
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
-	if(getaddrinfo(host, port, &hints, &res) != 0)
-		die("error: cannot resolve hostname\n");
+	if(getaddrinfo(host, port, &hints, &res) != 0) {
+		fprintf(stderr, "error: cannot resolve hostname %s\n", host);
+		return -1;
+	}
 	for(r = res; r; r = r->ai_next) {
 		if((srv = socket(r->ai_family, r->ai_socktype, r->ai_protocol)) == -1)
 			continue;
@@ -28,8 +28,10 @@ static int dial(char *host, char *port) {
 		close(srv);
 	}
 	freeaddrinfo(res);
-	if(!r)
-		die("error: cannot connect to host\n");
+	if(!r) {
+		fprintf(stderr, "error: cannot connect to host %s\n", host);
+		return -1;
+	}
 	return srv;
 }
 
@@ -39,7 +41,7 @@ int get(char *host, char *path, char **buf) {
 	char h[1024] = "\0";
 	FILE *srv;
 
-	fd = dial(host, "80");
+	if((fd = dial(host, "80")) == -1) return 0;
 	srv = fdopen(fd, "r+");
 
 	fprintf(srv, "GET %s HTTP/1.0\r\nUser-Agent: getgbook-"VERSION \
