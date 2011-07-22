@@ -38,7 +38,7 @@ clean:
 
 dist:
 	@mkdir -p $(NAME)-$(VERSION)
-	@cp $(SRC) util.h util.c Makefile config.mk $(NAME)-$(VERSION)
+	@cp $(SRC) util.h util.c Makefile config.mk COPYING $(NAME)-$(VERSION)
 	@tar c $(NAME)-$(VERSION) | gzip -c > $(NAME)-$(VERSION).tar.gz
 	@rm -rf $(NAME)-$(VERSION)
 	@echo $(NAME)-$(VERSION).tar.gz
