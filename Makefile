@@ -1,7 +1,7 @@
 # See COPYING file for copyright, license and warranty details.
 include config.mk
 
-NAME = getbooks
+NAME = getxbook
 
 SRC = getgbook.c
 LIB = util.o
