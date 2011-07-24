@@ -2,6 +2,7 @@ make sure i'm checking all lib calls that could fail
 
 make sure all arrays are used within bounds
 
+use defined constants rather than e.g. 1024
 
 getgbooktxt (different program as it gets from html pages, which getgbook doesn't any more)
 

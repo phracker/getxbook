@@ -6,9 +6,10 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include "util.h"
 
 /* plundered from suckless' sic */
-static int dial(char *host, char *port) {
+int dial(char *host, char *port) {
 	static struct addrinfo hints;
 	int srv;
 	struct addrinfo *res, *r;
@@ -35,23 +36,29 @@ static int dial(char *host, char *port) {
 	return srv;
 }
 
-int get(char *host, char *path, char **buf) {
+int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) {
 	size_t l, res;
 	int fd, i, p;
 	char h[1024] = "\0";
+	char c[1024] = "";
 	FILE *srv;
+	if(savecookie) savecookie[0] = 0; /* TEMP TO PLEASE GCC */
 
 	if((fd = dial(host, "80")) == -1) return 0;
 	srv = fdopen(fd, "r+");
 
+	if(sendcookie)
+		snprintf(c, COOKIEMAX-1, "\r\nCookie: %s", sendcookie);
 	fprintf(srv, "GET %s HTTP/1.0\r\nUser-Agent: getgbook-"VERSION \
-	             " (not mozilla)\r\nHost: %s\r\n\r\n", path, host);
+	             " (not mozilla)\r\nHost: %s%s\r\n\r\n", path, host, c);
 	fflush(srv);
 
 	while(h[0] != '\r') {
 		fgets(h, 1024, srv);
 		if(sscanf(h, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
 			return 0;
+		if(savecookie != NULL && sscanf(h, "Set-Cookie: %s;", c))
+			strncat(savecookie, c, COOKIEMAX-1);
 	}
 
 	*buf = malloc(sizeof(char *) * 4096);
@@ -62,12 +69,12 @@ int get(char *host, char *path, char **buf) {
 	return l;
 }
 
-int gettofile(char *host, char *url, char *savepath) {
+int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *savepath) {
 	char *buf = 0;
 	FILE *f;
 	size_t i, l;
 
-	if(!(l = get(host, url, &buf))) {
+	if(!(l = get(host, url, sendcookie, savecookie, &buf))) {
 		fprintf(stderr, "Could not download %s\n", url);
 		return 1;
 	}
