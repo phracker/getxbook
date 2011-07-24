@@ -68,7 +68,7 @@ Page *getpagedetail(char *bookid, char *pg, char *cookie)
 
 int main(int argc, char *argv[])
 {
-	char *bookid, *tmp, pg[16], buf[1024], n[80], code[3], cookie[COOKIEMAX], u[1024];
+	char *bookid, *tmp, pg[16], buf[1024], n[80], code[3], cookie[COOKIEMAX];
 	int i, c, retry;
 	Page *page;
 
@@ -95,11 +95,10 @@ int main(int argc, char *argv[])
 			if(!page->url[0]) {
 				free(page);
 				/* try with fresh cookie */
-				if(!retry) {
-					snprintf(u, URLMAX, "/books?id=%s", bookid);
-					get("books.google.com", u, NULL, cookie, &tmp);
+				if(retry < 5) {
+					get("books.google.com", "/", NULL, cookie, &tmp);
 					free(tmp);
-					retry=1;
+					retry++;
 					i--;
 				} else {
 					fprintf(stderr, "%s not available\n", pg);
@@ -125,8 +124,7 @@ int main(int argc, char *argv[])
 	} else {
 		while(fgets(buf, 1024, stdin)) {
 			sscanf(buf, "%15s", pg);
-			snprintf(u, URLMAX, "/books?id=%s", bookid);
-			get("books.google.com", u, NULL, cookie, &tmp);
+			get("books.google.com", "/", NULL, cookie, &tmp);
 			if(!(page = getpagedetail(bookid, pg, cookie)) || !page->url[0]) {
 				fprintf(stderr, "%s failed\n", pg);
 				if(page) free(page);
