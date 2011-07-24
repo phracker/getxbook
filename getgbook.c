@@ -49,7 +49,8 @@ Page *getpagedetail(char *bookid, char *pg, char *cookie)
 				*p = *d;
 		}
 		*p = '\0';
-	}
+	} else
+		d=c;
 
 	for(; *d; d++) {
 		if(*d == '}') {
@@ -106,20 +107,29 @@ int main(int argc, char *argv[])
 				}
 				continue;
 			}
+			retry=0;
 			if(argv[1][1] == 'a') {
-				snprintf(n, 80, "%05d.png", page->num);
+				if(page->num != -1)
+					snprintf(n, 80, "%05d.png", page->num);
+				else
+					snprintf(n, 80, "%s.png", page->name);
 				gettofile("books.google.com", page->url, cookie, NULL, n);
 				printf("Downloaded page %d\n", page->num);
-			} else if(page->num != -1)
-				printf("%s %d\n", page->name, page->num);
+			} else {
+				printf("%s ", page->name);
+				if(page->num != -1) printf("%d", page->num);
+				printf("\n");
+			}
 			free(page);
 		}
 	} else {
 		while(fgets(buf, 1024, stdin)) {
 			sscanf(buf, "%15s", pg);
+			snprintf(u, URLMAX, "/books?id=%s", bookid);
+			get("books.google.com", u, NULL, cookie, &tmp);
 			if(!(page = getpagedetail(bookid, pg, cookie)) || !page->url[0]) {
 				fprintf(stderr, "%s failed\n", pg);
-				free(page);
+				if(page) free(page);
 				continue;
 			}
 			snprintf(n, 80, "%05d.png", page->num);
