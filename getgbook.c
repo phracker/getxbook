@@ -124,16 +124,19 @@ int main(int argc, char *argv[])
 	} else {
 		while(fgets(buf, 1024, stdin)) {
 			sscanf(buf, "%15s", pg);
-			get("books.google.com", "/", NULL, cookie, &tmp);
-			if(!(page = getpagedetail(bookid, pg, cookie)) || !page->url[0]) {
-				fprintf(stderr, "%s failed\n", pg);
+			for(retry = 0; retry < 5; retry++) {
+				get("books.google.com", "/", NULL, cookie, &tmp);
+				if((page = getpagedetail(bookid, pg, cookie)) && page->url[0]) {
+					snprintf(n, 80, "%05d.png", page->num);
+					gettofile("books.google.com", page->url, cookie, NULL, n);
+					printf("Downloaded page %d\n", page->num);
+					free(page);
+					break;
+				}
 				if(page) free(page);
-				continue;
 			}
-			snprintf(n, 80, "%05d.png", page->num);
-			gettofile("books.google.com", page->url, cookie, NULL, n);
-			printf("Downloaded page %d\n", page->num);
-			free(page);
+			if(retry == 5)
+				fprintf(stderr, "%s failed\n", pg);
 		}
 	}
 

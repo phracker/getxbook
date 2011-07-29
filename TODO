@@ -1,6 +1,10 @@
+Note: looks like google allows around 3 page requests per cookie session, and about 40 per ip per [some time period]. If I knew the time period, and once stdin retry is working, could make a script that gets all it can, gets a list of failures, waits, then tries failures, etc. Note these would also have to stop at some point; some pages just aren't available
+
 make sure i'm checking all lib calls that could fail
 
 make sure all arrays are used within bounds
+
+strace to check paths taken are sensible
 
 use defined constants rather than e.g. 1024
 
