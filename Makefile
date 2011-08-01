@@ -1,4 +1,4 @@
-# See COPYING file for copyright, license and warranty details.
+# See COPYING file for copyright and license details.
 include config.mk
 
 NAME = getxbook

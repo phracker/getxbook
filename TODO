@@ -1,12 +1,6 @@
-Note: looks like google allows around 3 page requests per cookie session, and about 40 per ip per [some time period]. If I knew the time period, and once stdin retry is working, could make a script that gets all it can, gets a list of failures, waits, then tries failures, etc. Note these would also have to stop at some point; some pages just aren't available
+list all binaries in readme and what they do
 
-make sure i'm checking all lib calls that could fail
-
-make sure all arrays are used within bounds
-
-strace to check paths taken are sensible
-
-use defined constants rather than e.g. 1024
+# other utils
 
 getgbooktxt (different program as it gets from html pages, which getgbook doesn't any more)
 
@@ -14,9 +8,7 @@ getabook
 
 getbnbook
 
-openlibrary.org?
-
-# once it is basically working #
+# other todos
 
 try supporting 3xx in get, if it can be done in a few lines
  by getting Location line, freeing buf, and returning a new
@@ -24,14 +16,16 @@ try supporting 3xx in get, if it can be done in a few lines
 
 add https support to get
 
-to be fast and efficient it's best to crank through all the json 1st, filling in an array of page structs as we go
-	this requires slightly fuller json support
-	could consider making a json reading module, ala confoo, to make ad-hoc memory structures from json
-
-write helper scripts like trymissing
-
 write some little tests
+
+## getgbook
 
 have file extension be determined by file type, rather than assuming png
 
 think about whether default functionality should be dl all, rather than -a
+
+to be fast and efficient it's best to crank through all the json 1st, filling in an array of page structs as we go
+	this requires slightly fuller json support
+	could consider making a json reading module, ala confoo, to make ad-hoc memory structures from json
+
+Note: looks like google allows around 3 page requests per cookie session, and about 40 per ip per [some time period]. If I knew the time period, could make a script that gets all it can, gets a list of failures, waits, then tries failures, etc. Note these would also have to stop at some point; some pages just aren't available

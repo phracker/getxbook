@@ -1,4 +1,4 @@
-/* See COPYING file for copyright, license and warranty details. */
+/* See COPYING file for copyright and license details. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,19 +11,22 @@
               "  otherwise, all pages in stdin will be downloaded\n"
 
 #define URLMAX 1024
+#define STRMAX 1024
+#define PGCODELEN 3
+#define RETRYNUM 5
 
 typedef struct {
 	int num;
 	char url[URLMAX];
-	char name[80];
+	char name[STRMAX];
 } Page;
 
-char pagecodes[][3] = { "PP", "PR", "PA", "PT", "\0" };
+char pagecodes[][PGCODELEN] = { "PP", "PR", "PA", "PT", "\0" };
 
 Page *getpagedetail(char *bookid, char *pg, char *cookie)
 {
-	char url[URLMAX];
-	char *buf, *c, *d, m[80], *p;
+	char url[URLMAX], m[STRMAX];
+	char *c, *d, *p, *buf = NULL;
 	Page *page;
 
 	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3", bookid, pg);
@@ -31,12 +34,12 @@ Page *getpagedetail(char *bookid, char *pg, char *cookie)
 	if(!get("books.google.com", url, cookie, NULL, &buf))
 		return NULL;
 
-	snprintf(m, 80, "\"pid\":\"%s\"", pg);
+	snprintf(m, STRMAX, "\"pid\":\"%s\"", pg);
 	if(!(c = strstr(buf,m)))
 		return NULL;
 
 	page = malloc(sizeof(Page));
-	strncpy(page->name, pg, 80);
+	strncpy(page->name, pg, STRMAX);
 	page->url[0] = '\0';
 	page->num = -1;
 
@@ -68,7 +71,8 @@ Page *getpagedetail(char *bookid, char *pg, char *cookie)
 
 int main(int argc, char *argv[])
 {
-	char *bookid, *tmp, pg[16], buf[1024], n[80], code[3], cookie[COOKIEMAX];
+	char *bookid, *tmp, *code;
+	char pg[STRMAX], buf[BUFSIZ], n[STRMAX], cookie[COOKIEMAX] = "";
 	int i, c, retry;
 	Page *page;
 
@@ -81,13 +85,13 @@ int main(int argc, char *argv[])
 	bookid = argv[argc-1];
 
 	if(argv[1][0] == '-') {
-		strncpy(code, pagecodes[0], 3);
+		code = pagecodes[0];
 		c = i = retry = 0;
 		while(++i) {
-			snprintf(pg, 15, "%s%d", code, i);
+			snprintf(pg, STRMAX, "%s%d", code, i);
 			if(!(page = getpagedetail(bookid, pg, cookie))) {
 				/* no more pages with that code */
-				strncpy(code, pagecodes[++c], 3);
+				code = pagecodes[++c];
 				if(code[0] == '\0') break;
 				i=0;
 				continue;
@@ -95,7 +99,7 @@ int main(int argc, char *argv[])
 			if(!page->url[0]) {
 				free(page);
 				/* try with fresh cookie */
-				if(retry < 5) {
+				if(retry < RETRYNUM) {
 					get("books.google.com", "/", NULL, cookie, &tmp);
 					free(tmp);
 					retry++;
@@ -109,11 +113,13 @@ int main(int argc, char *argv[])
 			retry=0;
 			if(argv[1][1] == 'a') {
 				if(page->num != -1)
-					snprintf(n, 80, "%05d.png", page->num);
+					snprintf(n, STRMAX, "%04d.png", page->num);
 				else
-					snprintf(n, 80, "%s.png", page->name);
-				gettofile("books.google.com", page->url, cookie, NULL, n);
-				printf("Downloaded page %d\n", page->num);
+					snprintf(n, STRMAX, "%s.png", page->name);
+				if(gettofile("books.google.com", page->url, cookie, NULL, n))
+					fprintf(stderr, "%s failed\n", pg);
+				else
+					printf("Downloaded page %d\n", page->num);
 			} else {
 				printf("%s ", page->name);
 				if(page->num != -1) printf("%d", page->num);
@@ -122,20 +128,21 @@ int main(int argc, char *argv[])
 			free(page);
 		}
 	} else {
-		while(fgets(buf, 1024, stdin)) {
+		while(fgets(buf, BUFSIZ, stdin)) {
 			sscanf(buf, "%15s", pg);
-			for(retry = 0; retry < 5; retry++) {
+			for(retry = 0; retry < RETRYNUM; retry++) {
 				get("books.google.com", "/", NULL, cookie, &tmp);
 				if((page = getpagedetail(bookid, pg, cookie)) && page->url[0]) {
-					snprintf(n, 80, "%05d.png", page->num);
-					gettofile("books.google.com", page->url, cookie, NULL, n);
+					snprintf(n, STRMAX, "%04d.png", page->num);
+					if(gettofile("books.google.com", page->url, cookie, NULL, n))
+						continue;
 					printf("Downloaded page %d\n", page->num);
 					free(page);
 					break;
 				}
 				if(page) free(page);
 			}
-			if(retry == 5)
+			if(retry == RETRYNUM)
 				fprintf(stderr, "%s failed\n", pg);
 		}
 	}

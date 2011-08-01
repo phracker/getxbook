@@ -1,4 +1,4 @@
-/* See COPYING file for copyright, license and warranty details. */
+/* See COPYING file for copyright and license details. */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -39,31 +39,30 @@ int dial(char *host, char *port) {
 int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) {
 	size_t l, res;
 	int fd, i, p;
-	char h[1024] = "\0";
-	char c[1024] = "";
+	char h[HEADERMAX] = "\0";
+	char c[COOKIEMAX] = "";
 	FILE *srv;
-	if(savecookie) savecookie[0] = 0; /* TEMP TO PLEASE GCC */
 
 	if((fd = dial(host, "80")) == -1) return 0;
 	srv = fdopen(fd, "r+");
 
 	if(sendcookie)
-		snprintf(c, COOKIEMAX-1, "\r\nCookie: %s", sendcookie);
-	fprintf(srv, "GET %s HTTP/1.0\r\nUser-Agent: getgbook-"VERSION \
+		snprintf(c, COOKIEMAX, "\r\nCookie: %s", sendcookie);
+	fprintf(srv, "GET %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
 	             " (not mozilla)\r\nHost: %s%s\r\n\r\n", path, host, c);
 	fflush(srv);
 
 	while(h[0] != '\r') {
-		fgets(h, 1024, srv);
+		fgets(h, HEADERMAX, srv);
 		if(sscanf(h, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
 			return 0;
 		if(savecookie != NULL && sscanf(h, "Set-Cookie: %s;", c))
-			strncat(savecookie, c, COOKIEMAX-1);
+			strncat(savecookie, c, COOKIEMAX);
 	}
 
-	*buf = malloc(sizeof(char *) * 4096);
-	for(l=0; (res = fread(*buf+l, 1, 4096, srv)) > 0; l+=res)
-		*buf = realloc(*buf, sizeof(char *) * (l+4096));
+	*buf = malloc(sizeof(char *) * BUFSIZ);
+	for(l=0; (res = fread(*buf+l, 1, BUFSIZ, srv)) > 0; l+=res)
+		*buf = realloc(*buf, sizeof(char *) * (l+BUFSIZ));
 
 	fclose(srv);
 	return l;
