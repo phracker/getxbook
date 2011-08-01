@@ -5,6 +5,7 @@ NAME = getxbook
 
 SRC = getgbook.c
 LIB = util.o
+SCRIPTS = getgmissing.sh makepdf.sh
 
 BIN = $(SRC:.c=)
 OBJ = $(SRC:.c=.o) $(LIB)
@@ -28,17 +29,17 @@ util.a: $(LIB)
 	@ranlib $@
 
 install: all
-	cp -f $(BIN) $(DESTDIR)$(PREFIX)/bin
+	cp -f $(BIN) $(SCRIPTS) $(DESTDIR)$(PREFIX)/bin
 
 uninstall:
-	cd $(DESTDIR)$(PREFIX)/bin && rm -f $(BIN)
+	cd $(DESTDIR)$(PREFIX)/bin && rm -f $(BIN) $(SCRIPTS)
 
 clean:
 	rm -f -- $(BIN) $(OBJ) util.a
 
 dist:
 	@mkdir -p $(NAME)-$(VERSION)
-	@cp $(SRC) util.h util.c Makefile config.mk COPYING $(NAME)-$(VERSION)
+	@cp $(SRC) $(SCRIPTS) util.h util.c Makefile config.mk COPYING $(NAME)-$(VERSION)
 	@tar c $(NAME)-$(VERSION) | gzip -c > $(NAME)-$(VERSION).tar.gz
 	@rm -rf $(NAME)-$(VERSION)
 	@echo $(NAME)-$(VERSION).tar.gz
