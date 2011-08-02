@@ -5,7 +5,7 @@ NAME = getxbook
 
 SRC = getgbook.c
 LIB = util.o
-SCRIPTS = getgmissing.sh makepdf.sh
+SCRIPTS = getgmissing.sh makebookpdf.sh
 
 BIN = $(SRC:.c=)
 OBJ = $(SRC:.c=.o) $(LIB)
