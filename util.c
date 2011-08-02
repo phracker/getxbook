@@ -53,7 +53,7 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 	fflush(srv);
 
 	while(h[0] != '\r') {
-		fgets(h, HEADERMAX, srv);
+		if(!fgets(h, HEADERMAX, srv)) return 0;
 		if(sscanf(h, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
 			return 0;
 		if(savecookie != NULL && sscanf(h, "Set-Cookie: %s;", c))
