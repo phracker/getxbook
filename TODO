@@ -1,3 +1,7 @@
+got a stack trace when a connection seemingly timed out (after around 30 successful calls to -p)
+
+getgmissing doesn't work brilliantly with preview books as it will always get 1st ~40 pages then get ip block. getgfailed will do a better job
+
 list all binaries in readme and what they do
 
 # other utils
@@ -28,4 +32,4 @@ to be fast and efficient it's best to crank through all the json 1st, filling in
 	this requires slightly fuller json support
 	could consider making a json reading module, ala confoo, to make ad-hoc memory structures from json
 
-Note: looks like google allows around 3 page requests per cookie session, and about 40 per ip per [some time period]. If I knew the time period, could make a script that gets all it can, gets a list of failures, waits, then tries failures, etc. Note these would also have to stop at some point; some pages just aren't available
+Note: looks like google allows around 3 page requests per cookie session, and exactly 31 per ip per [some time period]. If I knew the time period, could make a script that gets all it can, gets a list of failures, waits, then tries failures, etc. Note these would also have to stop at some point; some pages just aren't available

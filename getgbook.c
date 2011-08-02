@@ -124,6 +124,7 @@ int main(int argc, char *argv[])
 				printf("%s ", page->name);
 				if(page->num != -1) printf("%d", page->num);
 				printf("\n");
+				fflush(stdout);
 			}
 			free(page);
 		}
