@@ -1,0 +1,27 @@
+# Getgbook
+
+## TOS
+
+Google's terms of service forbid using anything but a browser
+to access their sites. This is absurd and ruinous.
+See section 5.3 of http://www.google.com/accounts/TOS.
+
+Thankfully, however, for Google Books one is only bound to it
+"for digital content you purchase through the Google Books
+service," which does not affect this program.
+See http://www.google.com/googlebooks/tos.html
+
+## robots.txt
+
+Their robots.txt allows certain book pages, but disallows
+others.
+
+We use two types of URL:
+http://books.google.com/books?id=<bookid>&pg=<pgcode>&jscmd=click3
+http://books.google.com/books?id=<bookid>&pg=<pgcode>&img=1&zoom=3&hl=en&<sig>
+
+robots.txt disallows /books?*jscmd=* and /books?*pg=*. However,
+Google consider Allow statements to overrule disallow statements
+if they are longer. And they happen to allow /books?*q=subject:*.
+So, we append that to both url types (it has no effect on them),
+and we are obeying robots.txt

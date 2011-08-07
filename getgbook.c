@@ -29,7 +29,7 @@ Page *getpagedetail(char *bookid, char *pg, char *cookie)
 	char *c, *d, *p, *buf = NULL;
 	Page *page;
 
-	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3", bookid, pg);
+	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3&q=subject:a", bookid, pg);
 
 	if(!get("books.google.com", url, cookie, NULL, &buf))
 		return NULL;
@@ -51,7 +51,7 @@ Page *getpagedetail(char *bookid, char *pg, char *cookie)
 			} else
 				*p = *d;
 		}
-		*p = '\0';
+		strncpy(p, "&q=subject:a", 12);
 	} else
 		d=c;
 
