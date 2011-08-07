@@ -23,7 +23,7 @@ censorship, whether done for profit or for any other reason. And
 it is dangerous.
 
 The getxbook programs download books anonymously. Your IP address
-will still be logged (use [https://www.torproject.org](torify or torsocks)
+will still be logged (use [torify or tsocks](https://www.torproject.org)
 to stop this), but your reading won't be automatically linked to
 other information websites have about you, as no existing cookies
 are used. Once the book is downloaded, you can read it as you

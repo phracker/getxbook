@@ -1,0 +1,36 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix doap: <http://usefulinc.com/ns/doap#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix :     <http://njw.me.uk/software/getxbook/#>.
+
+:p a doap:Project;
+	doap:name "Getxbook";
+	doap:shortdesc "A collection of tools to download books from websites";
+	doap:homepage <http://njw.me.uk/software/getxbook/>;
+	doap:repository :repo;
+	doap:programming-language "C";
+	doap:license <http://www.isc.org/software/license>;
+	doap:release :v01, :v02, :v03;
+	doap:maintainer <http://njw.me.uk/card#i>.
+
+<http://njw.me.uk/card#i> a foaf:Person;
+	foaf:name "Nick White";
+	foaf:homepage <http://njw.me.uk>.
+
+:repo a doap:GitRepository;
+	doap:location <http://git.njw.me.uk/getxbook.git>.
+
+:v01 a doap:Version;
+	doap:revision "0.1";
+	doap:created "2011-03-27";
+	doap:file-release <http://njw.me.uk/software/getgbook/getgbook-0.1.tar.bz2>.
+
+:v02 a doap:Version;
+	doap:revision "0.2";
+	doap:created "2011-04-11";
+	doap:file-release <http://njw.me.uk/software/getgbook/getgbook-0.2.tar.bz2>.
+
+:v03 a doap:Version;
+	doap:revision "0.3";
+	doap:created "2011-08-07";
+	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-0.3.tar.gz>.

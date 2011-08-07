@@ -1,5 +1,5 @@
 # See COPYING file for copyright and license details.
-VERSION = prealpha
+VERSION = 0.3
 
 # paths
 PREFIX = /usr/local

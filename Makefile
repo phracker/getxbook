@@ -5,7 +5,8 @@ NAME = getxbook
 
 SRC = getgbook.c
 LIB = util.o
-SCRIPTS = getgmissing.sh makebookpdf.sh
+SCRIPTS = getgmissing.sh getgfailed.sh makebookpdf.sh
+DOC = README COPYING LEGAL
 
 BIN = $(SRC:.c=)
 OBJ = $(SRC:.c=.o) $(LIB)
@@ -35,13 +36,31 @@ uninstall:
 	cd $(DESTDIR)$(PREFIX)/bin && rm -f $(BIN) $(SCRIPTS)
 
 clean:
-	rm -f -- $(BIN) $(OBJ) util.a
+	rm -f -- $(BIN) $(OBJ) util.a index.html
 
 dist:
-	@mkdir -p $(NAME)-$(VERSION)
-	@cp $(SRC) $(SCRIPTS) util.h util.c Makefile config.mk COPYING $(NAME)-$(VERSION)
-	@tar c $(NAME)-$(VERSION) | gzip -c > $(NAME)-$(VERSION).tar.gz
-	@rm -rf $(NAME)-$(VERSION)
-	@echo $(NAME)-$(VERSION).tar.gz
+	mkdir -p $(NAME)-$(VERSION)
+	cp $(SRC) $(SCRIPTS) $(DOC) util.h util.c Makefile config.mk $(NAME)-$(VERSION)
+	tar c $(NAME)-$(VERSION) | gzip -c > $(NAME)-$(VERSION).tar.gz
+	gpg -b < $(NAME)-$(VERSION).tar.gz > $(NAME)-$(VERSION).tar.gz.sig
+	rm -rf $(NAME)-$(VERSION)
+	echo $(NAME)-$(VERSION).tar.gz $(NAME)-$(VERSION).tar.gz.sig
+
+index.html: doap.ttl README
+	echo making webpage
+	echo "<!DOCTYPE html><html><head><title>$(NAME)</title>" > $@
+	echo '<link rel="alternate" type="text/turtle" title="rdf" href="doap.ttl" />' >> $@
+	echo '<style type="text/css">' >> $@
+	echo "body {font-family:sans-serif; width:38em; margin:auto; max-width:94%;}" >> $@
+	echo "h1 {font-size:1.6em; text-align:center;}" >> $@
+	echo "a {text-decoration:none; border-bottom-width:thin; border-bottom-style:dotted;}" >> $@
+	echo "</style></head><body>" >> $@
+	smu < README >> $@
+	echo "<h2>download</h2>" >> $@
+	echo "[$(NAME) $(VERSION)]($(NAME)-$(VERSION).tar.gz) ([sig]($(NAME)-$(VERSION).tar.gz.sig))" | smu >> $@
+	echo '<hr />' >> $@
+	sh websummary.sh doap.ttl | smu >> $@
+	echo '</body></html>' >> $@
 
 .PHONY: all clean install uninstall dist
+.SILENT: index.html dist
