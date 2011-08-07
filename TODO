@@ -14,6 +14,8 @@ add https support to get
 
 write some little tests
 
+create man pages
+
 ## getgbook
 
 Note: looks like google allows around 3 page requests per cookie session, and exactly 31 per ip per [some time period > 18 hours]. If I knew the time period, could make a script that gets maybe 20 pages, waits for some time period, then continues.

@@ -41,10 +41,10 @@ clean:
 dist:
 	mkdir -p $(NAME)-$(VERSION)
 	cp $(SRC) $(SCRIPTS) $(DOC) util.h util.c Makefile config.mk $(NAME)-$(VERSION)
-	tar c $(NAME)-$(VERSION) | gzip -c > $(NAME)-$(VERSION).tar.gz
-	gpg -b < $(NAME)-$(VERSION).tar.gz > $(NAME)-$(VERSION).tar.gz.sig
+	tar c $(NAME)-$(VERSION) | bzip2 -c > $(NAME)-$(VERSION).tar.bz2
+	gpg -b < $(NAME)-$(VERSION).tar.bz2 > $(NAME)-$(VERSION).tar.bz2.sig
 	rm -rf $(NAME)-$(VERSION)
-	echo $(NAME)-$(VERSION).tar.gz $(NAME)-$(VERSION).tar.gz.sig
+	echo $(NAME)-$(VERSION).tar.bz2 $(NAME)-$(VERSION).tar.bz2.sig
 
 index.html: doap.ttl README
 	echo making webpage
@@ -57,7 +57,7 @@ index.html: doap.ttl README
 	echo "</style></head><body>" >> $@
 	smu < README >> $@
 	echo "<h2>download</h2>" >> $@
-	echo "[$(NAME) $(VERSION)]($(NAME)-$(VERSION).tar.gz) ([sig]($(NAME)-$(VERSION).tar.gz.sig))" | smu >> $@
+	echo "[$(NAME) $(VERSION)]($(NAME)-$(VERSION).tar.bz2) ([sig]($(NAME)-$(VERSION).tar.bz2.sig))" | smu >> $@
 	echo '<hr />' >> $@
 	sh websummary.sh doap.ttl | smu >> $@
 	echo '</body></html>' >> $@
