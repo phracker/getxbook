@@ -1,12 +1,4 @@
-got a stack trace when a connection seemingly timed out (after around 30 successful calls to -p)
-
-getgmissing doesn't work brilliantly with preview books as it will always get 1st ~40 pages then get ip block. getgfailed will do a better job
-
-list all binaries in readme and what they do
-
 # other utils
-
-getgbooktxt (different program as it gets from html pages, which getgbook doesn't any more)
 
 getabook
 
@@ -24,12 +16,13 @@ write some little tests
 
 ## getgbook
 
-have file extension be determined by file type, rather than assuming png
+Note: looks like google allows around 3 page requests per cookie session, and exactly 31 per ip per [some time period > 18 hours]. If I knew the time period, could make a script that gets maybe 20 pages, waits for some time period, then continues.
 
-think about whether default functionality should be dl all, rather than -a
+got a stack trace when a connection seemingly timed out (after around 30 successful calls to -p). enable core dumping and re-run (note have done a small amount of hardening since, but bug is probably still there).
 
-to be fast and efficient it's best to crank through all the json 1st, filling in an array of page structs as we go
-	this requires slightly fuller json support
-	could consider making a json reading module, ala confoo, to make ad-hoc memory structures from json
-
-Note: looks like google allows around 3 page requests per cookie session, and exactly 31 per ip per [some time period]. If I knew the time period, could make a script that gets all it can, gets a list of failures, waits, then tries failures, etc. Note these would also have to stop at some point; some pages just aren't available
+running it from scripts (getgfailed.sh and getgmissing.sh), refuses to Ctrl-C exit, and creates 2 processes, which may be killed independently. not related to torify
+	multiple processes seems to be no bother
+	ctrl-c seems to be the loop continuing rather than breaking on ctrl-c; e.g. pressing it enough times to end loop works.
+	due to ctrl-c on a program which is using a pipe continues the loop rather than breaking it. using || break works, but breaks real functionality in the scripts 
+	see seq 5|while read i; do echo run $i; echo a|sleep 5||break; done vs seq 5|while read i; do echo run $i; echo a|sleep 5; do
+	trapping signals doesn't help; the trap is only reached on last iteration; e.g. when it will exit the script anyway

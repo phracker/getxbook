@@ -1,0 +1,31 @@
+# getxbook
+
+getxbook is a collection of programs to download books from
+several websites.
+
+* getgbook - downloads from google books' "book preview"
+* getabook - downloads from amazon's "look inside the book"
+  (coming soon)
+* getbnbook - downloads from barnes and noble's "book viewer"
+  (coming soon)
+
+## why
+
+Online book websites commodify reading. They are engineered not
+around reading, but around surveillance. It is not merely the
+selection of book that is recorded, but exactly what is read, when,
+and for how long. Forever. And it is linked to all other information
+the website holds about you (which in the case of Google and Amazon
+is likely a great deal).
+
+Reading books is one of the holiest acts in our society. Limiting
+our access, and monitoring it closely is a grave act. It is
+censorship, whether done for profit or for any other reason. And
+it is dangerous.
+
+The getxbook programs download books anonymously. Your IP address
+will still be logged (use [https://www.torproject.org](torify or torsocks)
+to stop this), but your reading won't be automatically linked to
+other information websites have about you, as no existing cookies
+are used. Once the book is downloaded, you can read it as you
+please without any further prying.
