@@ -38,7 +38,7 @@ Page *getpagedetail(char *bookid, char *pg, char *cookie)
 	if(!(c = strstr(buf,m)))
 		return NULL;
 
-	page = malloc(sizeof(Page));
+	page = malloc(sizeof(*page));
 	strncpy(page->name, pg, STRMAX);
 	page->url[0] = '\0';
 	page->num = -1;
