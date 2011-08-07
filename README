@@ -1,7 +1,6 @@
 # getxbook
 
-getxbook is a collection of programs to download books from
-several websites.
+getxbook is a collection of tools to download books from websites.
 
 * getgbook - downloads from google books' "book preview"
 * getabook - downloads from amazon's "look inside the book"
@@ -29,3 +28,7 @@ to stop this), but your reading won't be automatically linked to
 other information websites have about you, as no existing cookies
 are used. Once the book is downloaded, you can read it as you
 please without any further prying.
+
+Of course, being free to do what you like with it, you can also load
+the book onto any device you have access to, share it, study it, and
+anything else you can do with normal computer files.
