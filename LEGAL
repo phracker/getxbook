@@ -16,14 +16,15 @@ See section 5.3 of http://www.google.com/accounts/TOS.
 Their robots.txt allows certain book URLs, but disallows
 others.
 
-We use two types of URL:
+We use three types of URL:
+http://books.google.com/books?id=<bookid>&printsec=frontcover
 http://books.google.com/books?id=<bookid>&pg=<pgcode>&jscmd=click3
 http://books.google.com/books?id=<bookid>&pg=<pgcode>&img=1&zoom=3&hl=en&<sig>
 
 robots.txt disallows /books?*jscmd=* and /books?*pg=*. However,
 Google consider Allow statements to overrule disallow statements
 if they are longer. And they happen to allow /books?*q=subject:*.
-So, we append that to both url types (it has no effect on them),
-and we are obeying robots.txt
+So, we append that to the urls (it has no effect on them), and
+we are obeying robots.txt
 Details on how Google interprets robots.txt are at
 http://code.google.com/web/controlcrawlindex/docs/robots_txt.html

@@ -6,6 +6,8 @@ getbnbook
 
 # other todos
 
+use HTTP/1.1 with "Connection: close" header
+
 try supporting 3xx in get, if it can be done in a few lines
  by getting Location line, freeing buf, and returning a new
  iteration.
@@ -16,15 +18,28 @@ write some little tests
 
 create man pages
 
+have websummary.sh print the date of release, e.g.
+  getxbook 0.3 (sig) (2011-08-02)
+
 ## getgbook
 
-Note: looks like google allows around 3 page requests per cookie session, and exactly 31 per ip per [some time period > 18 hours]. If I knew the time period, could make a script that gets maybe 20 pages, waits for some time period, then continues.
+Google will give you up to 5 cookies which get useful pages in immediate succession. It will stop serving new pages to the ip, even with a fresh cookie. So the cookie is certainly not everything.
 
-got a stack trace when a connection seemingly timed out (after around 30 successful calls to -p). enable core dumping and re-run (note have done a small amount of hardening since, but bug is probably still there).
+If one does something too naughty, all requests from the ip to books.google.com are blocked with a 403 'automated requests' error for 24 hours. What causes this ip block is less clear. It certainly isn't after just trying lots of pages with 5 cookies. It seems to be after requesting 100 new cookies in a certain time period - 100 in 5 minutes seemed to do it, as did 100 in ~15 minutes.
 
-running it from scripts (getgfailed.sh and getgmissing.sh), refuses to Ctrl-C exit, and creates 2 processes, which may be killed independently. not related to torify
-	multiple processes seems to be no bother
-	ctrl-c seems to be the loop continuing rather than breaking on ctrl-c; e.g. pressing it enough times to end loop works.
-	due to ctrl-c on a program which is using a pipe continues the loop rather than breaking it. using || break works, but breaks real functionality in the scripts 
-	see seq 5|while read i; do echo run $i; echo a|sleep 5||break; done vs seq 5|while read i; do echo run $i; echo a|sleep 5; do
-	trapping signals doesn't help; the trap is only reached on last iteration; e.g. when it will exit the script anyway
+So, if no more than 5 useable cookies can be gotten, and many more than this cause an ip block, a strategy could be to not bother getting more than 5 cookies, and bail once the 5th starts failing. of course, this doesn't address getting more pages, and moreover it doesn't address knowing which pages are available.
+
+all pages available (includes page code & order (even when not available from main click3 part) (& title sometimes, & height), though not url): curl 'http://books.google.com/books?id=h3DSQ0L10o8C&printsec=frontcover' | sed -e '/OC_Run\(/!d' -e 's/.*_OC_Run\({"page"://g' -e 's/}].*//g'
+
+TODO, THEN:
+	at start (if in -p or -a mode), fill a Page struct (don't hold url in struct any more)
+	in -a, go through Page struct, if file exists, skip, otherwise get the url for the page (don't bother about re-getting order etc). this means that getgfailed and getgmissing can go away
+	in -p, just go through Page struct and print each entry
+	when 5 cookies have been exhausted, quit, saying no more cookies available for now (and recommending a time period to retry)
+	have -a be default, and stdin be -
+
+	so, usage should be
+	 getgbook [-] bookid
+	  if - is given, read page codes from stdin
+	  otherwise, just download everything (skipping already
+	  downloaded pages)
