@@ -44,32 +44,43 @@ int dial(char *host, char *port) {
 int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) {
 	size_t l, res;
 	int fd, i, p;
-	char h[HEADERMAX] = "\0";
+	char h[HDRMAX] = "\0";
 	char c[COOKIEMAX] = "";
-	FILE *srv;
+	char t[BUFSIZ];
+	char *t2;
 
+	/* TODO: should socket be closed after use? */
 	if((fd = dial(host, "80")) == -1) return 0;
-	srv = fdopen(fd, "r+");
 
 	if(sendcookie)
 		snprintf(c, COOKIEMAX, "\r\nCookie: %s", sendcookie);
-	fprintf(srv, "GET %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
-	             " (not mozilla)\r\nHost: %s%s\r\n\r\n", path, host, c);
-	fflush(srv);
+	snprintf(h, HDRMAX, "GET %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
+	                    " (not mozilla)\r\nHost: %s%s\r\n\r\n", path, host, c);
+	if(!send(fd, h, HDRMAX, 0)) return 0;
 
-	while(h[0] != '\r') {
-		if(!fgets(h, HEADERMAX, srv)) return 0;
-		if(sscanf(h, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
+	*buf = NULL;
+	l = 0;
+	while(recv(fd, t, 1024, 0) > 0) {
+		if(sscanf(t, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
 			return 0;
-		if(savecookie != NULL && sscanf(h, "Set-Cookie: %s;", c))
+		if(savecookie != NULL && sscanf(t, "Set-Cookie: %s;", c))
 			strncat(savecookie, c, COOKIEMAX);
+		if((t2 = strstr(t, "\r\n\r\n") + 4)) {
+			l = strlen(t2);
+			*buf = malloc(sizeof(char *) * l);
+			strncpy(*buf, t2, l);
+			break;
+		}
 	}
 
-	*buf = malloc(sizeof(char *) * BUFSIZ);
-	for(l=0; (res = fread(*buf+l, 1, BUFSIZ, srv)) > 0; l+=res)
+	printf("to start, got %d (%d) bytes:\n%s\n", l, strlen(*buf), *buf);
+
+	*buf = realloc(*buf, sizeof(char *) * (l+BUFSIZ));
+	for(; (res = recv(fd, *buf+l, BUFSIZ, 0)) > 0; l+=res)
 		*buf = realloc(*buf, sizeof(char *) * (l+BUFSIZ));
 
-	fclose(srv);
+	printf("got %d bytes (%d):\n%s\n", l, strlen(*buf), *buf);
+
 	return l;
 }
 
