@@ -4,6 +4,8 @@ getabook
 
 getbnbook
 
+use "" rather than "\0" in headermax
+
 # other todos
 
 use HTTP/1.1 with "Connection: close" header

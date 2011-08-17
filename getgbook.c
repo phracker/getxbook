@@ -5,15 +5,15 @@
 #include "util.h"
 
 #define usage "getgbook " VERSION " - a google books downloader\n" \
-              "usage: getgbook [-p|-a] bookid\n" \
-              "  -p print all available pages\n" \
-              "  -a download all available pages\n" \
-              "  otherwise, all pages in stdin will be downloaded\n"
+              "usage: getgbook [-] bookid\n" \
+              "  - download pages from stdin\n" \
+              "  otherwise, all available pages will be downloaded\n"
 
 #define URLMAX 1024
 #define STRMAX 1024
 #define PGCODELEN 3
 #define RETRYNUM 5
+#define COOKIENUM 5
 
 typedef struct {
 	int num;
@@ -22,6 +22,13 @@ typedef struct {
 } Page;
 
 char pagecodes[][PGCODELEN] = { "PP", "PR", "PA", "PT", "\0" };
+
+int getpagelist(char *bookid, Page *pages)
+{
+	/* TODO */
+	/*http://books.google.com/books?id=h3DSQ0L10o8C&printsec=frontcover*/
+	return 1;
+}
 
 Page *getpagedetail(char *bookid, char *pg, char *cookie)
 {
@@ -71,20 +78,48 @@ Page *getpagedetail(char *bookid, char *pg, char *cookie)
 
 int main(int argc, char *argv[])
 {
-	char *bookid, *tmp, *code;
+	char *bookid, *tmp, *code, cookies[COOKIENUM][COOKIEMAX];
 	char pg[STRMAX], buf[BUFSIZ], n[STRMAX], cookie[COOKIEMAX] = "";
 	int i, c, retry;
-	Page *page;
 
-	if(argc < 2 || argc > 3 ||
-	   (argv[1][0]=='-' && ((argv[1][1]!='p' && argv[1][1]!='a') || argc < 3))) {
+	if(argc < 2 || argc > 3 || (argc == 3 && argv[1][0]!='-')) {
 		fputs(usage, stdout);
 		return 1;
 	}
 
+	/* get cookies */
+	for(i=0;i<COOKIENUM;i++) {
+		get("books.google.com", "/", NULL, cookies[i], &tmp);
+		free(tmp);
+	}
+
 	bookid = argv[argc-1];
 
-	if(argv[1][0] == '-') {
+	if(argc == 2) {
+		/* download all pages */
+		/* - fill page struct with names & nums
+		 * - loop through each struct
+		 * - if there's not a file matching num, try downloading, if dl failure, try with a different cookie */
+		/*
+			cookie management:
+			use up to 5 cookies. (number might change)
+			complexity comes with a page which is not available; that shouldn't cause us to use up all the cookies
+			so:
+			 - save 5 cookies immediately
+			 - use first until it fails
+				 - then use next. if it succeeds, drop previous. if not, try next, etc. if all failed, don't drop any, and continue to next page, and +1 to retry
+			 - maybe: when retry is 5, quit as it looks like we won't get anything more from any cookies
+		*/
+
+		Page page[10000];
+		if(!getpagelist(bookid, page)) {
+			fprintf(stderr, "Could not find pages for %s\n", bookid);
+			return 1;
+		}
+
+
+
+		/* OLD CODE */
 		code = pagecodes[0];
 		c = i = retry = 0;
 		while(++i) {
@@ -129,6 +164,9 @@ int main(int argc, char *argv[])
 			free(page);
 		}
 	} else {
+		/* download pages from stdin */
+		/* TODO: rewrite using cookies as above */
+		Page *page;
 		while(fgets(buf, BUFSIZ, stdin)) {
 			sscanf(buf, "%15s", pg);
 			for(retry = 0; retry < RETRYNUM; retry++) {
