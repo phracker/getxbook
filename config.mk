@@ -16,8 +16,8 @@ CC = cc
 LDFLAGS = 
 
 # mingw
-CC = gcc
-CFLAGS = -ansi -Wall -DVERSION=\"$(VERSION)\" -DWINVER=0x0501
-LDFLAGS = -lws2_32
+#CC = gcc
+#CFLAGS = -ansi -Wall -DVERSION=\"$(VERSION)\" -DWINVER=0x0501
+#LDFLAGS = -lws2_32
 
 LD = $(CC)
