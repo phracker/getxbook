@@ -3,10 +3,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include "util.h"
+#ifndef WINVER
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include "util.h"
+#else
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#endif
 
 /* plundered from suckless' sic */
 int dial(char *host, char *port) {

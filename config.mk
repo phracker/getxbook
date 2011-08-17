@@ -15,4 +15,9 @@ CFLAGS = -ansi -pedantic -Wall -Wextra -Werror -g -D_POSIX_C_SOURCE=200112L \
 CC = cc
 LDFLAGS = 
 
+# mingw
+CC = gcc
+CFLAGS = -ansi -Wall -DVERSION=\"$(VERSION)\" -DWINVER=0x0501
+LDFLAGS = -lws2_32
+
 LD = $(CC)
