@@ -49,10 +49,9 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 	char t[BUFSIZ];
 	char *t2;
 
-	/* TODO: should socket be closed after use? */
 	if((fd = dial(host, "80")) == -1) return 0;
 
-	if(sendcookie)
+	if(sendcookie && sendcookie[0])
 		snprintf(c, COOKIEMAX, "\r\nCookie: %s", sendcookie);
 	snprintf(h, HDRMAX, "GET %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
 	                    " (not mozilla)\r\nHost: %s%s\r\n\r\n", path, host, c);
@@ -60,26 +59,23 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 
 	*buf = NULL;
 	l = 0;
-	while(recv(fd, t, 1024, 0) > 0) {
+	while((res = recv(fd, t, 1024, 0)) > 0) {
 		if(sscanf(t, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
 			return 0;
 		if(savecookie != NULL && sscanf(t, "Set-Cookie: %s;", c))
 			strncat(savecookie, c, COOKIEMAX);
 		if((t2 = strstr(t, "\r\n\r\n") + 4)) {
-			l = strlen(t2);
+			*(t2-1) = '\0';
+			l = res - strlen(t) - 1;
 			*buf = malloc(sizeof(char *) * l);
-			strncpy(*buf, t2, l);
+			memcpy(*buf, t2, l);
 			break;
 		}
 	}
 
-	printf("to start, got %d (%d) bytes:\n%s\n", l, strlen(*buf), *buf);
-
 	*buf = realloc(*buf, sizeof(char *) * (l+BUFSIZ));
 	for(; (res = recv(fd, *buf+l, BUFSIZ, 0)) > 0; l+=res)
 		*buf = realloc(*buf, sizeof(char *) * (l+BUFSIZ));
-
-	printf("got %d bytes (%d):\n%s\n", l, strlen(*buf), *buf);
 
 	return l;
 }

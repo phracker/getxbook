@@ -52,6 +52,7 @@ Page *getpagedetail(char *bookid, char *pg, char *cookie)
 				*p = *d;
 		}
 		strncpy(p, "&q=subject:a", 12);
+		*(p+12) = '\0';
 	} else
 		d=c;
 
