@@ -44,7 +44,7 @@ int dial(char *host, char *port) {
 int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) {
 	size_t l, res;
 	int fd, i, p;
-	char h[HDRMAX] = "\0";
+	char h[HDRMAX] = "";
 	char c[COOKIEMAX] = "";
 	char t[BUFSIZ];
 	char *t2;
@@ -59,7 +59,7 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 
 	*buf = NULL;
 	l = 0;
-	while((res = recv(fd, t, 1024, 0)) > 0) {
+	while((res = recv(fd, t, BUFSIZ, 0)) > 0) {
 		if(sscanf(t, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
 			return 0;
 		if(savecookie != NULL && sscanf(t, "Set-Cookie: %s;", c))
