@@ -89,8 +89,8 @@ int main(int argc, char *argv[])
 
 	/* get cookies */
 	for(i=0;i<COOKIENUM;i++) {
-		get("books.google.com", "/", NULL, cookies[i], &tmp);
-		free(tmp);
+		if(get("books.google.com", "/", NULL, cookies[i], &tmp))
+			free(tmp);
 	}
 
 	bookid = argv[argc-1];
