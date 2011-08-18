@@ -140,8 +140,8 @@ int main(int argc, char *argv[])
 		*/
 
 		Page **page;
-		page = malloc(sizeof(Page) * 1000);
-		for(i=0; i<1000; i++) page[i] = malloc(sizeof(*page));
+		page = malloc(sizeof(*page) * 1000);
+		for(i=0; i<1000; i++) page[i] = malloc(sizeof(**page));
 		if(!(i = getpagelist(bookid, page))) {
 			fprintf(stderr, "Could not find pages for %s\n", bookid);
 			return 1;
