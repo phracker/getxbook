@@ -72,8 +72,7 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 			return 0;
 		if(savecookie != NULL && sscanf(t, "Set-Cookie: %s;", c))
 			strncat(savecookie, c, COOKIEMAX);
-		t2 = strstr(t, "\r\n\r\n");
-		if(t2) {
+		if((t2 = strstr(t, "\r\n\r\n")) != NULL) {
 			t2+=4;
 			l = res - (t2 - t);
 			*buf = malloc(sizeof(char *) * l);
