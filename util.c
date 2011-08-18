@@ -19,6 +19,14 @@ int dial(char *host, char *port) {
 	int srv;
 	struct addrinfo *res, *r;
 
+	#ifdef WINVER
+	WSADATA w;
+	if(WSAStartup(MAKEWORD(2,2), &w)!= 0) {
+		fprintf(stderr, "error: failed to start winsock\n");
+		return -1;
+	}
+	#endif
+
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
@@ -64,9 +72,10 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 			return 0;
 		if(savecookie != NULL && sscanf(t, "Set-Cookie: %s;", c))
 			strncat(savecookie, c, COOKIEMAX);
-		if((t2 = strstr(t, "\r\n\r\n") + 4)) {
-			*(t2-1) = '\0';
-			l = res - strlen(t) - 1;
+		t2 = strstr(t, "\r\n\r\n");
+		if(t2) {
+			t2+=4;
+			l = res - (t2 - t);
 			*buf = malloc(sizeof(char *) * l);
 			memcpy(*buf, t2, l);
 			break;
@@ -89,13 +98,13 @@ int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *s
 		fprintf(stderr, "Could not download %s\n", url);
 		return 1;
 	}
-	if((f = fopen(savepath, "w")) == NULL) {
+	if((f = fopen(savepath, "wb")) == NULL) {
 		fprintf(stderr, "Could not create file %s\n", savepath);
 		free(buf); return 1;
 	}
 
-	for(i=0; i < l; i+=512)
-		if(!fwrite(buf+i, l-i > 512 ? 512 : l-i, 1, f)) {
+	for(i=0; i < l; i+=BUFSIZ)
+		if(!fwrite(buf+i, l-i > BUFSIZ ? BUFSIZ : l-i, 1, f)) {
 			fprintf(stderr, "Error writing file %s\n", savepath);
 			free(buf); fclose(f); return 1;
 		}
