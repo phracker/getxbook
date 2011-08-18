@@ -48,9 +48,8 @@ int getpagelist(char *bookid, Page **pages)
 			for(;*s; s++) {
 				if(*s == '}')
 					break;
-				if(!strncmp(s, "\"order\"", 7)) {
+				if(!strncmp(s, "\"order\"", 7))
 					sscanf(s+8, "%d,", &(p->num));
-				}
 			}
 			p=pages[++i];
 		}
