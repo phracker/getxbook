@@ -107,7 +107,9 @@ int main(int argc, char *argv[])
 	int a, i, j, totalpages;
 	FILE *f;
 
-	if(argc < 2 || argc > 3 || (argc == 3 && argv[1][0]!='-')) {
+	if(argc < 2 || argc > 3 || (argc == 3 && (argv[1][0]!='-'
+	   || (argv[1][1] != 'c' && argv[1][1] != 'n')))
+	   || (argc >= 2 && argv[1][0] == '-' && argv[1][1] == 'h')) {
 		fputs(usage, stdout);
 		return 1;
 	}
