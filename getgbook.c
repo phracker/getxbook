@@ -12,6 +12,7 @@
 
 #define URLMAX 1024
 #define STRMAX 1024
+#define MAXPAGES 9999
 #define COOKIENUM 5
 
 typedef struct {
@@ -121,8 +122,8 @@ int main(int argc, char *argv[])
 
 	if(argc == 2) {
 		Page **page;
-		page = malloc(sizeof(*page) * 1000);
-		for(i=0; i<1000; i++) page[i] = malloc(sizeof(**page));
+		page = malloc(sizeof(*page) * MAXPAGES);
+		for(i=0; i<MAXPAGES; i++) page[i] = malloc(sizeof(**page));
 		if(!(totalpages = getpagelist(bookid, page))) {
 			fprintf(stderr, "Could not find pages for %s\n", bookid);
 			return 1;
