@@ -56,6 +56,7 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 	char c[COOKIEMAX] = "";
 	char t[BUFSIZ];
 	char *t2;
+	char m[256];
 
 	if((fd = dial(host, "80")) == -1) return 0;
 
@@ -67,10 +68,12 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 
 	*buf = NULL;
 	l = 0;
+	snprintf(m, 256, "Set-Cookie: %%%ds;", COOKIEMAX-1);
 	while((res = recv(fd, t, BUFSIZ, 0)) > 0) {
 		if(sscanf(t, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
 			return 0;
-		if(savecookie != NULL && sscanf(t, "Set-Cookie: %s;", c))
+		if(savecookie != NULL &&
+		   (t2 = strstr(t, "Set-Cookie: ")) != NULL && sscanf(t2, m, c))
 			strncat(savecookie, c, COOKIEMAX);
 		if((t2 = strstr(t, "\r\n\r\n")) != NULL) {
 			t2+=4;

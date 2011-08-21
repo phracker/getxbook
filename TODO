@@ -6,6 +6,10 @@ getbnbook
 
 # other todos
 
+use wide string functions when dealing with stuff returned over http; it's known utf8
+
+bug in get(): if the \r\n\r\n after http headers is cut off between recv buffers
+
 use HTTP/1.1 with "Connection: close" header
 
 try supporting 3xx in get, if it can be done in a few lines
@@ -21,23 +25,12 @@ have websummary.sh print the date of release, e.g.
 
 ## getgbook
 
+mkdir of bookid and save pages in there
+
+### notes
+
 Google will give you up to 5 cookies which get useful pages in immediate succession. It will stop serving new pages to the ip, even with a fresh cookie. So the cookie is certainly not everything.
 
 If one does something too naughty, all requests from the ip to books.google.com are blocked with a 403 'automated requests' error for 24 hours. What causes this ip block is less clear. It certainly isn't after just trying lots of pages with 5 cookies. It seems to be after requesting 100 new cookies in a certain time period - 100 in 5 minutes seemed to do it, as did 100 in ~15 minutes.
 
-So, if no more than 5 useable cookies can be gotten, and many more than this cause an ip block, a strategy could be to not bother getting more than 5 cookies, and bail once the 5th starts failing. of course, this doesn't address getting more pages, and moreover it doesn't address knowing which pages are available.
-
-all pages available (includes page code & order (even when not available from main click3 part) (& title sometimes, & height), though not url): curl 'http://books.google.com/books?id=h3DSQ0L10o8C&printsec=frontcover' | sed -e '/OC_Run\(/!d' -e 's/.*_OC_Run\({"page"://g' -e 's/}].*//g'
-
-TODO, THEN:
-	at start (if in -p or -a mode), fill a Page struct (don't hold url in struct any more)
-	in -a, go through Page struct, if file exists, skip, otherwise get the url for the page (don't bother about re-getting order etc). this means that getgfailed and getgmissing can go away
-	in -p, just go through Page struct and print each entry
-	when 5 cookies have been exhausted, quit, saying no more cookies available for now (and recommending a time period to retry)
-	have -a be default, and stdin be -
-
-	so, usage should be
-	 getgbook [-] bookid
-	  if - is given, read page codes from stdin
-	  otherwise, just download everything (skipping already
-	  downloaded pages)
+The method of getting all pages from book webpage does miss some; they aren't all listed. These pages can often be requested, though, though at present getgbook can't, as if a page isn't in its initial structure it won't save the url, even if it's presented.

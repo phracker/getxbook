@@ -5,7 +5,7 @@ NAME = getxbook
 
 SRC = getgbook.c
 LIB = util.o
-SCRIPTS = getgmissing.sh getgfailed.sh makebookpdf.sh
+SCRIPTS = makebookpdf.sh
 DOC = README COPYING LEGAL
 
 BIN = $(SRC:.c=)
