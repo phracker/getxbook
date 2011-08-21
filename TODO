@@ -1,3 +1,10 @@
+# before 0.4
+
+mkdir of bookid and save pages in there
+
+have websummary.sh print the date of release, e.g.
+  getxbook 0.3 (sig) (2011-08-02)
+
 # other utils
 
 getabook
@@ -20,12 +27,7 @@ add https support to get
 
 write some little tests
 
-have websummary.sh print the date of release, e.g.
-  getxbook 0.3 (sig) (2011-08-02)
-
 ## getgbook
-
-mkdir of bookid and save pages in there
 
 ### notes
 
