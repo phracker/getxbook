@@ -41,6 +41,7 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 	int fd, i, p;
 	char h[HEADERMAX] = "\0";
 	char c[COOKIEMAX] = "";
+	char m[256];
 	FILE *srv;
 
 	if((fd = dial(host, "80")) == -1) return 0;
@@ -52,11 +53,13 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 	             " (not mozilla)\r\nHost: %s%s\r\n\r\n", path, host, c);
 	fflush(srv);
 
+	snprintf(m, 256, "Set-Cookie: %%%ds;", COOKIEMAX-1);
+
 	while(h[0] != '\r') {
 		if(!fgets(h, HEADERMAX, srv)) return 0;
 		if(sscanf(h, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
 			return 0;
-		if(savecookie != NULL && sscanf(h, "Set-Cookie: %s;", c))
+		if(savecookie != NULL && sscanf(h, m, c))
 			strncat(savecookie, c, COOKIEMAX);
 	}
 
