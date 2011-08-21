@@ -23,7 +23,7 @@ typedef struct {
 
 int getpagelist(char *bookid, Page **pages)
 {
-	char url[URLMAX];
+	char url[URLMAX], m[STRMAX];
 	char *buf;
 	char *s;
 	int i;
@@ -43,7 +43,8 @@ int getpagelist(char *bookid, Page **pages)
 		if(*s == ']')
 			break;
 		if(!strncmp(s, "\"pid\"", 5)) {
-			sscanf(s+6, "\"%[^\"]\",", p->name);
+			snprintf(m, STRMAX, "\"%%%d[^\"]\"", STRMAX-1);
+			sscanf(s+6, m, p->name);
 			for(;*s; s++) {
 				if(*s == '}')
 					break;
@@ -58,7 +59,7 @@ int getpagelist(char *bookid, Page **pages)
 }
 
 int getpageurls(char *bookid, Page **pages, int totalpages, char *pagecode, char *cookie) {
-	char url[URLMAX], code[STRMAX];
+	char url[URLMAX], code[STRMAX], m[STRMAX];
 	char *c, *d, *p, *buf = NULL;
 	int i;
 
@@ -69,7 +70,8 @@ int getpageurls(char *bookid, Page **pages, int totalpages, char *pagecode, char
 
 	c = buf;
 	while(*c && (c = strstr(c, "\"pid\":"))) {
-		if(!sscanf(c, "\"pid\":\"%[^\"]\"", code))
+		snprintf(m, STRMAX, "\"pid\":\"%%%d[^\"]\"", STRMAX-1);
+		if(!sscanf(c, m, code))
 			break;
 		for(; *c; c++) {
 			if(*c == '}') {
