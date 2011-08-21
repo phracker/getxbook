@@ -33,10 +33,10 @@ int getpagelist(char *bookid, Page **pages)
 	snprintf(url, URLMAX, "/books?id=%s&printsec=frontcover", bookid);
 
 	if(!get("books.google.com", url, NULL, NULL, &buf))
-		return -1;
+		return 0;
 
 	if((s = strstr(buf, "_OC_Run({\"page\":[")) == NULL)
-		return -1;
+		return 0;
 	s+=strlen("_OC_Run({\"page\":[");
 
 	for(i=0, p=pages[0];*s; s++) {
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 		page = malloc(sizeof(*page) * MAXPAGES);
 		for(i=0; i<MAXPAGES; i++) page[i] = malloc(sizeof(**page));
 		if(!(totalpages = getpagelist(bookid, page))) {
-			fprintf(stderr, "Could not find pages for %s\n", bookid);
+			fprintf(stderr, "Could not find any pages for %s\n", bookid);
 			return 1;
 		}
 		for(i=0; i<totalpages; i++) {

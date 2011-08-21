@@ -31,9 +31,14 @@ have websummary.sh print the date of release, e.g.
 
 mkdir of bookid and save pages in there
 
+add cmdline arguments for stdin parsing
+
+merge pageinfo branch
+
+### notes
+
 Google will give you up to 5 cookies which get useful pages in immediate succession. It will stop serving new pages to the ip, even with a fresh cookie. So the cookie is certainly not everything.
 
 If one does something too naughty, all requests from the ip to books.google.com are blocked with a 403 'automated requests' error for 24 hours. What causes this ip block is less clear. It certainly isn't after just trying lots of pages with 5 cookies. It seems to be after requesting 100 new cookies in a certain time period - 100 in 5 minutes seemed to do it, as did 100 in ~15 minutes.
 
-NOTE!!: the method of getting all pages from book page does miss some; they aren't all listed
-* these pages can often be requested, though
+The method of getting all pages from book webpage does miss some; they aren't all listed. These pages can often be requested, though.
