@@ -5,23 +5,21 @@
 #include "util.h"
 
 #define usage "getgbook " VERSION " - a google books downloader\n" \
-              "usage: getgbook [-] bookid\n" \
-              "  - download pages from stdin\n" \
+              "usage: getgbook [-c|-n] bookid\n" \
+              "  -c download pages from codes in stdin (TODO)\n" \
+              "  -n download pages from numbers in stdin (TODO)\n" \
               "  otherwise, all available pages will be downloaded\n"
 
 #define URLMAX 1024
 #define STRMAX 1024
-#define PGCODELEN 3
-#define RETRYNUM 5
 #define COOKIENUM 5
 
 typedef struct {
 	int num;
 	char url[URLMAX];
 	char name[STRMAX];
+	char cookie[COOKIEMAX];
 } Page;
-
-char pagecodes[][PGCODELEN] = { "PP", "PR", "PA", "PT", "\0" };
 
 int getpagelist(char *bookid, Page **pages)
 {
@@ -41,6 +39,7 @@ int getpagelist(char *bookid, Page **pages)
 	s+=strlen("_OC_Run({\"page\":[");
 
 	for(i=0, p=pages[0];*s; s++) {
+		p->url[0] = '\0';
 		if(*s == ']')
 			break;
 		if(!strncmp(s, "\"pid\"", 5)) {
@@ -58,56 +57,52 @@ int getpagelist(char *bookid, Page **pages)
 	return i;
 }
 
-Page *getpagedetail(char *bookid, char *pg, char *cookie)
-{
-	char url[URLMAX], m[STRMAX];
+int getpageurls(char *bookid, Page **pages, int totalpages, char *pagecode, char *cookie) {
+	char url[URLMAX], code[STRMAX];
 	char *c, *d, *p, *buf = NULL;
-	Page *page;
+	int i;
 
-	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3&q=subject:a", bookid, pg);
+	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3&q=subject:a", bookid, pagecode);
 
 	if(!get("books.google.com", url, cookie, NULL, &buf))
-		return NULL;
+		return 1;
 
-	snprintf(m, STRMAX, "\"pid\":\"%s\"", pg);
-	if(!(c = strstr(buf,m)))
-		return NULL;
-
-	page = malloc(sizeof(*page));
-	strncpy(page->name, pg, STRMAX);
-	page->url[0] = '\0';
-	page->num = -1;
-
-	if(!strncmp(c+strlen(m)+1, "\"src\"", 5)) {
-		for(p=page->url, d=c+strlen(m)+8; *d && *d != '"'; d++, p++) {
-			if(!strncmp(d, "\\u0026", 6)) {
-				*p = '&';
-				d+=5;
-			} else
-				*p = *d;
-		}
-		strncpy(p, "&q=subject:a", 12);
-	} else
-		d=c;
-
-	for(; *d; d++) {
-		if(*d == '}') {
+	c = buf;
+	while(*c && (c = strstr(c, "\"pid\":"))) {
+		if(!sscanf(c, "\"pid\":\"%[^\"]\"", code))
 			break;
-		}
-		if(!strncmp(d, "\"order\"", 7)) {
-			sscanf(d+8, "%d,", &(page->num));
-			break;
+		for(; *c; c++) {
+			if(*c == '}') {
+				break;
+			}
+			if(!strncmp(c, "\"src\"", 5)) {
+				for(i=0; i<totalpages; i++)
+					if(!strncmp(pages[i]->name, code, STRMAX))
+						break;
+				for(p=pages[i]->url, d=c+strlen("\"src\":")+1; *d && *d != '"'; d++, p++) {
+					if(!strncmp(d, "\\u0026", 6)) {
+						*p = '&';
+						d+=5;
+					} else
+						*p = *d;
+				}
+				strncpy(p, "&q=subject:a", 13);
+				strncpy(pages[i]->cookie, cookie, COOKIEMAX);
+				break;
+			}
 		}
 	}
 
 	free(buf);
-	return page;
+	return 0;
 }
 
 int main(int argc, char *argv[])
 {
 	char *bookid, *tmp, cookies[COOKIENUM][COOKIEMAX];
-	int i, a;
+	char pgpath[STRMAX];
+	int a, i, j, totalpages;
+	FILE *f;
 
 	if(argc < 2 || argc > 3 || (argc == 3 && argv[1][0]!='-')) {
 		fputs(usage, stdout);
@@ -123,30 +118,41 @@ int main(int argc, char *argv[])
 	bookid = argv[argc-1];
 
 	if(argc == 2) {
-		/* download all pages */
-		/* - fill page struct with names & nums
-		 * - loop through each struct
-		 * - if there's not a file matching num, try downloading, if dl failure, try with a different cookie */
-		/*
-			cookie management:
-			use up to 5 cookies. (number might change)
-			complexity comes with a page which is not available; that shouldn't cause us to use up all the cookies
-			so:
-			 - save 5 cookies immediately
-			 - use first until it fails
-				 - then use next. if it succeeds, drop previous. if not, try next, etc. if all failed, don't drop any, and continue to next page, and +1 to retry
-			 - maybe: when retry is 5, quit as it looks like we won't get anything more from any cookies
-		*/
-
 		Page **page;
 		page = malloc(sizeof(*page) * 1000);
 		for(i=0; i<1000; i++) page[i] = malloc(sizeof(**page));
-		if(!(i = getpagelist(bookid, page))) {
+		if(!(totalpages = getpagelist(bookid, page))) {
 			fprintf(stderr, "Could not find pages for %s\n", bookid);
 			return 1;
 		}
-		for(a=0; a<i; a++)
-			printf("page name: %s page num: %d\n", page[a]->name, page[a]->num);
+		for(i=0; i<totalpages; i++) {
+			snprintf(pgpath, STRMAX, "%04d.png", page[i]->num);
+			if((f = fopen(pgpath, "r")) != NULL) {
+				fclose(f);
+				continue;
+			}
+			if(page[i]->url[0] == '\0') {
+				for(j=0; j<COOKIENUM; j++) {
+					if(cookies[j][0] == '\0') /* dead cookie */
+						continue;
+					getpageurls(bookid, page, totalpages, page[i]->name, cookies[j]);
+					if(page[i]->url[0] != '\0') {
+						/* invalidate old cookies if one succeeded */
+						for(a=0; a<j; a++)
+							cookies[a][0] = '\0';
+						break;
+					}
+				}
+			}
+			if(page[i]->url[0] == '\0')
+				fprintf(stderr, "%s not found\n", page[i]->name);
+			else {
+				if(gettofile("books.google.com", page[i]->url, page[i]->cookie, NULL, pgpath))
+					fprintf(stderr, "%s failed\n", page[i]->name);
+				else
+					printf("%d downloaded\n", page[i]->num);
+			}
+		}
 	}
 
 	return EXIT_SUCCESS;
