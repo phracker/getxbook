@@ -1,0 +1,31 @@
+.\" See COPYING file for copyright, license and warranty details.
+.TH GETGBOOK 1 getgbook\-VERSION
+.SH NAME
+getgbook \- downloads books from google books
+.SH SYNOPSIS
+.B getgbook
+.RB [-c|-n]
+.RB bookid
+.SH DESCRIPTION
+getgbook downloads pages of books from google books' "book
+preview" service. Some pages are not available, in which
+case they will be skipped.
+.SH OPTIONS
+.TP
+.B \-c
+Downloads from page codes given on stdin (one code per line). 
+Google books page codes are on of the following, followed by
+a number:
+.RB PP
+.RB PR
+.RB PA
+.RB PT
+.TP
+.B \-n
+Downloads from page numbers given on stdin (one number per
+line).
+.TP
+.B bookid
+is the unique ID Google assigns to each book. It is 12
+characters long. It can be found by looking for the 'id='
+part of the URL of its Google Books page.

@@ -3,6 +3,7 @@ VERSION = 0.3
 
 # paths
 PREFIX = /usr/local
+MANPREFIX = $(PREFIX)/share/man
 
 CFLAGS = -ansi -pedantic -Wall -Wextra -Werror -g -D_POSIX_C_SOURCE=200112L \
          -DVERSION=\"$(VERSION)\"

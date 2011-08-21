@@ -9,6 +9,7 @@ SCRIPTS = getgmissing.sh getgfailed.sh makebookpdf.sh
 DOC = README COPYING LEGAL
 
 BIN = $(SRC:.c=)
+MAN = $(SRC:.c=.1)
 OBJ = $(SRC:.c=.o) $(LIB)
 
 all: $(BIN)
@@ -30,10 +31,14 @@ util.a: $(LIB)
 	@ranlib $@
 
 install: all
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp -f $(BIN) $(SCRIPTS) $(DESTDIR)$(PREFIX)/bin
+	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
+	for f in $(MAN); do sed "s/VERSION/$(VERSION)/g" < $$f > $(DESTDIR)$(MANPREFIX)/man1/$$f; done
 
 uninstall:
 	cd $(DESTDIR)$(PREFIX)/bin && rm -f $(BIN) $(SCRIPTS)
+	cd $(DESTDIR)$(MANPREFIX)/man1 && rm -f $(MAN)
 
 clean:
 	rm -f -- $(BIN) $(OBJ) util.a index.html

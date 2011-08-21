@@ -16,8 +16,6 @@ add https support to get
 
 write some little tests
 
-create man pages
-
 have websummary.sh print the date of release, e.g.
   getxbook 0.3 (sig) (2011-08-02)
 
