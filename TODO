@@ -17,7 +17,9 @@ use wide string functions when dealing with stuff returned over http; it's known
 
 bug in get(): if the \r\n\r\n after http headers is cut off between recv buffers
 
-use HTTP/1.1 with "Connection: close" header
+create a tcl/tk gui wrapper, which asks for the book downloader to run, the book id, and then shows output of stdout & stderr as it runs
+
+package for osx and windows
 
 try supporting 3xx in get, if it can be done in a few lines
  by getting Location line, freeing buf, and returning a new
@@ -27,7 +29,18 @@ add https support to get
 
 write some little tests
 
+would likely be rather tricky, but building for android
+would be nice. how it would work would be modifying the
+getgbook src slightly, redefining function calls to be
+findable by the java, and then writing java stuffs to call
+it. gui could either be done from the java directly, or from
+xml; both are gross options. see:
+http://developer.android.com/resources/tutorials/hello-world.html
+http://marakana.com/forums/android/examples/49.html
+
 ## getgbook
+
+use realloc to size pages memory structure appropriately
 
 ### notes
 
