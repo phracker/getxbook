@@ -64,7 +64,7 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 		snprintf(c, COOKIEMAX, "\r\nCookie: %s", sendcookie);
 	snprintf(h, HDRMAX, "GET %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
 	                    " (not mozilla)\r\nHost: %s%s\r\n\r\n", path, host, c);
-	if(!send(fd, h, HDRMAX, 0)) return 0;
+	if(!send(fd, h, strlen(h), 0)) return 0;
 
 	*buf = NULL;
 	l = 0;
