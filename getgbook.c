@@ -128,6 +128,7 @@ int getpage(Page *page)
 	}
 
 	printf("%d downloaded\n", page->num);
+	fflush(stdout);
 	return 0;
 }
 
