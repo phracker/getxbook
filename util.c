@@ -72,9 +72,13 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 	while((res = recv(fd, t, BUFSIZ, 0)) > 0) {
 		if(sscanf(t, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
 			return 0;
-		if(savecookie != NULL &&
-		   (t2 = strstr(t, "Set-Cookie: ")) != NULL && sscanf(t2, m, c))
-			strncat(savecookie, c, COOKIEMAX);
+		t2 = t;
+		if(savecookie != NULL) {
+			while((t2 = strstr(t2, "Set-Cookie: ")) && sscanf(t2, m, c)) {
+				strncat(savecookie, c, COOKIEMAX);
+				t2++;
+			}
+		}
 		if((t2 = strstr(t, "\r\n\r\n")) != NULL && (t2 - t) < (signed)res) {
 			t2+=4;
 			l = res - (t2 - t);

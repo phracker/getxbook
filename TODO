@@ -17,7 +17,9 @@ use wide string functions when dealing with stuff returned over http; it's known
 
 bug in get(): if the \r\n\r\n after http headers is cut off between recv buffers
 
-create a tcl/tk gui wrapper, which asks for the book downloader to run, the book id, and then shows output of stdout & stderr as it runs
+what happens if we receive not a http header? does recv loop forever, in a memory killing manner?
+
+print stderr in gui as well
 
 package for osx and windows
 
