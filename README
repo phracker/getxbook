@@ -33,6 +33,10 @@ Of course, being free to do what you like with it, you can also load
 the book onto any device you have access to, share it, study it, and
 anything else you can do with normal computer files.
 
+"I have sworn upon the altar of God eternal hostility against every
+form of tyranny over the mind of man."
+ - *Thomas Jefferson*
+
 ## technical
 
 Each tool is written in around 200 lines of portable C code, with no
