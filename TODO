@@ -5,6 +5,8 @@ mkdir of bookid and save pages in there
 have websummary.sh print the date of release, e.g.
   getxbook 0.3 (sig) (2011-08-02)
 
+before 1.0: create other 2 utilities, make sure memory usage is sensible, be unicode safe, package for osx & windows
+
 # other utils
 
 getabook
@@ -21,7 +23,8 @@ what happens if we receive not a http header? does recv loop forever, in a memor
 
 print stderr in gui as well
 
-package for osx and windows
+package for osx
+package for windows - ideally pack all in one binary
 
 try supporting 3xx in get, if it can be done in a few lines
  by getting Location line, freeing buf, and returning a new
