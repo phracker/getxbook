@@ -1,7 +1,3 @@
-# before 0.4
-
-mkdir of bookid and save pages in there
-
 before 1.0: create other 2 utilities, make sure memory usage is sensible, be unicode safe, package for osx & windows
 
 # other utils
@@ -12,11 +8,15 @@ getbnbook
 
 # other todos
 
+mkdir of bookid and save pages in there
+
 use wide string functions when dealing with stuff returned over http; it's known utf8
 
 bug in get(): if the \r\n\r\n after http headers is cut off between recv buffers
 
 what happens if we receive not a http header? does recv loop forever, in a memory killing manner?
+
+be more reasonable with memory: only allocate each page when it's processed, point to cookies rather than copy them
 
 print stderr in gui as well
 
