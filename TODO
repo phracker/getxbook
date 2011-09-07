@@ -2,9 +2,6 @@
 
 mkdir of bookid and save pages in there
 
-have websummary.sh print the date of release, e.g.
-  getxbook 0.3 (sig) (2011-08-02)
-
 before 1.0: create other 2 utilities, make sure memory usage is sensible, be unicode safe, package for osx & windows
 
 # other utils

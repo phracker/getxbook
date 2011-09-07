@@ -41,5 +41,5 @@ form of tyranny over the mind of man."
 
 Each tool is written in around 200 lines of portable C code, with no
 dependencies beyond libc. They should work well on Linux, BSDs, OSX
-and Windows. There is also an optional graphical interface, written
-in Tcl/Tk.
+and Windows. There is also an optional graphical interface, using
+Tcl/Tk.
