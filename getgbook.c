@@ -45,10 +45,11 @@ int getpagelist()
 	s+=strlen("_OC_Run({\"page\":[");
 
 	for(i=0, p=pages[0];*s; s++) {
-		p->url[0] = '\0';
 		if(*s == ']')
 			break;
 		if(!strncmp(s, "\"pid\"", 5)) {
+			p=pages[i++]=malloc(sizeof(**pages));;
+			p->url[0] = '\0';
 			snprintf(m, STRMAX, "\"%%%d[^\"]\"", STRMAX-1);
 			sscanf(s+6, m, p->name);
 			for(;*s; s++) {
@@ -57,7 +58,6 @@ int getpagelist()
 				if(!strncmp(s, "\"order\"", 7))
 					sscanf(s+8, "%d,", &(p->num));
 			}
-			p=pages[++i];
 		}
 	}
 
@@ -175,7 +175,6 @@ int main(int argc, char *argv[])
 	bookid = argv[argc-1];
 
 	pages = malloc(sizeof(*pages) * MAXPAGES);
-	for(i=0; i<MAXPAGES; i++) pages[i] = malloc(sizeof(**pages));
 	if(!(totalpages = getpagelist(bookid, pages))) {
 		fprintf(stderr, "Could not find any pages for %s\n", bookid);
 		return 1;
@@ -220,7 +219,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	for(i=0; i<MAXPAGES; i++) free(pages[i]);
+	for(i=0; i<totalpages; i++) free(pages[i]);
 	free(pages);
 
 	return EXIT_SUCCESS;
