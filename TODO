@@ -16,8 +16,6 @@ bug in get(): if the \r\n\r\n after http headers is cut off between recv buffers
 
 what happens if we receive not a http header? does recv loop forever, in a memory killing manner?
 
-be more reasonable with memory: point to cookies rather than copy them
-
 print stderr in gui as well
 
 package for osx

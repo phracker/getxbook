@@ -19,7 +19,7 @@ typedef struct {
 	int num;
 	char url[URLMAX];
 	char name[STRMAX];
-	char cookie[COOKIEMAX];
+	char *cookie;
 } Page;
 
 Page **pages;
@@ -102,7 +102,7 @@ int getpageurls(char *pagecode, char *cookie) {
 						*p = *d;
 				}
 				strncpy(p, "&q=subject:a", 13);
-				strncpy(pages[j]->cookie, cookie, COOKIEMAX);
+				pages[j]->cookie = cookie;
 				break;
 			}
 		}
