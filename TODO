@@ -38,10 +38,6 @@ xml; both are gross options. see:
 http://developer.android.com/resources/tutorials/hello-world.html
 http://marakana.com/forums/android/examples/49.html
 
-## getgbook
-
-use realloc to size pages memory structure appropriately
-
 ### notes
 
 Google will give you up to 5 cookies which get useful pages in immediate succession. It will stop serving new pages to the ip, even with a fresh cookie. So the cookie is certainly not everything.
