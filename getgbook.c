@@ -44,7 +44,7 @@ int getpagelist()
 		return 0;
 	s+=strlen("_OC_Run({\"page\":[");
 
-	for(i=0, p=pages[0];*s; s++) {
+	for(i=0, p=pages[0];*s && i<MAXPAGES; s++) {
 		if(*s == ']')
 			break;
 		if(!strncmp(s, "\"pid\"", 5)) {
@@ -67,7 +67,7 @@ int getpagelist()
 
 int getpageurls(char *pagecode, char *cookie) {
 	char url[URLMAX], code[STRMAX], m[STRMAX];
-	char *c, *d, *p, *buf = NULL;
+	char *c, *d, *p, *q, *buf = NULL;
 	int i, j;
 
 	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3&q=subject:a", bookid, pagecode);
@@ -94,7 +94,7 @@ int getpageurls(char *pagecode, char *cookie) {
 				}
 				if(j == -1) /* TODO: it would be good to add new page on the end */
 					break;  /*       of structure rather than throw it away. */
-				for(p=pages[j]->url, d=c+strlen("\"src\":")+1; *d && *d != '"'; d++, p++) {
+				for(p=pages[j]->url, q=(pages[j]->url-(STRMAX-13-1)), d=c+strlen("\"src\":")+1; *d && *d != '"' && p != q; d++, p++) {
 					if(!strncmp(d, "\\u0026", 6)) {
 						*p = '&';
 						d+=5;
