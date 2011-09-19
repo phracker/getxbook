@@ -3,7 +3,7 @@ include config.mk
 
 NAME = getxbook
 
-SRC = getgbook.c
+SRC = getgbook.c getabook.c
 LIB = util.o
 SCRIPTS = makebookpdf.sh getxbookgui
 DOC = README COPYING LEGAL
