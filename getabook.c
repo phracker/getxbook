@@ -55,12 +55,11 @@ int getpagelist()
 int getpageurls(int pagenum) {
 	char url[URLMAX], m[STRMAX];
 	char *c, *s, *buf = NULL;
-	size_t l;
 	int i;
 
 	snprintf(url, URLMAX, "/gp/search-inside/service-data?method=goToPage&asin=%s&page=%d", bookid, pagenum);
 
-	if(!(l = get("www.amazon.com", url, NULL, NULL, &buf)))
+	if(!get("www.amazon.com", url, NULL, NULL, &buf))
 		return 1;
 
 	s = strstr(buf, "\"jumboImageUrls\":{") + strlen("\"jumboImageUrls\":{");
