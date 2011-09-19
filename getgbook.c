@@ -6,8 +6,8 @@
 
 #define usage "getgbook " VERSION " - a google books downloader\n" \
               "usage: getgbook [-c|-n] bookid\n" \
-              "  -c download pages from codes in stdin (TODO)\n" \
-              "  -n download pages from numbers in stdin (TODO)\n" \
+              "  -c download pages from codes in stdin\n" \
+              "  -n download pages from numbers in stdin\n" \
               "  otherwise, all available pages will be downloaded\n"
 
 #define URLMAX 1024

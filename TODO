@@ -1,4 +1,4 @@
-before 1.0: create other 2 utilities, make sure memory usage is sensible, be unicode safe, package for osx & windows
+before 1.0: create other 2 utilities, fix http bugs, be unicode safe, package for osx & windows
 
 # other utils
 
