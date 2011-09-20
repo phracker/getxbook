@@ -62,7 +62,11 @@ int getpageurls(int pagenum) {
 	if(!get("www.amazon.com", url, NULL, NULL, &buf))
 		return 1;
 
-	s = strstr(buf, "\"jumboImageUrls\":{") + strlen("\"jumboImageUrls\":{");
+	if(!(s = strstr(buf, "\"jumboImageUrls\":{"))) {
+		free(buf);
+		return 1;
+	}
+	s += strlen("\"jumboImageUrls\":{");
 
 	for(i=0; *s && i<numpages; i++) {
 		c = s;
@@ -80,7 +84,7 @@ int getpageurls(int pagenum) {
 			continue;
 
 		c += strlen(m);
-		if(!sscanf(c, "\"%[^\"]\"", pages[i]->url))
+		if(!sscanf(c, "\"//sitb-images.amazon.com%[^\"]\"", pages[i]->url))
 			continue;
 	}
 
@@ -88,19 +92,18 @@ int getpageurls(int pagenum) {
 	return 0;
 }
 
-/*
 int getpage(Page *page)
 {
 	char path[STRMAX];
 	snprintf(path, STRMAX, "%04d.png", page->num);
 
 	if(page->url[0] == '\0') {
-		fprintf(stderr, "%s not found\n", page->name);
+		fprintf(stderr, "%d not found\n", page->num);
 		return 1;
 	}
 
-	if(gettofile("books.google.com", page->url, page->cookie, NULL, path)) {
-		fprintf(stderr, "%s failed\n", page->name);
+	if(gettofile("sitb-images.amazon.com", page->url, NULL, NULL, path)) {
+		fprintf(stderr, "%d failed\n", page->num);
 		return 1;
 	}
 
@@ -108,17 +111,13 @@ int getpage(Page *page)
 	fflush(stdout);
 	return 0;
 }
-*/
 
 int main(int argc, char *argv[])
 {
-	/*char *tmp;
 	char buf[BUFSIZ], pgpath[STRMAX];
 	char in[16];
 	int a, i, n;
-	FILE *f;*/
-
-	int i;
+	FILE *f;
 
 	if(argc < 2 || argc > 3 ||
 	   (argc == 3 && (argv[1][0]!='-' || argv[1][1] != 'n'))
@@ -135,15 +134,6 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	for(i=0; i<numpages; i++) {
-		if(pages[i]->url[0] == '\0')
-			getpageurls(pages[i]->num);
-		printf("page %d is %s\n", pages[i]->num, pages[i]->url);
-	}
-
-	return 0;
-
-/*
 	if(argc == 2) {
 		for(i=0; i<numpages; i++) {
 			snprintf(pgpath, STRMAX, "%04d.png", pages[i]->num);
@@ -151,38 +141,30 @@ int main(int argc, char *argv[])
 				fclose(f);
 				continue;
 			}
-			searchpage(pages[i]);
+			if(pages[i]->url[0] == '\0')
+				getpageurls(pages[i]->num);
 			getpage(pages[i]);
 		}
-	} else if(argv[1][0] == '-') {
+	} else if(argv[1][0] == '-' && argv[1][1] == 'n') {
 		while(fgets(buf, BUFSIZ, stdin)) {
 			sscanf(buf, "%15s", in);
 			i = -1;
-			if(argv[1][1] == 'c') {
-				for(a=0; a<numpages; a++) {
-					if(strncmp(pages[a]->name, in, STRMAX) == 0) {
-						i = a;
-						break;
-					}
-				}
-			} else if(argv[1][1] == 'n') {
-				sscanf(in, "%d", &n);
-				for(a=0; a<numpages; a++) {
-					if(pages[a]->num == n) {
-						i = a;
-						break;
-					}
+			sscanf(in, "%d", &n);
+			for(a=0; a<numpages; a++) {
+				if(pages[a]->num == n) {
+					i = a;
+					break;
 				}
 			}
 			if(i == -1) {
 				fprintf(stderr, "%s not found\n", in);
 				continue;
 			}
-			searchpage(pages[i]);
+			if(pages[i]->url[0] == '\0')
+				getpageurls(pages[i]->num);
 			getpage(pages[i]);
 		}
 	}
-*/
 
 	for(i=0; i<numpages; i++) free(pages[i]);
 	free(pages);

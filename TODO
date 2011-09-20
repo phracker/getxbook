@@ -1,10 +1,10 @@
 before 1.0: create other 2 utilities, fix http bugs, be unicode safe, package for osx & windows
 
-# other utils
+# getabook
 
-getabook
+parse jumboImageUrls in getBookData
 
-getbnbook
+# getbnbook
 
 # other todos
 
