@@ -22,45 +22,10 @@ Page **pages;
 int numpages;
 char *bookid;
 
-int getpagelist()
-{
-	char url[URLMAX], b[STRMAX];
-	char *buf = NULL;
-	char *s, *c;
+int fillurls(char *buf) {
+	char m[STRMAX];
+	char *c, *s;
 	int i;
-	Page *p;
-
-	snprintf(url, URLMAX, "/gp/search-inside/service-data?method=getBookData&asin=%s", bookid);
-
-	if(!get("www.amazon.com", url, NULL, NULL, &buf))
-		return 0;
-
-	if((s = strstr(buf, "\"litbPages\":[")) == NULL)
-		return 0;
-	s+=strlen("\"litbPages\":[");
-
-	for(i=0, p=pages[0];*s && i<MAXPAGES; s++) {
-		for(c = b; *s != ',' && *s != ']'; s++, c++) *c = *s;
-		*(c+1) = '\0';
-		p=pages[i++]=malloc(sizeof(**pages));;
-		sscanf(b, "%d,", &(p->num));
-		if(s[0] == ']')
-			break;
-		p->url[0] = '\0';
-	}
-	free(buf);
-	return i;
-}
-
-int getpageurls(int pagenum) {
-	char url[URLMAX], m[STRMAX];
-	char *c, *s, *buf = NULL;
-	int i;
-
-	snprintf(url, URLMAX, "/gp/search-inside/service-data?method=goToPage&asin=%s&page=%d", bookid, pagenum);
-
-	if(!get("www.amazon.com", url, NULL, NULL, &buf))
-		return 1;
 
 	if(!(s = strstr(buf, "\"jumboImageUrls\":{"))) {
 		free(buf);
@@ -72,7 +37,7 @@ int getpageurls(int pagenum) {
 		c = s;
 
 		snprintf(m, STRMAX, "\"%d\":", pages[i]->num);
-		
+
 		while(strncmp(c, m, strlen(m)) != 0) {
 			while(*c && *c != '}' && *c != ',')
 				c++;
@@ -89,6 +54,53 @@ int getpageurls(int pagenum) {
 	}
 
 	free(buf);
+	return 0;
+}
+
+int getpagelist()
+{
+	char url[URLMAX], b[STRMAX];
+	char *buf = NULL;
+	char *s, *c;
+	int i;
+	Page *p;
+
+	snprintf(url, URLMAX, "/gp/search-inside/service-data?method=getBookData&asin=%s", bookid);
+
+	if(!get("www.amazon.com", url, NULL, NULL, &buf))
+		return 1;
+
+	if((s = strstr(buf, "\"litbPages\":[")) == NULL)
+		return 1;
+	s+=strlen("\"litbPages\":[");
+
+	for(i=0, p=pages[0];*s && i<MAXPAGES; s++) {
+		for(c = b; *s != ',' && *s != ']'; s++, c++) *c = *s;
+		*(c+1) = '\0';
+		p=pages[i++]=malloc(sizeof(**pages));;
+		sscanf(b, "%d,", &(p->num));
+		if(s[0] == ']')
+			break;
+		p->url[0] = '\0';
+	}
+	numpages = i;
+
+	fillurls(buf);
+
+	return 0;
+}
+
+int getpageurls(int pagenum) {
+	char url[URLMAX];
+	char *buf = NULL;
+
+	snprintf(url, URLMAX, "/gp/search-inside/service-data?method=goToPage&asin=%s&page=%d", bookid, pagenum);
+
+	if(!get("www.amazon.com", url, NULL, NULL, &buf))
+		return 1;
+
+	fillurls(buf);
+
 	return 0;
 }
 
@@ -129,7 +141,7 @@ int main(int argc, char *argv[])
 	bookid = argv[argc-1];
 
 	pages = malloc(sizeof(*pages) * MAXPAGES);
-	if(!(numpages = getpagelist(bookid, pages))) {
+	if(getpagelist(bookid, pages)) {
 		fprintf(stderr, "Could not find any pages for %s\n", bookid);
 		return 1;
 	}

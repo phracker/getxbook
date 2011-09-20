@@ -2,7 +2,7 @@ before 1.0: create other 2 utilities, fix http bugs, be unicode safe, package fo
 
 # getabook
 
-parse jumboImageUrls in getBookData
+not all pages of 0312607172 are got, though they're available from web interface. maybe cookies are needed after all :(
 
 # getbnbook
 
