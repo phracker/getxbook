@@ -25,6 +25,7 @@ print stderr in gui as well
 package for osx
 package for windows
 	have tcl as a starpack. have it always reference the executables in its directory, and we're golden.
+	http://www.digital-smarties.com/Tcl2002/tclkit.pdf
 
 try supporting 3xx in get, if it can be done in a few lines
  by getting Location line, freeing buf, and returning a new
