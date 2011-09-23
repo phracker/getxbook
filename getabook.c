@@ -28,7 +28,6 @@ int fillurls(char *buf) {
 	int i;
 
 	if(!(s = strstr(buf, "\"jumboImageUrls\":{"))) {
-		free(buf);
 		return 1;
 	}
 	s += strlen("\"jumboImageUrls\":{");
@@ -53,7 +52,6 @@ int fillurls(char *buf) {
 			continue;
 	}
 
-	free(buf);
 	return 0;
 }
 
@@ -87,6 +85,7 @@ int getpagelist()
 
 	fillurls(buf);
 
+	free(buf);
 	return 0;
 }
 
@@ -101,6 +100,7 @@ int getpageurls(int pagenum) {
 
 	fillurls(buf);
 
+	free(buf);
 	return 0;
 }
 
