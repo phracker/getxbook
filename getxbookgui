@@ -1,8 +1,8 @@
-#!/usr/bin/tclsh
+#!/usr/bin/tclsh8.5
 # See COPYING file for copyright and license details.
 package require Tk
 
-set bin [list getgbook]
+set bin [list getgbook getabook]
 
 proc go {} {
 	set cmd "[.bin get [.bin curselection]] [.id get]"
@@ -12,6 +12,7 @@ proc go {} {
 		.txt insert end "\n"
 		update
 	}
+	.txt insert end "done"
 }
 
 label .lab -text "book id"
