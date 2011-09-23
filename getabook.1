@@ -1,0 +1,22 @@
+.\" See COPYING file for copyright, license and warranty details.
+.TH GETABOOK 1 getabook\-VERSION
+.SH NAME
+getabook \- downloads books from amazon
+.SH SYNOPSIS
+.B getabook
+.RB [-n]
+.RB asin
+.SH DESCRIPTION
+getabook downloads pages of books from amazon's "search
+inside this book" service. Some pages are not available, in
+which case they will be skipped.
+.SH OPTIONS
+.TP
+.B \-n
+Downloads from page numbers given on stdin (one number per
+line).
+.TP
+.B asin
+is the unique ID Amazon assigns to each product. It is 10
+characters long. It can be found by looking for the
+'/xxxxxxxxxx/' part of the URL of its Amazon page.
