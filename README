@@ -13,7 +13,7 @@ getxbook is a collection of tools to download books from websites.
 Online book websites are engineered not around reading, but around
 surveillance. It is not merely the selection of book that is
 recorded, but exactly what is read, when, and for how long.
-Forever. And it is linked to all other information the website
+Forever. And this is linked to all other information the website
 holds about you (which in the case of Google and Amazon is likely
 a great deal).
 
@@ -40,6 +40,6 @@ form of tyranny over the mind of man."
 ## technical
 
 Each tool is written in around 200 lines of portable C code, with no
-dependencies beyond libc. They should work well on Linux, BSDs, OSX
-and Windows. There is also an optional graphical interface, using
-Tcl/Tk.
+dependencies beyond libc and network sockets. It should work well on
+Linux, BSDs, OSX and Windows. There is also an optional graphical
+interface, built with Tcl/Tk.
