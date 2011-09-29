@@ -1,13 +1,10 @@
 # Overview
 
-None of the getxbook tools seek to hide what they do. They use
-the User Agent getxbook (though this can be easily changed in
-util.c, or by using a proxy).
-
-While legal "agreements" (which company lawyers consider signed
-by use of the service) tend to be hostile, using the standard
-for determining what an automated tool is allowed to do on a
-server, robots.txt, all of the getxbook tools are permitted.
+While legal "agreements" (which consider themselves signed
+by using a service they mention) tend to be hostile, using
+the standard for determining what an automated tool is
+allowed to do on a server, robots.txt, all of the getxbook
+tools are permitted.
 
 # Getgbook
 
