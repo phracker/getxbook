@@ -91,11 +91,13 @@ int getpagelist()
 
 int getpageurls(int pagenum) {
 	char url[URLMAX];
+	char query[URLMAX];
 	char *buf = NULL;
 
-	snprintf(url, URLMAX, "/gp/search-inside/service-data?method=goToPage&asin=%s&page=%d", bookid, pagenum);
+	strncpy(url, "/gp/search-inside/service-data", URLMAX);
+	snprintf(query, URLMAX, "method=goToPage&asin=%s&page=%d", bookid, pagenum);
 
-	if(!get("www.amazon.com", url, NULL, NULL, &buf))
+	if(!post("www.amazon.com", url, query, &buf))
 		return 1;
 
 	fillurls(buf);

@@ -120,3 +120,41 @@ int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *s
 
 	return 0;
 }
+
+int post(char *host, char *path, char *data, char **buf) {
+	size_t l, res;
+	int fd, i, p;
+	char h[HDRMAX] = "";
+	char t[BUFSIZ];
+	char *t2;
+
+	if((fd = dial(host, "80")) == -1) return 0;
+
+	snprintf(h, HDRMAX, "POST %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
+	                    " (not mozilla)\r\nContent-Length: %d\r\n" \
+	                    "Content-Type: application/x-www-form-urlencoded\r\n" \
+	                    "Host: %s\r\n\r\n%s\r\n",
+	                    path, strlen(data), host, data);
+	if(!send(fd, h, strlen(h), 0)) return 0;
+
+	*buf = NULL;
+	l = 0;
+	while((res = recv(fd, t, BUFSIZ, 0)) > 0) {
+		if(sscanf(t, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
+			return 0;
+		t2 = t;
+		if((t2 = strstr(t, "\r\n\r\n")) != NULL && (t2 - t) < (signed)res) {
+			t2+=4;
+			l = res - (t2 - t);
+			*buf = malloc(sizeof(char *) * l);
+			memcpy(*buf, t2, l);
+			break;
+		}
+	}
+
+	*buf = realloc(*buf, sizeof(char *) * (l+BUFSIZ));
+	for(; (res = recv(fd, *buf+l, BUFSIZ, 0)) > 0; l+=res)
+		*buf = realloc(*buf, sizeof(char *) * (l+BUFSIZ));
+
+	return l;
+}
