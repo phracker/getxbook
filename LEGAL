@@ -1,6 +1,17 @@
+# Overview
+
+None of the getxbook tools seek to hide what they do. They use
+the User Agent getxbook (though this can be easily changed in
+util.c, or by using a proxy).
+
+While legal "agreements" (which company lawyers consider signed
+by use of the service) tend to be hostile, using the standard
+for determining what an automated tool is allowed to do on a
+server, robots.txt, all of the getxbook tools are permitted.
+
 # Getgbook
 
-## TOS
+## Terms of Service
 
 Google's terms of service are ambiguous. On the one hand they
 forbid using anything but a browser to access their sites.
@@ -28,3 +39,29 @@ So, we append that to the urls (it has no effect on them), and
 we are obeying robots.txt
 Details on how Google interprets robots.txt are at
 http://code.google.com/web/controlcrawlindex/docs/robots_txt.html
+
+# Getabook
+
+## Conditions of Use
+
+With Amazon, massive overreach rules the day. In the "license and
+site access" section of Amazon.com's Conditions of Use, they state
+that downloading any part of their website except for page caching
+is forbidden, and that using "robots, or similar data gathering
+and extraction tools" is also not allowed.
+http://www.amazon.com/gp/help/customer/display.html/ref=x?nodeId=508088
+
+Thankfully, however, the rules set out in Amazon's robots.txt tells
+a different story. Given that these explicitly lay down the rules
+for automated downloading tools, it seems reasonable too take them
+as representative of accepted policy.
+
+## robots.txt
+
+Amazon's main robots.txt allows all of the request types we make.
+
+## Curious
+
+One other curious sentiment in the Conditions of Use is the clause
+"we each waive any right to a jury trial." Amazon's is truly a
+Brave New World.
