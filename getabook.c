@@ -5,7 +5,7 @@
 #include "util.h"
 
 #define usage "getabook " VERSION " - an amazon look inside the book downloader\n" \
-              "usage: getabook [-c|-n] asin\n" \
+              "usage: getabook [-n] asin\n" \
               "  -n download pages from numbers in stdin\n" \
               "  otherwise, all available pages will be downloaded\n"
 
