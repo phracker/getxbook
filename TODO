@@ -1,8 +1,4 @@
-before 1.0: create other 2 utilities, fix http bugs, be unicode safe, package for osx & windows
-
-# getabook
-
-not all pages of 0312607172 are got, though they're available from web interface. maybe cookies are needed after all :(
+before 1.0: create bn tool, fix http bugs, be unicode safe, package for osx & windows
 
 # getbnbook
 
@@ -16,7 +12,7 @@ use wide string functions when dealing with stuff returned over http; it's known
 	this means c99, rather than plain ansi c. worth it.
 	alternative is to just use our own bit of utf-8 handling; we only need to know to skip x number of bytes to get one char at a time, to find next char etc. whether this would get more tricky, being unable to use strcmp etc, to make it not worthwhile, is not yet certain. try it and see if it fits. note st has nice homemade utf8 support.
 
-bug in get(): if the \r\n\r\n after http headers is cut off between recv buffers
+bug in get() & post(): if the \r\n\r\n after http headers is cut off between recv buffers
 
 what happens if we receive not a http header? does recv loop forever, in a memory killing manner?
 
