@@ -4,7 +4,7 @@
 @prefix :     <http://njw.me.uk/software/getxbook/#>.
 
 :p a doap:Project;
-	doap:name "Getxbook";
+	doap:name "getxbook";
 	doap:shortdesc "A collection of tools to download books from websites";
 	doap:homepage <http://njw.me.uk/software/getxbook/>;
 	doap:repository :repo;
