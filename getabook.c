@@ -68,6 +68,13 @@ int getpagelist()
 	if(!get("www.amazon.com", url, NULL, NULL, &buf))
 		return 1;
 
+	/* amazon have a canonical asin, which is needed to get all available pages */
+	if((s = strstr(buf, "\"ASIN\":\"")) != NULL) {
+		s+=strlen("\"ASIN\":\"");
+		strncpy(bookid, s, 10);
+		bookid[10] = '\0';
+	}
+
 	if((s = strstr(buf, "\"litbPages\":[")) == NULL)
 		return 1;
 	s+=strlen("\"litbPages\":[");
