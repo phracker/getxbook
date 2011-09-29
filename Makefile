@@ -6,7 +6,7 @@ NAME = getxbook
 SRC = getgbook.c getabook.c
 LIB = util.o
 SCRIPTS = makebookpdf.sh getxbookgui
-DOC = README COPYING LEGAL
+DOC = README COPYING INSTALL LEGAL
 
 BIN = $(SRC:.c=)
 MAN = $(SRC:.c=.1)
