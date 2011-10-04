@@ -134,7 +134,7 @@ int post(char *host, char *path, char *data, char **buf) {
 	                    " (not mozilla)\r\nContent-Length: %d\r\n" \
 	                    "Content-Type: application/x-www-form-urlencoded\r\n" \
 	                    "Host: %s\r\n\r\n%s\r\n",
-	                    path, strlen(data), host, data);
+	                    path, (int)strlen(data), host, data);
 	if(!send(fd, h, strlen(h), 0)) return 0;
 
 	*buf = NULL;
