@@ -4,7 +4,6 @@ before 1.0: create bn tool, fix http bugs, be unicode safe, package for osx & wi
 
 # other todos
 
-mkdir of bookid and save pages in there
 
 use wide string functions when dealing with stuff returned over http; it's known utf8
 	http://triptico.com/docs/unicode.html#utf-8

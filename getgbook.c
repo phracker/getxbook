@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <dirent.h>
 #include "util.h"
 
 #define usage "getgbook " VERSION " - a google books downloader\n" \
@@ -25,7 +28,8 @@ typedef struct {
 Page **pages;
 int totalpages;
 char cookies[COOKIENUM][COOKIEMAX];
-char *bookid;
+char bookid[STRMAX];
+char *bookdir;
 
 int getpagelist()
 {
@@ -115,7 +119,7 @@ int getpageurls(char *pagecode, char *cookie) {
 int getpage(Page *page)
 {
 	char path[STRMAX];
-	snprintf(path, STRMAX, "%04d.png", page->num);
+	snprintf(path, STRMAX, "%s/%04d.png", bookdir, page->num);
 
 	if(page->url[0] == '\0') {
 		fprintf(stderr, "%s not found\n", page->name);
@@ -172,7 +176,8 @@ int main(int argc, char *argv[])
 			free(tmp);
 	}
 
-	bookid = argv[argc-1];
+	strncpy(bookid, argv[argc-1], STRMAX);
+	bookdir = argv[argc-1];
 
 	pages = malloc(sizeof(*pages) * MAXPAGES);
 	if(!(totalpages = getpagelist(bookid, pages))) {
@@ -180,9 +185,14 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	if(!(opendir(bookdir) || !mkdir(bookdir, S_IRWXU))) {
+		fprintf(stderr, "Could not create directory %s\n", bookdir);
+		return 1;
+	}
+
 	if(argc == 2) {
 		for(i=0; i<totalpages; i++) {
-			snprintf(pgpath, STRMAX, "%04d.png", pages[i]->num);
+			snprintf(pgpath, STRMAX, "%s/%04d.png", bookdir, pages[i]->num);
 			if((f = fopen(pgpath, "r")) != NULL) {
 				fclose(f);
 				continue;
