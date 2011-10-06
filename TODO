@@ -4,12 +4,20 @@ before 1.0: create bn tool, fix http bugs, be unicode safe, package for osx & wi
 
 # other todos
 
+mention in getgbook man page that not all pages may be available in one run, but try later / from a different ip and it will try to fill in the gaps (can replace notes section here, too)
+
+use the correct file extension depending on the image type (for google and amazon
+the first page is a jpg, all the others are png)
 
 use wide string functions when dealing with stuff returned over http; it's known utf8
 	http://triptico.com/docs/unicode.html#utf-8
 	http://www.cl.cam.ac.uk/~mgk25/unicode.html#c
 	this means c99, rather than plain ansi c. worth it.
 	alternative is to just use our own bit of utf-8 handling; we only need to know to skip x number of bytes to get one char at a time, to find next char etc. whether this would get more tricky, being unable to use strcmp etc, to make it not worthwhile, is not yet certain. try it and see if it fits. note st has nice homemade utf8 support.
+OR
+use custom string functions where needed (prob only strstr needed), which work on utf8 specifically, and just skip the appropriate # of chars if it's not an ascii char
+BUT
+see how things are done in plan9, as they're good there
 
 bug in get() & post(): if the \r\n\r\n after http headers is cut off between recv buffers
 
