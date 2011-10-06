@@ -16,8 +16,6 @@ bug in get() & post(): if the \r\n\r\n after http headers is cut off between rec
 
 what happens if we receive not a http header? does recv loop forever, in a memory killing manner?
 
-print stderr in gui as well
-
 package for osx
 package for windows
 	have tcl as a starpack. have it always reference the executables in its directory, and we're golden.

@@ -6,7 +6,7 @@ set bin [list getgbook getabook]
 
 proc go {} {
 	set cmd "[.bin get [.bin curselection]] [.id get]"
-	set out [open "|$cmd" "r"]
+	set out [open "|$cmd 2>@1" "r"]
 	while {![eof $out]} {
 		.txt insert end [gets $out]
 		.txt insert end "\n"
