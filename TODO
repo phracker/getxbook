@@ -4,8 +4,6 @@ before 1.0: create bn tool, fix http bugs, be unicode safe, package for osx & wi
 
 # other todos
 
-mention in getgbook man page that not all pages may be available in one run, but try later / from a different ip and it will try to fill in the gaps (can replace notes section here, too)
-
 use the correct file extension depending on the image type (for google and amazon
 the first page is a jpg, all the others are png)
 
@@ -44,11 +42,3 @@ it. gui could either be done from the java directly, or from
 xml; both are gross options. see:
 http://developer.android.com/resources/tutorials/hello-world.html
 http://marakana.com/forums/android/examples/49.html
-
-### notes
-
-Google will give you up to 5 cookies which get useful pages in immediate succession. It will stop serving new pages to the ip, even with a fresh cookie. So the cookie is certainly not everything.
-
-If one does something too naughty, all requests from the ip to books.google.com are blocked with a 403 'automated requests' error for 24 hours. What causes this ip block is less clear. It certainly isn't after just trying lots of pages with 5 cookies. It seems to be after requesting 100 new cookies in a certain time period - 100 in 5 minutes seemed to do it, as did 100 in ~15 minutes.
-
-The method of getting all pages from book webpage does miss some; they aren't all listed. These pages can often be requested, though, though at present getgbook can't, as if a page isn't in its initial structure it won't save the url, even if it's presented.

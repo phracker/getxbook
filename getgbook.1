@@ -29,3 +29,18 @@ line).
 is the unique ID Google assigns to each book. It is 12
 characters long. It can be found by looking for the 'id='
 part of the URL of its Google Books page.
+.SH NOTES
+Some pages of "limited preview" books are never available.
+.PP
+Book pages vary in availability depending on the location of
+your IP.
+.PP
+getgbook will not try to download pages that have already
+been downloaded, so stopping and then starting it later will
+continue from where it left off.
+.PP
+getgbook uses several cookies to get as many pages as possible.
+However Google Books also limits the number of pages based on
+IP address, for 24 hours. Therefore if not all pages are
+downloaded it may be worth rerunning getgbook in 24 hours, or
+from a different IP.
