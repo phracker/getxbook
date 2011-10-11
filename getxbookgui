@@ -27,3 +27,4 @@ button .dl -text "download" -command go
 label .st -relief sunken -width 20
 
 pack .lab .id .bin .dl .st
+bind . <Enter> go
