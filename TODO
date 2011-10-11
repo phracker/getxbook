@@ -4,6 +4,9 @@ before 1.0: create bn tool, fix http bugs, be unicode safe, package for osx & wi
 
 # other todos
 
+improve 2pdf script to use ocr; use tesseract to output hocr & hocr2pdf (from exact-image pkg) - see http://www.exactcode.de/site/open_source/exactimage/hocr2pdf/ https://tfischernet.wordpress.com/2008/11/26/searchable-pdfs-with-linux/ http://code.google.com/p/tesseract-ocr/
+ create 2epub script if simple
+
 use the correct file extension depending on the image type (for google and amazon
 the first page is a jpg, all the others are png)
 
@@ -30,6 +33,8 @@ try supporting 3xx in get, if it can be done in a few lines
  by getting Location line, freeing buf, and returning a new
  iteration.
 
+use something smarter than update in gui to stop freezing
+
 add https support to get
 
 write some little tests
@@ -42,3 +47,8 @@ it. gui could either be done from the java directly, or from
 xml; both are gross options. see:
 http://developer.android.com/resources/tutorials/hello-world.html
 http://marakana.com/forums/android/examples/49.html
+
+create 'pad' file (like a stupid version of doap), to get windows shareware folks in
+	http://pad.asp-software.org/
+	http://padsites.asp-software.org/
+	http://pad.asp-software.org/repository/user/submit.php?Home=user
