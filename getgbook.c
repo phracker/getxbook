@@ -71,7 +71,7 @@ int getpagelist()
 
 int getpageurls(char *pagecode, char *cookie) {
 	char url[URLMAX], code[STRMAX], m[STRMAX];
-	char *c, *d, *p, *q, *buf = NULL;
+	char *c = NULL, *d, *p, *q, *buf = NULL;
 	int i, j;
 
 	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3&q=subject:a", bookid, pagecode);
@@ -162,6 +162,7 @@ int main(int argc, char *argv[])
 	char in[16];
 	int a, i, n;
 	FILE *f;
+	DIR *d;
 
 	if(argc < 2 || argc > 3 || (argc == 3 && (argv[1][0]!='-'
 	   || (argv[1][1] != 'c' && argv[1][1] != 'n')))
@@ -185,10 +186,11 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	if(!(opendir(bookdir) || !mkdir(bookdir, S_IRWXU))) {
+	if(!((d = opendir(bookdir)) || !mkdir(bookdir, S_IRWXU))) {
 		fprintf(stderr, "Could not create directory %s\n", bookdir);
 		return 1;
 	}
+	if(d) closedir(d);
 
 	if(argc == 2) {
 		for(i=0; i<totalpages; i++) {

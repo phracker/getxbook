@@ -61,7 +61,7 @@ int fillurls(char *buf) {
 
 int getpagelist()
 {
-	char url[URLMAX], b[STRMAX];
+	char url[URLMAX], b[STRMAX] = "";
 	char *buf = NULL;
 	char *s, *c;
 	int i;
@@ -79,8 +79,10 @@ int getpagelist()
 		bookid[10] = '\0';
 	}
 
-	if((s = strstr(buf, "\"litbPages\":[")) == NULL)
+	if((s = strstr(buf, "\"litbPages\":[")) == NULL) {
+		free(buf);
 		return 1;
+	}
 	s+=strlen("\"litbPages\":[");
 
 	for(i=0, p=pages[0];*s && i<MAXPAGES; s++) {
@@ -143,6 +145,7 @@ int main(int argc, char *argv[])
 	char in[16];
 	int a, i, n;
 	FILE *f;
+	DIR *d;
 
 	if(argc < 2 || argc > 3 ||
 	   (argc == 3 && (argv[1][0]!='-' || argv[1][1] != 'n'))
@@ -160,10 +163,11 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	if(!(opendir(bookdir) || !mkdir(bookdir, S_IRWXU))) {
+	if(!((d = opendir(bookdir)) || !mkdir(bookdir, S_IRWXU))) {
 		fprintf(stderr, "Could not create directory %s\n", bookdir);
 		return 1;
 	}
+	if(d) closedir(d);
 
 	if(argc == 2) {
 		for(i=0; i<numpages; i++) {

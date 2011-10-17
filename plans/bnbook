@@ -23,3 +23,5 @@ http://search2.barnesandnoble.com/digbooks/proxy/54/9780312361983/%d/fp
 the %d can be replaced with the page number
 requesting a page which isn't available
 (freevendstatus="false") returns the standard book swf
+
+note that cookies have to be sent for the fp stuff to work. cookies from the homepage work fine
