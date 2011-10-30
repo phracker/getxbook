@@ -4,9 +4,6 @@ before 1.0: create bn tool, fix http bugs, be unicode safe, package for osx & wi
 
 # other todos
 
-improve 2pdf script to use ocr; use tesseract to output hocr & hocr2pdf (from exact-image pkg) - see http://www.exactcode.de/site/open_source/exactimage/hocr2pdf/ https://tfischernet.wordpress.com/2008/11/26/searchable-pdfs-with-linux/ http://code.google.com/p/tesseract-ocr/
- create 2epub script if simple
-
 use the correct file extension depending on the image type (for google and amazon
 the first page is a jpg, all the others are png)
 

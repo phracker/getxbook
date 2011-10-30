@@ -5,8 +5,9 @@ NAME = getxbook
 
 SRC = getgbook.c getabook.c
 LIB = util.o
-SCRIPTS = makebookpdf.sh getxbookgui
+GUI = getxbookgui
 DOC = README COPYING INSTALL LEGAL
+EXTRAS = extras/mkpdf.sh extras/mkocrpdf.sh
 
 BIN = $(SRC:.c=)
 MAN = $(SRC:.c=.1)
@@ -32,12 +33,12 @@ util.a: $(LIB)
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	cp -f $(BIN) $(SCRIPTS) $(DESTDIR)$(PREFIX)/bin
+	cp -f $(BIN) $(GUI) $(DESTDIR)$(PREFIX)/bin
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
 	for f in $(MAN); do sed "s/VERSION/$(VERSION)/g" < $$f > $(DESTDIR)$(MANPREFIX)/man1/$$f; done
 
 uninstall:
-	cd $(DESTDIR)$(PREFIX)/bin && rm -f $(BIN) $(SCRIPTS)
+	cd $(DESTDIR)$(PREFIX)/bin && rm -f $(BIN) $(GUI)
 	cd $(DESTDIR)$(MANPREFIX)/man1 && rm -f $(MAN)
 
 clean:
@@ -45,7 +46,7 @@ clean:
 
 dist:
 	mkdir -p $(NAME)-$(VERSION)
-	cp $(SRC) $(SCRIPTS) $(DOC) util.h util.c Makefile config.mk $(NAME)-$(VERSION)
+	cp $(SRC) $(GUI) $(EXTRAS) $(DOC) util.h util.c Makefile config.mk $(NAME)-$(VERSION)
 	tar c $(NAME)-$(VERSION) | bzip2 -c > $(NAME)-$(VERSION).tar.bz2
 	gpg -b < $(NAME)-$(VERSION).tar.bz2 > $(NAME)-$(VERSION).tar.bz2.sig
 	rm -rf $(NAME)-$(VERSION)
