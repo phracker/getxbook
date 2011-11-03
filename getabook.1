@@ -20,3 +20,10 @@ line).
 is the unique ID Amazon assigns to each product. It is 10
 characters long. It can be found by looking for the
 \'/xxxxxxxxxx/\' part of the URL of its Amazon page.
+.SH EXAMPLES
+.TP
+.B download all available pages of a book
+getabook 161293031X
+.TP
+.B download the first 5 pages of a book
+seq 5 10 | getgbook -n 161293031X

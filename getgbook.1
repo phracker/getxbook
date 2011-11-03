@@ -44,3 +44,10 @@ However Google Books also limits the number of pages based on
 IP address, for 24 hours. Therefore if not all pages are
 downloaded it may be worth rerunning getgbook in 24 hours, or
 from a different IP.
+.SH EXAMPLES
+.TP
+.B download all of a book
+getgbook ta1uaL7RF5g
+.TP
+.B download the first 100 pages of a book
+seq 100 | getgbook -n ta1uaL7RF5g
