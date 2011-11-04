@@ -4,8 +4,7 @@ before 1.0: create bn tool, fix http bugs, package for osx & windows
 
 # other todos
 
-use the correct file extension depending on the image type (for google and amazon
-the first page is a jpg, all the others are png)
+use the correct file extension depending on the image type (for google and amazon the first page is a jpg, all the others are png)
 
 bug in get() & post(): if the \r\n\r\n after http headers is cut off between recv buffers
 
@@ -16,24 +15,11 @@ package for windows
 	have tcl as a starpack. have it always reference the executables in its directory, and we're golden.
 	http://www.digital-smarties.com/Tcl2002/tclkit.pdf
 
-try supporting 3xx in get, if it can be done in a few lines
- by getting Location line, freeing buf, and returning a new
- iteration.
-
 use something smarter than update in gui to stop freezing
 
-add https support to get
+add https support to get (getabook can use it everywhere, others cannot)
 
 write some little tests
-
-would likely be rather tricky, but building for android
-would be nice. how it would work would be modifying the
-getgbook src slightly, redefining function calls to be
-findable by the java, and then writing java stuffs to call
-it. gui could either be done from the java directly, or from
-xml; both are gross options. see:
-http://developer.android.com/resources/tutorials/hello-world.html
-http://marakana.com/forums/android/examples/49.html
 
 create 'pad' file (like a stupid version of doap), to get windows shareware folks in
 	http://pad.asp-software.org/
