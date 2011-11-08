@@ -9,7 +9,7 @@ MANPREFIX = $(PREFIX)/share/man
 CFLAGS = -ansi -pedantic -Wall -Wextra -Werror -g -D_POSIX_C_SOURCE=200112L \
          -DVERSION=\"$(VERSION)\"
 
-TCLKIT = tclkit-8.5.9-win32.upx.exe
+W32TCLKIT = tclkit-8.5.9-win32.upx.exe
 
 # musl static
 #CC = musl-gcc

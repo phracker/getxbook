@@ -35,7 +35,7 @@ getxbookgui.exe: getxbookgui.tcl
 	@echo STARPACK $@
 	@sdx qwrap getxbookgui.tcl
 	@sdx unwrap getxbookgui.kit
-	@sdx wrap $@ -runtime $(TCLKIT)
+	@sdx wrap $@ -runtime $(W32TCLKIT)
 	@rm -r getxbookgui.kit getxbookgui.vfs
 
 install: all
