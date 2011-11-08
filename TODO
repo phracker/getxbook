@@ -12,8 +12,6 @@ what happens if we receive not a http header? does recv loop forever, in a memor
 
 package for osx
 package for windows
-	have tcl as a starpack. have it always reference the executables in its directory, and we're golden.
-	http://www.digital-smarties.com/Tcl2002/tclkit.pdf
 
 use something smarter than update in gui to stop freezing
 
@@ -25,3 +23,5 @@ create 'pad' file (like a stupid version of doap), to get windows shareware folk
 	http://pad.asp-software.org/
 	http://padsites.asp-software.org/
 	http://pad.asp-software.org/repository/user/submit.php?Home=user
+	note that it must include all fields, with irrelevant ones being self-closed
+	(mostly there, needs cleaning and automating and self-closed crap)

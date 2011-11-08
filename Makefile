@@ -5,7 +5,7 @@ NAME = getxbook
 
 SRC = getgbook.c getabook.c
 LIB = util.o
-GUI = getxbookgui
+GUI = getxbookgui.tcl
 DOC = README COPYING INSTALL LEGAL
 EXTRAS = extras/mkpdf.sh extras/mkocrpdf.sh
 
@@ -30,6 +30,13 @@ util.a: $(LIB)
 	@echo AR $@
 	@$(AR) -r -c $@ $(LIB)
 	@ranlib $@
+
+getxbookgui.exe: getxbookgui.tcl
+	@echo STARPACK $@
+	@sdx qwrap getxbookgui.tcl
+	@sdx unwrap getxbookgui.kit
+	@sdx wrap $@ -runtime $(TCLKIT)
+	@rm -r getxbookgui.kit getxbookgui.vfs
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
