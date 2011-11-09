@@ -59,6 +59,16 @@ dist:
 	rm -rf $(NAME)-$(VERSION)
 	echo $(NAME)-$(VERSION).tar.bz2 $(NAME)-$(VERSION).tar.bz2.sig
 
+# needs to be run from a mingw setup
+dist-win: $(BIN) $(GUI:.tcl=.exe)
+	mkdir -p $(NAME)-win
+	cp $(OBJ:.o=.exe) $(GUI:.tcl=.exe) $(NAME)-win
+	for f in $(DOC); do cp $$f $(NAME)-win/$$f.txt; done
+	zip -j $(NAME)-$(VERSION)-win.zip $(NAME)-win/*
+	gpg -b < $(NAME)-$(VERSION)-win.zip > $(NAME)-$(VERSION)-win.zip.sig
+	rm -rf $(NAME)-win
+	echo $(NAME)-$(VERSION)-win.zip $(NAME)-$(VERSION)-win.zip.sig
+
 index.html: doap.ttl README
 	echo making webpage
 	echo "<!DOCTYPE html><html><head><title>$(NAME)</title>" > $@
@@ -75,5 +85,5 @@ index.html: doap.ttl README
 	sh websummary.sh doap.ttl | smu >> $@
 	echo '</body></html>' >> $@
 
-.PHONY: all clean install uninstall dist
+.PHONY: all clean install uninstall dist dist-win
 .SILENT: index.html dist
