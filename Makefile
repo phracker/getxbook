@@ -80,7 +80,8 @@ index.html: doap.ttl README
 	echo "</style></head><body>" >> $@
 	smu < README >> $@
 	echo "<h2>download</h2>" >> $@
-	echo "[$(NAME) $(VERSION)]($(NAME)-$(VERSION).tar.bz2) ([sig]($(NAME)-$(VERSION).tar.bz2.sig)) ($(RELDATE))" | smu >> $@
+	echo "[$(NAME) $(VERSION) source]($(NAME)-$(VERSION).tar.bz2) ([sig]($(NAME)-$(VERSION).tar.bz2.sig)) ($(RELDATE))" | smu >> $@
+	echo "[$(NAME) $(VERSION) windows]($(NAME)-$(VERSION).zip) ([sig]($(NAME)-$(VERSION).zip.sig)) ($(RELDATE))" | smu >> $@
 	echo '<hr />' >> $@
 	sh websummary.sh doap.ttl | smu >> $@
 	echo '</body></html>' >> $@
