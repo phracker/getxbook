@@ -31,13 +31,6 @@ util.a: $(LIB)
 	@$(AR) -r -c $@ $(LIB)
 	@ranlib $@
 
-getxbookgui.exe: getxbookgui.tcl
-	@echo STARPACK $@
-	@sdx qwrap getxbookgui.tcl
-	@sdx unwrap getxbookgui.kit
-	@sdx wrap $@ -runtime $(W32TCLKIT)
-	@rm -r getxbookgui.kit getxbookgui.vfs
-
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp -f $(BIN) $(GUI) $(DESTDIR)$(PREFIX)/bin
@@ -58,6 +51,15 @@ dist:
 	gpg -b < $(NAME)-$(VERSION).tar.bz2 > $(NAME)-$(VERSION).tar.bz2.sig
 	rm -rf $(NAME)-$(VERSION)
 	echo $(NAME)-$(VERSION).tar.bz2 $(NAME)-$(VERSION).tar.bz2.sig
+
+getxbookgui.exe: getxbookgui.tcl
+	@echo STARPACK $@
+	@sdx qwrap getxbookgui.tcl
+	@sdx unwrap getxbookgui.kit
+	@sdx wrap $@ -runtime $(W32TCLKIT)
+	@rm -r getxbookgui.kit getxbookgui.vfs
+
+# TODO: create rule to make osx starpack of gui
 
 # needs to be run from a mingw setup
 dist-win: $(BIN) $(GUI:.tcl=.exe)
