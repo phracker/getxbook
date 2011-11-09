@@ -59,7 +59,12 @@ getxbookgui.exe: getxbookgui.tcl
 	@sdx wrap $@ -runtime $(W32TCLKIT)
 	@rm -r getxbookgui.kit getxbookgui.vfs
 
-# TODO: create rule to make osx starpack of gui
+getxbookgui: getxbookgui.tcl
+	@echo STARPACK $@
+	@sdx qwrap getxbookgui.tcl
+	@sdx unwrap getxbookgui.kit
+	@sdx wrap $@ -runtime $(MACTCLKIT)
+	@rm -r getxbookgui.kit getxbookgui.vfs
 
 # needs to be run from a mingw setup
 dist-win: $(BIN) $(GUI:.tcl=.exe)
@@ -70,6 +75,19 @@ dist-win: $(BIN) $(GUI:.tcl=.exe)
 	gpg -b < $(NAME)-$(VERSION)-win.zip > $(NAME)-$(VERSION)-win.zip.sig
 	rm -rf $(NAME)-win
 	echo $(NAME)-$(VERSION)-win.zip $(NAME)-$(VERSION)-win.zip.sig
+
+# needs to be run from a mac
+dist-mac: $(BIN) $(GUI:.tcl=)
+	mkdir -p $(NAME)-$(VERSION)/$(NAME).app/Contents/MacOS
+	mkdir -p $(NAME)-$(VERSION)/$(NAME).app/Contents/Resources
+	cp $(BIN) $(GUI:.tcl=) $(NAME)-$(VERSION)/$(NAME).app/Contents/MacOS/
+	for f in $(DOC); do cp $$f $(NAME)-$(VERSION)/$$f.txt; done
+	echo '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict><key>CFBundlePackageType</key><string>APPL</string>'"<key>CFBundleExecutable</key><string>getxbookgui</string><key>CFBundleVersion</key><string>$(VERSION)</string><key>CFBundleName</key><string>$(NAME)</string></dict></plist>" > $(NAME)-$(VERSION)/$(NAME).app/Contents/Info.plist
+	hdiutil create -srcfolder $(NAME) $(NAME)-$(VERSION).dmg
+	hdiutil internet-enable -yes $(NAME)-$(VERSION).dmg
+	gpg -b < $(NAME)-$(VERSION)-mac.dmg > $(NAME)-$(VERSION)-mac.dmg.sig
+	rm -rf $(NAME)-$(VERSION)
+	echo $(NAME)-$(VERSION)-mac.dmg $(NAME)-$(VERSION)-mac.dmg.sig
 
 index.html: doap.ttl README
 	echo making webpage
@@ -84,9 +102,10 @@ index.html: doap.ttl README
 	echo "<h2>download</h2>" >> $@
 	echo "[$(NAME) $(VERSION) source]($(NAME)-$(VERSION).tar.bz2) ([sig]($(NAME)-$(VERSION).tar.bz2.sig)) ($(RELDATE))" | smu >> $@
 	echo "[$(NAME) $(VERSION) windows]($(NAME)-$(VERSION).zip) ([sig]($(NAME)-$(VERSION).zip.sig)) ($(RELDATE))" | smu >> $@
+	echo "[$(NAME) $(VERSION) mac]($(NAME)-$(VERSION).dmg) ([sig]($(NAME)-$(VERSION).dmg.sig)) ($(RELDATE))" | smu >> $@
 	echo '<hr />' >> $@
 	sh websummary.sh doap.ttl | smu >> $@
 	echo '</body></html>' >> $@
 
-.PHONY: all clean install uninstall dist dist-win
+.PHONY: all clean install uninstall dist dist-win dist-mac
 .SILENT: index.html dist
