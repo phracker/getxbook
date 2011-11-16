@@ -30,7 +30,9 @@ please without any further prying.
 
 Of course, being free to do what you like with it, you can also load
 the book onto any device you have access to, share it, study it, and
-anything else you can do with normal computer files.
+anything else you can do with normal computer files. You can easily
+use OCR software to get text versions of downloaded books, making
+them accessible to people who can't easily read from the page scans.
 
 "I have sworn upon the altar of God eternal hostility against every
 form of tyranny over the mind of man."
@@ -40,5 +42,7 @@ form of tyranny over the mind of man."
 
 Each tool is written in around 200 lines of portable C code, with no
 dependencies beyond libc and network sockets. It should work well on
-Linux, BSDs, OSX and Windows. There is also an optional graphical
-interface, built with Tcl/Tk.
+Linux, BSDs, OSX and Windows. There is an optional graphical
+interface, built with Tcl/Tk. There are some simple scripts to create
+searchable PDF or plain text files from the downloaded pages, which
+use tesseract OCR software.
