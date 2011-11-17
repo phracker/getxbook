@@ -11,7 +11,7 @@
 #       converted to tiff format, so that they're readable by
 #       any version of tesseract.
 
-for i in `ls *tif`
+for i in `ls *png`
 do
 	echo "$i"
 
