@@ -5,7 +5,6 @@ getxbook is a collection of tools to download books from websites.
 * getgbook - downloads from google books' "book preview"
 * getabook - downloads from amazon's "look inside the book"
 * getbnbook - downloads from barnes and noble's "book viewer"
-  (coming soon)
 
 ## why
 
