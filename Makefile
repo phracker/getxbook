@@ -3,7 +3,7 @@ include config.mk
 
 NAME = getxbook
 
-SRC = getgbook.c getabook.c
+SRC = getgbook.c getabook.c getbnbook.c
 LIB = util.o
 GUI = getxbookgui.tcl
 DOC = README COPYING INSTALL LEGAL
