@@ -7,7 +7,7 @@ SRC = getgbook.c getabook.c getbnbook.c
 LIB = util.o
 GUI = getxbookgui.tcl
 DOC = README COPYING INSTALL LEGAL
-EXTRAS = extras/mkpdf.sh extras/mkocrpdf.sh
+EXTRAS = extras/mkpdf.sh extras/mkocrpdf.sh extras/mkocrtxt.sh
 
 BIN = $(SRC:.c=)
 MAN = $(SRC:.c=.1)
@@ -46,7 +46,9 @@ clean:
 
 dist:
 	mkdir -p $(NAME)-$(VERSION)
-	cp $(SRC) $(GUI) $(EXTRAS) $(DOC) util.h util.c Makefile config.mk $(NAME)-$(VERSION)
+	cp $(SRC) $(GUI) $(DOC) $(MAN) util.h util.c Makefile config.mk $(NAME)-$(VERSION)
+	mkdir -p $(NAME)-$(VERSION)/extras
+	cp $(EXTRAS) $(NAME)-$(VERSION)/extras
 	tar c $(NAME)-$(VERSION) | bzip2 -c > $(NAME)-$(VERSION).tar.bz2
 	gpg -b < $(NAME)-$(VERSION).tar.bz2 > $(NAME)-$(VERSION).tar.bz2.sig
 	rm -rf $(NAME)-$(VERSION)
