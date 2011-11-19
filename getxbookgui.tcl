@@ -2,7 +2,7 @@
 # See COPYING file for copyright and license details.
 package require Tk
 
-set bin [list getgbook getabook]
+set bin [list getgbook getabook getbnbook]
 
 proc go {} {
 	if { [.id get] == "" } { return }
