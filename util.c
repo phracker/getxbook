@@ -70,8 +70,11 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 	l = 0;
 	snprintf(m, 256, "Set-Cookie: %%%ds;", COOKIEMAX-1);
 	while((res = recv(fd, t, BUFSIZ, 0)) > 0) {
-		if(sscanf(t, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200)
+		if(sscanf(t, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200) {
+			if(p == 403)
+				fprintf(stderr, "403 forbidden: your IP address may be temporarily blocked\n");
 			return 0;
+		}
 		t2 = t;
 		if(savecookie != NULL) {
 			while((t2 = strstr(t2, "Set-Cookie: ")) && sscanf(t2, m, c)) {
