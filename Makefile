@@ -98,7 +98,7 @@ index.html: doap.ttl README
 	echo '<style type="text/css">' >> $@
 	echo "body {font-family:sans-serif; width:38em; margin:auto; max-width:94%;}" >> $@
 	echo "h1 {font-size:1.6em; text-align:center;}" >> $@
-	echo "a {text-decoration:none; border:thin dotted;}" >> $@
+	echo "a {text-decoration:none; border-bottom:thin dotted;}" >> $@
 	echo "</style></head><body>" >> $@
 	smu < README >> $@
 	echo "<h2>download</h2>" >> $@
