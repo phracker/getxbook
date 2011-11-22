@@ -26,7 +26,7 @@ typedef struct {
 } Page;
 
 Page **pages;
-int totalpages;
+int numpages;
 char cookies[COOKIENUM][COOKIEMAX];
 char bookid[STRMAX];
 char *bookdir;
@@ -39,13 +39,13 @@ int getpagelist()
 	int i;
 	Page *p;
 
-	snprintf(url, URLMAX, "/books?id=%s&printsec=frontcover", bookid);
+	snprintf(url, URLMAX, "/books?id=%s&printsec=frontcover&redir_esc=y", bookid);
 
 	if(!get("books.google.com", url, NULL, NULL, &buf))
-		return 0;
+		return 1;
 
 	if((s = strstr(buf, "_OC_Run({\"page\":[")) == NULL)
-		return 0;
+		return 1;
 	s+=strlen("_OC_Run({\"page\":[");
 
 	for(i=0, p=pages[0];*s && i<MAXPAGES; s++) {
@@ -65,16 +65,19 @@ int getpagelist()
 		}
 	}
 
+	numpages = i;
+
 	free(buf);
-	return i;
+	return 0;
 }
 
-int getpageurls(char *pagecode, char *cookie) {
+int getpageurls(char *pagecode, char *cookie)
+{
 	char url[URLMAX], code[STRMAX], m[STRMAX];
 	char *c = NULL, *d, *p, *q, *buf = NULL;
 	int i, j;
 
-	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3&q=subject:a", bookid, pagecode);
+	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3&q=subject:a&redir_esc=y", bookid, pagecode);
 
 	if(!get("books.google.com", url, cookie, NULL, &buf))
 		return 1;
@@ -90,7 +93,7 @@ int getpageurls(char *pagecode, char *cookie) {
 			}
 			j = -1;
 			if(!strncmp(c, "\"src\"", 5)) {
-				for(i=0; i<totalpages; i++) {
+				for(i=0; i<numpages; i++) {
 					if(!strncmp(pages[i]->name, code, STRMAX)) {
 						j = i;
 						break;
@@ -136,11 +139,12 @@ int getpage(Page *page)
 	return 0;
 }
 
-void searchpage(Page *page) {
+int searchpage(Page *page)
+{
 	int i, j;
 
 	if(page->url[0] != '\0')
-		return;
+		return 0;
 
 	for(i=0; i<COOKIENUM; i++) {
 		if(cookies[i][0] == '\0') /* dead cookie */
@@ -150,9 +154,11 @@ void searchpage(Page *page) {
 			/* invalidate old cookies if one succeeded */
 			for(j=0; j<i; j++)
 				cookies[j][0] = '\0';
-			break;
+			return 0;
 		}
 	}
+
+	return 1;
 }
 
 int main(int argc, char *argv[])
@@ -181,7 +187,7 @@ int main(int argc, char *argv[])
 	bookdir = argv[argc-1];
 
 	pages = malloc(sizeof(*pages) * MAXPAGES);
-	if(!(totalpages = getpagelist(bookid, pages))) {
+	if(getpagelist(bookid, pages)) {
 		fprintf(stderr, "Could not find any pages for %s\n", bookid);
 		return 1;
 	}
@@ -193,7 +199,7 @@ int main(int argc, char *argv[])
 	if(d) closedir(d);
 
 	if(argc == 2) {
-		for(i=0; i<totalpages; i++) {
+		for(i=0; i<numpages; i++) {
 			snprintf(pgpath, STRMAX, "%s/%04d.png", bookdir, pages[i]->num);
 			if((f = fopen(pgpath, "r")) != NULL) {
 				fclose(f);
@@ -207,7 +213,7 @@ int main(int argc, char *argv[])
 			sscanf(buf, "%15s", in);
 			i = -1;
 			if(argv[1][1] == 'c') {
-				for(a=0; a<totalpages; a++) {
+				for(a=0; a<numpages; a++) {
 					if(strncmp(pages[a]->name, in, STRMAX) == 0) {
 						i = a;
 						break;
@@ -215,7 +221,7 @@ int main(int argc, char *argv[])
 				}
 			} else if(argv[1][1] == 'n') {
 				sscanf(in, "%d", &n);
-				for(a=0; a<totalpages; a++) {
+				for(a=0; a<numpages; a++) {
 					if(pages[a]->num == n) {
 						i = a;
 						break;
@@ -231,7 +237,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	for(i=0; i<totalpages; i++) free(pages[i]);
+	for(i=0; i<numpages; i++) free(pages[i]);
 	free(pages);
 
 	return EXIT_SUCCESS;
