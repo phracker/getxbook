@@ -5,6 +5,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
+#indef WINVER
+#define mkdir(D, M) _mkdir(D)
+#endif
 #include "util.h"
 
 #define usage "getabook " VERSION " - an amazon look inside the book downloader\n" \
