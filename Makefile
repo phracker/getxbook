@@ -103,8 +103,8 @@ index.html: doap.ttl README
 	smu < README >> $@
 	echo "<h2>download</h2>" >> $@
 	echo "[$(NAME) $(VERSION) source]($(NAME)-$(VERSION).tar.bz2) ([sig]($(NAME)-$(VERSION).tar.bz2.sig)) ($(RELDATE))" | smu >> $@
-	echo "[$(NAME) $(VERSION) windows]($(NAME)-$(VERSION).zip) ([sig]($(NAME)-$(VERSION).zip.sig)) ($(RELDATE))" | smu >> $@
-	echo "[$(NAME) $(VERSION) mac]($(NAME)-$(VERSION).dmg) ([sig]($(NAME)-$(VERSION).dmg.sig)) ($(RELDATE))" | smu >> $@
+	echo "[$(NAME) $(VERSION) windows]($(NAME)-$(VERSION)-win.zip) ([sig]($(NAME)-$(VERSION)-win.zip.sig)) ($(RELDATE))" | smu >> $@
+	echo "[$(NAME) $(VERSION) mac]($(NAME)-$(VERSION)-mac.dmg) ([sig]($(NAME)-$(VERSION)-mac.dmg.sig)) ($(RELDATE))" | smu >> $@
 	echo '<hr />' >> $@
 	sh websummary.sh doap.ttl | smu >> $@
 	echo '</body></html>' >> $@
