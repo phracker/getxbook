@@ -161,3 +161,27 @@ int post(char *host, char *path, char *data, char **buf) {
 
 	return l;
 }
+
+int renameifjpg(char *path) {
+	FILE *f;
+	char *newpath, *c;
+
+	if((f = fopen(path, "rb")) == NULL)
+		return 1;
+
+	if(fgetc(f) == 255) {
+		if((newpath = malloc(strlen(path) + 1)) == NULL)
+			return 1;
+		strncpy(newpath, path, strlen(path));
+		c = strrchr(newpath, '.');
+		strncpy(c+1, "jpg\0", 4);
+
+		if(rename(path, newpath))
+			return 1;
+		free(newpath);
+	}
+
+	fclose(f);
+
+	return 0;
+}

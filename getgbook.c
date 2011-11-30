@@ -136,6 +136,7 @@ int getpage(Page *page)
 		fprintf(stderr, "%s failed\n", page->name);
 		return 1;
 	}
+	renameifjpg(path);
 
 	printf("%d downloaded\n", page->num);
 	fflush(stdout);

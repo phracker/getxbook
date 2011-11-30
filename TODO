@@ -2,8 +2,6 @@ before 1.0: fix http bugs, package for osx & windows
 
 # other todos
 
-use the correct file extension depending on the image type (for google and amazon the first page is a jpg, all the others are png)
-
 bug in get() & post(): if the \r\n\r\n after http headers is cut off between recv buffers
 
 package for osx - https://github.com/kennethreitz/osx-gcc-installer

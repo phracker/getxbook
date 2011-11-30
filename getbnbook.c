@@ -83,6 +83,7 @@ int getpage(int pagenum)
 		fprintf(stderr, "%d failed\n", pagenum);
 		return 1;
 	}
+	renameifjpg(path);
 
 	printf("%d downloaded\n", pagenum);
 	fflush(stdout);
