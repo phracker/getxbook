@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
-#indef WINVER
+#ifdef WINVER
 #define mkdir(D, M) _mkdir(D)
 #endif
 #include "util.h"
