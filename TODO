@@ -6,8 +6,6 @@ use the correct file extension depending on the image type (for google and amazo
 
 bug in get() & post(): if the \r\n\r\n after http headers is cut off between recv buffers
 
-what happens if we receive not a http header? does recv loop forever, in a memory killing manner?
-
 package for osx - https://github.com/kennethreitz/osx-gcc-installer
 
 add djvu convert script

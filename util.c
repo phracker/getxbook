@@ -92,7 +92,7 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 	}
 
 	*buf = realloc(*buf, sizeof(char *) * (l+BUFSIZ));
-	for(; (res = recv(fd, *buf+l, BUFSIZ, 0)) > 0; l+=res)
+	for(; buf != NULL && (res = recv(fd, *buf+l, BUFSIZ, 0)) > 0; l+=res)
 		*buf = realloc(*buf, sizeof(char *) * (l+BUFSIZ));
 
 	return l;
