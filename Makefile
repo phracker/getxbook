@@ -72,7 +72,8 @@ getxbookgui: getxbookgui.tcl
 dist-win: $(BIN) $(GUI:.tcl=.exe)
 	mkdir -p $(NAME)-win
 	cp $(OBJ:.o=.exe) $(GUI:.tcl=.exe) $(NAME)-win
-	for f in $(DOC); do cp $$f $(NAME)-win/$$f.txt; done
+	for f in LEGAL README COPYING; do \
+	sed 's/$$/\r/g' < $$f > $(NAME)-win/$$f.txt; done
 	zip -j $(NAME)-$(VERSION)-win.zip $(NAME)-win/*
 	gpg -b < $(NAME)-$(VERSION)-win.zip > $(NAME)-$(VERSION)-win.zip.sig
 	rm -rf $(NAME)-win
