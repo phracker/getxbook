@@ -20,7 +20,3 @@ create 'pad' file (like a stupid version of doap), to get windows shareware folk
 	http://pad.asp-software.org/repository/user/submit.php?Home=user
 	note that it must include all fields, with irrelevant ones being self-closed
 	(mostly there, needs cleaning and automating and self-closed crap)
-
-# consider text ripping
-
-amazon one method is get "kindle preview": curl -d 'method=getKindleSample&asin=B002MQYOFW'
