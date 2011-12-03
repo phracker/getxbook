@@ -11,7 +11,10 @@
 #       converted to tiff format, so that they're readable by
 #       any version of tesseract.
 
-for i in `ls *png`
+test $# -ne 1 && echo "Usage: $0 bookdir" && exit 1
+cd "$1" || exit 1
+
+for i in `ls`
 do
 	echo "$i"
 
@@ -30,4 +33,4 @@ do
 	rm -f "$i.big.tif" "$i.txt"
 done
 
-echo book.txt
+echo "$1/book.txt"

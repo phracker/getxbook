@@ -9,9 +9,12 @@
 #       script does that, then reduces the results back down
 #       to create a reasonable size PDF.
 
+test $# -ne 1 && echo "Usage: $0 bookdir" && exit 1
+cd "$1" || exit 1
+
 echo 'tessedit_create_hocr 1' > hocr
 
-for i in `ls *png`
+for i in `ls`
 do
 	echo "$i"
 
@@ -42,8 +45,8 @@ do
 	rm -f "$i.big.tif" "$i.big.tif.html" "$i.html"
 done
 
-echo book.pdf
-
 # cat the pdf pages together
 pdftk *pdf cat output book.pdf
 rm -f [0-9]*pdf hocr
+
+echo "$1/book.pdf"
