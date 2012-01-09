@@ -6,7 +6,7 @@ RELDATE = 2011-11-22
 PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/share/man
 
-CFLAGS = -ansi -pedantic -Wall -Wextra -Werror -g -D_POSIX_C_SOURCE=200112L \
+CFLAGS = -std=c99 -pedantic -Wall -Wextra -Werror -g -D_POSIX_C_SOURCE=200112L \
          -DVERSION=\"$(VERSION)\"
 
 W32TCLKIT = tclkit-8.5.9-win32.upx.exe
