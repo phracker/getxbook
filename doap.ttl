@@ -6,6 +6,7 @@
 :p a doap:Project;
 	doap:name "getxbook";
 	doap:shortdesc "A collection of tools to download books from websites";
+	doap:description "getxbook is a collection of tools to download books from Websites. There are tools to download from Google Books' book preview, Amazon's look inside the book, and Barnes and Noble's book viewer. There is an optional GUI written in Tcl/Tk, and some shell scripts using OCR to create plain text or searchable PDFs from the downloaded books.";
 	doap:homepage <http://njw.me.uk/software/getxbook/>;
 	doap:repository :repo;
 	doap:programming-language "C";
