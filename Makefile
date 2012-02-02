@@ -7,7 +7,7 @@ SRC = getgbook.c getabook.c getbnbook.c
 LIB = util.o
 GUI = getxbookgui.tcl
 DOC = README COPYING INSTALL LEGAL
-EXTRAS = extras/mkpdf.sh extras/mkocrpdf.sh extras/mkocrtxt.sh
+EXTRAS = extras/mkpdf.sh extras/mkocrpdf.sh extras/mkdjvu.sh extras/mkocrtxt.sh extras/mkocrdjvu.sh
 
 BIN = $(SRC:.c=)
 MAN = $(SRC:.c=.1)

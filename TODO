@@ -8,8 +8,6 @@ in getgbook, check that downloaded page doesn't match 'page not available' image
 
 package for osx - https://github.com/kennethreitz/osx-gcc-installer
 
-add djvu convert script
-
 use something smarter than update in gui to stop freezing
 
 add https support to get (getabook can use it everywhere, others cannot)

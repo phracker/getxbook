@@ -1,6 +1,7 @@
 #!/bin/sh
 # See COPYING file for copyright and license details.
 #
+# Makes a PDF
 # Requires imagemagick
 
 test $# -ne 1 && echo "Usage: $0 bookdir" && exit 1
