@@ -43,5 +43,5 @@ Each tool is written in around 200 lines of portable C code, with no
 dependencies beyond libc and network sockets. It should work well on
 Linux, BSDs, OSX and Windows. There is an optional graphical
 interface, built with Tcl/Tk. There are some simple scripts to create
-searchable PDF or plain text files from the downloaded pages, which
-use tesseract OCR software.
+searchable PDF, DjVu, or plain text files from the downloaded pages,
+which use tesseract OCR software.
