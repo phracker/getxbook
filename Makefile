@@ -54,25 +54,6 @@ dist:
 	rm -rf $(NAME)-$(VERSION)
 	echo $(NAME)-$(VERSION).tar.bz2 $(NAME)-$(VERSION).tar.bz2.sig
 
-# quick and dirty; a real debian dev should create a real .deb
-dist-deb:
-	mkdir -p deb
-	cp config.mk config.mk.orig
-	sed 's/^PREFIX =.*/PREFIX = deb\/usr/g' < config.mk.orig > config.mk
-	make install
-	mv config.mk.orig config.mk
-	cp $(EXTRAS) deb/usr/bin/
-	chmod +x deb/usr/bin/*
-	mkdir -p deb/usr/share/doc/$(NAME)
-	cp $(DOC) deb/usr/share/doc/$(NAME)
-	mv deb/usr/share/doc/$(NAME)/COPYING deb/usr/share/doc/$(NAME)/copyright
-	mkdir -p deb/DEBIAN
-	printf "Package: %s\nVersion: %s-1\nArchitecture: i386\nDepends: libc6, tcl, tk\n" "$(NAME)" "$(VERSION)" > deb/DEBIAN/control
-	fakeroot dpkg-deb --build deb
-	mv deb.deb $(NAME)_$(VERSION)-1_i386.deb
-	rm -rf deb
-	echo $(NAME)_$(VERSION)-1_i386.deb
-
 getxbookgui.exe: getxbookgui.tcl
 	@echo STARPACK $@
 	@sdx qwrap getxbookgui.tcl
@@ -129,5 +110,5 @@ index.html: doap.ttl README
 	sh websummary.sh doap.ttl | smu >> $@
 	echo '</body></html>' >> $@
 
-.PHONY: all clean install uninstall dist dist-deb dist-win dist-mac
-.SILENT: index.html dist dist-deb
+.PHONY: all clean install uninstall dist dist-win dist-mac
+.SILENT: index.html dist
