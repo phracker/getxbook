@@ -14,9 +14,4 @@ add https support to get (getabook can use it everywhere, others cannot)
 
 write some little tests
 
-create 'pad' file (like a stupid version of doap), to get windows shareware folks in
-	http://pad.asp-software.org/
-	http://padsites.asp-software.org/
-	http://pad.asp-software.org/repository/user/submit.php?Home=user
-	note that it must include all fields, with irrelevant ones being self-closed
-	(mostly there, needs cleaning and automating and self-closed crap)
+submit 'pad' file to websites http://padsites.asp-software.org/

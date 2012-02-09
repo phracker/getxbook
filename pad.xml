@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XML_DIZ_INFO>
+<MASTER_PAD_VERSION_INFO>
+<MASTER_PAD_VERSION>3.11</MASTER_PAD_VERSION>
+<MASTER_PAD_EDITOR/><MASTER_PAD_INFO/></MASTER_PAD_VERSION_INFO>
+
+<Company_Info>
+	<Company_Name>Nick J White (njw)</Company_Name>
+	<Address_1/><Address_2/><City_Town/><State_Province/>
+	<Zip_Postal_Code/><Country/>
+	<Company_WebSite_URL>http://njw.me.uk</Company_WebSite_URL>
+	<Contact_Info>
+		<Author_First_Name>Nick</Author_First_Name>
+		<Author_Last_Name>White</Author_Last_Name>
+		<Author_Email>pad@njw.me.uk</Author_Email>
+		<Contact_First_Name>Nick</Contact_First_Name>
+		<Contact_Last_Name>White</Contact_Last_Name>
+		<Contact_Email>pad@njw.me.uk</Contact_Email>
+	</Contact_Info>
+	<Support_Info>
+		<Sales_Email>pad@njw.me.uk</Sales_Email>
+		<Support_Email>pad@njw.me.uk</Support_Email>
+		<General_Email>pad@njw.me.uk</General_Email>
+		<Sales_Phone/><Support_Phone/><General_Phone/><Fax_Phone/>
+	</Support_Info>
+</Company_Info>
+
+<Program_Info>
+	<Program_Name>getxbook</Program_Name>
+	<Program_Version>0.6.1</Program_Version>
+	<Program_Release_Month/><Program_Release_Day/><Program_Release_Year/>
+	<Program_Cost_Dollars/><Program_Cost_Other_Code/><Program_Cost_Other/>
+	<Program_Type>Freeware</Program_Type><!--free software, dammit-->
+	<Program_Release_Status>Major Update</Program_Release_Status>
+	<Program_Install_Support>No Install Support</Program_Install_Support>
+	<Program_OS_Support>Linux,Unix,WinXP</Program_OS_Support>
+	<Program_Language>English</Program_Language>
+	<File_Info><File_Size_Bytes/><File_Size_K/><File_Size_MB/></File_Info>
+	<Expire_Info>
+		<Has_Expire_Info>n</Has_Expire_Info>
+		<Expire_Count/><Expire_Based_On/><Expire_Other_Info/>
+		<Expire_Month/><Expire_Day/><Expire_Year/>
+	</Expire_Info>
+	<Program_Change_Info/>
+	<Program_Category_Class>Network &amp; Internet::Download Managers</Program_Category_Class>
+	<Program_System_Requirements/>
+</Program_Info>
+
+<Program_Description><English>
+	<Keywords>books,downloader,google books,amazon,barnes and noble,ocr</Keywords>
+	<Char_Desc_45>A collection of tools to download books</Char_Desc_45>
+	<Char_Desc_250>getxbook is a collection of tools to download books from websites.
+
+ * getgbook - downloads from google books' "book preview"
+ * getabook - downloads from amazon's "look inside the book"
+ * getbnbook - downloads from barnes and noble's "book viewer"</Char_Desc_250>
+	<Char_Desc_80/><Char_Desc_450/><Char_Desc_2000/>
+</English></Program_Description>
+
+<Web_Info>
+	<Application_URLs>
+		<Application_Info_URL>http://njw.me.uk/software/getxbook</Application_Info_URL>
+		<Application_Order_URL/><Application_Screenshot_URL/><Application_Icon_URL/>
+		<Application_XML_File_URL>http://njw.me.uk/software/getxbook/pad.xml</Application_XML_File_URL>
+	</Application_URLs>
+	<Download_URLs>
+		<Primary_Download_URL>http://njw.me.uk/software/getxbook/getxbook-0.6.1-win.zip</Primary_Download_URL>
+		<Secondary_Download_URL/><Additional_Download_URL_1/><Additional_Download_URL_2/>
+	</Download_URLs>
+</Web_Info>
+
+<Permissions><Distribution_Permissions>ISC License
+
+Copyright 2011 Nick White njw.me.uk
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.</Distribution_Permissions></Permissions>
+
+</XML_DIZ_INFO>
