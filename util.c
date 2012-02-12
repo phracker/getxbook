@@ -92,7 +92,6 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 	if(savecookie != NULL) {
 		while((t2 = strstr(t2, "Set-Cookie: ")) && sscanf(t2, m, c)) {
 			strncat(savecookie, c, COOKIEMAX);
-			printf("set cookie %s\n",c);
 			t2++;
 		}
 	}
