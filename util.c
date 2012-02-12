@@ -52,7 +52,7 @@ int dial(char *host, char *port) {
 int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) {
 	size_t l, res;
 	int fd, i, p;
-	char h[HDRMAX] = "";
+	char h[BUFSIZ] = "";
 	char c[COOKIEMAX] = "";
 	char t[BUFSIZ];
 	char *t2;
@@ -62,32 +62,38 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 
 	if(sendcookie && sendcookie[0])
 		snprintf(c, COOKIEMAX, "\r\nCookie: %s", sendcookie);
-	snprintf(h, HDRMAX, "GET %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
+	snprintf(h, BUFSIZ, "GET %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
 	                    " (not mozilla)\r\nHost: %s%s\r\n\r\n", path, host, c);
 	if(!send(fd, h, strlen(h), 0)) return 0;
 
 	*buf = NULL;
 	l = 0;
+	h[0] = 0;
 	snprintf(m, 256, "Set-Cookie: %%%ds;", COOKIEMAX-1);
+
 	while((res = recv(fd, t, BUFSIZ, 0)) > 0) {
-		if(sscanf(t, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200) {
-			if(p == 403)
-				fprintf(stderr, "403 forbidden: your IP address may be temporarily blocked\n");
-			return 0;
-		}
-		t2 = t;
-		if(savecookie != NULL) {
-			while((t2 = strstr(t2, "Set-Cookie: ")) && sscanf(t2, m, c)) {
-				strncat(savecookie, c, COOKIEMAX);
-				t2++;
-			}
-		}
+		strncat(h, t, BUFSIZ - strlen(h) - 1);
 		if((t2 = strstr(t, "\r\n\r\n")) != NULL && (t2 - t) < (signed)res) {
+			/* end of header, save rest to buffer */
 			t2+=4;
 			l = res - (t2 - t);
 			*buf = malloc(sizeof(char *) * l);
 			memcpy(*buf, t2, l);
 			break;
+		}
+	}
+
+	if(sscanf(h, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200) {
+		if(p == 403)
+			fprintf(stderr, "403 forbidden: your IP address may be temporarily blocked\n");
+		return 0;
+	}
+	t2 = h;
+	if(savecookie != NULL) {
+		while((t2 = strstr(t2, "Set-Cookie: ")) && sscanf(t2, m, c)) {
+			strncat(savecookie, c, COOKIEMAX);
+			printf("set cookie %s\n",c);
+			t2++;
 		}
 	}
 
@@ -127,13 +133,13 @@ int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *s
 int post(char *host, char *path, char *data, char **buf) {
 	size_t l, res;
 	int fd, i, p;
-	char h[HDRMAX] = "";
+	char h[BUFSIZ] = "";
 	char t[BUFSIZ];
 	char *t2;
 
 	if((fd = dial(host, "80")) == -1) return 0;
 
-	snprintf(h, HDRMAX, "POST %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
+	snprintf(h, BUFSIZ, "POST %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
 	                    " (not mozilla)\r\nContent-Length: %d\r\n" \
 	                    "Content-Type: application/x-www-form-urlencoded\r\n" \
 	                    "Host: %s\r\n\r\n%s\r\n",
