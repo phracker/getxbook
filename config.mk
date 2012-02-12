@@ -1,6 +1,6 @@
 # See COPYING file for copyright and license details.
-VERSION = 0.6.1
-RELDATE = 2011-11-22
+VERSION = 0.7
+RELDATE = 2012-02-12
 
 # paths
 PREFIX = /usr/local

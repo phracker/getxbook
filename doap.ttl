@@ -6,12 +6,12 @@
 :p a doap:Project;
 	doap:name "getxbook";
 	doap:shortdesc "A collection of tools to download books from websites";
-	doap:description "getxbook is a collection of tools to download books from Websites. There are tools to download from Google Books' book preview, Amazon's look inside the book, and Barnes and Noble's book viewer. There is an optional GUI written in Tcl/Tk, and some shell scripts using OCR to create plain text or searchable PDFs from the downloaded books.";
+	doap:description "getxbook is a collection of tools to download books from Websites. There are tools to download from Google Books' book preview, Amazon's look inside the book, and Barnes and Noble's book viewer. There is an optional GUI written in Tcl/Tk, and some shell scripts using OCR to create plain text or searchable PDFs and DjVus from the downloaded books.";
 	doap:homepage <http://njw.me.uk/software/getxbook/>;
 	doap:repository :repo;
 	doap:programming-language "C";
 	doap:license <http://www.isc.org/software/license>;
-	doap:release :v01, :v02, :v03, :v04, :v05, :v06, :v061;
+	doap:release :v01, :v02, :v03, :v04, :v05, :v06, :v061, :v07;
 	doap:maintainer <http://njw.me.uk/card#i>.
 
 <http://njw.me.uk/card#i> a foaf:Person;
@@ -56,3 +56,8 @@
 	doap:created "2011-11-22";
 	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-0.6.1.tar.bz2>,
 	                  <http://njw.me.uk/software/getxbook/getxbook-0.6.1-win.zip>.
+
+:v07 a doap:Version;
+	doap:revision "0.7";
+	doap:created "2012-02-12";
+	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-0.7.tar.bz2>.
