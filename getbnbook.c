@@ -93,7 +93,7 @@ int getpage(int pagenum)
 int main(int argc, char *argv[])
 {
 	char *tmp;
-	char buf[STRMAX], pgpath[STRMAX];
+	char buf[BUFSIZ], pgpath[STRMAX];
 	char in[16];
 	int a, i, n;
 	FILE *f;
