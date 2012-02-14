@@ -4,19 +4,24 @@ package require Tk
 
 set bin [list getgbook getabook getbnbook]
 
+proc updateStatus {chan} {
+	if {![eof $chan]} {
+		set a [gets $chan]
+		if { $a != "" } { .st configure -text $a }
+	} else {
+		close $chan
+		.dl configure -state normal -text "download"
+		.st configure -text ""
+	}
+}
+
 proc go {} {
 	if { [.id get] == "" } { return }
 	set cmd "[.bin get [.bin curselection]] [.id get]"
 	.dl configure -state disabled -text "downloading"
 	update
 	set out [open "|$cmd 2>@1" "r"]
-	while {![eof $out]} {
-		set a [gets $out]
-		if { $a != "" } { .st configure -text $a }
-		update
-	}
-	.dl configure -state normal -text "download"
-	.st configure -text ""
+	fileevent $out readable [list updateStatus $out]
 }
 
 label .lab -text "book id"
