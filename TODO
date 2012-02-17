@@ -2,6 +2,8 @@ before 1.0: fix http bug, package for osx
 
 # other todos
 
+the tools look for ...png, meaning that they'll re-download jpgs. should look for png too.
+
 bug in get() & post(): if the \r\n\r\n after http headers is cut off between recv buffers
 
 in getgbook, check that downloaded page doesn't match 'page not available' image; if so delete (as may be redownloadable later, perhaps even then with different cookies)
