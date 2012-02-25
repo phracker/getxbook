@@ -93,7 +93,7 @@ int getpage(int pagenum)
 int main(int argc, char *argv[])
 {
 	char *tmp;
-	char buf[BUFSIZ], pgpath[STRMAX];
+	char buf[BUFSIZ], pgpath[STRMAX], pgpath2[STRMAX];
 	char in[16];
 	int a, i, n;
 	FILE *f;
@@ -127,7 +127,8 @@ int main(int argc, char *argv[])
 	if(argc == 2) {
 		for(i=0; i<numpages; i++) {
 			snprintf(pgpath, STRMAX, "%s/%04d.png", bookdir, pages[i]);
-			if((f = fopen(pgpath, "r")) != NULL) {
+			snprintf(pgpath2, STRMAX, "%s/%04d.jpg", bookdir, pages[i]);
+			if((f = fopen(pgpath, "r")) != NULL || (f = fopen(pgpath2, "r")) != NULL) {
 				fclose(f);
 				continue;
 			}
