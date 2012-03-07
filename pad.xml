@@ -60,7 +60,8 @@
 <Web_Info>
 	<Application_URLs>
 		<Application_Info_URL>http://njw.me.uk/software/getxbook</Application_Info_URL>
-		<Application_Order_URL/><Application_Screenshot_URL/><Application_Icon_URL/>
+		<Application_Order_URL/><Application_Icon_URL/>
+		<Application_Screenshot_URL>http://njw.me.uk/software/getxbook/screenshot.png</Application_Screenshot_URL>
 		<Application_XML_File_URL>http://njw.me.uk/software/getxbook/pad.xml</Application_XML_File_URL>
 	</Application_URLs>
 	<Download_URLs>
