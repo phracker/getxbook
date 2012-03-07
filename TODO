@@ -1,17 +1,15 @@
-before 1.0: fix http bug, package for osx
-
 # other todos
 
-bug in get() & post(): if the \r\n\r\n after http headers is cut off between recv buffers. solution is to get all, then strstr(\n\r\n\r) to find end of header, and memcopy the rest out (so that original memory can be freed)
+0.9 - bug in get() & post(): if the \r\n\r\n after http headers is cut off between recv buffers. solution is to get all, then strstr(\n\r\n\r) to find end of header, and memcopy the rest out (so that original memory can be freed)
 
 in getabook, the web client tries downloading sequentially the first few pages, regardless of whether they're in the available page list. this actually works (some or all of these pages will return), so we should implement something similar too. exactly how it knows when to stop looking is not clear, at least with the one i tried, it just tried all of the first 25 pages.
 
 in getgbook, check that downloaded page doesn't match 'page not available' image; if so delete (as may be redownloadable later, perhaps even then with different cookies)
 
-package for osx - https://github.com/kennethreitz/osx-gcc-installer
+1.0 package for osx - https://github.com/kennethreitz/osx-gcc-installer
 
 add https support to get (getabook can use it everywhere, others cannot)
 
 write some little tests
 
-submit 'pad' file to websites http://padsites.asp-software.org/
+1.0 submit 'pad' file to websites http://padsites.asp-software.org/
