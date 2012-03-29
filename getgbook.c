@@ -187,7 +187,8 @@ int main(int argc, char *argv[])
 			free(tmp);
 	}
 
-	strncpy(bookid, argv[argc-1], STRMAX);
+	strncpy(bookid, argv[argc-1], STRMAX-1);
+	bookid[STRMAX-1] = '\0';
 	bookdir = argv[argc-1];
 
 	pages = malloc(sizeof(*pages) * MAXPAGES);
