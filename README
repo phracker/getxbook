@@ -8,30 +8,31 @@ getxbook is a collection of tools to download books from websites.
 
 ## why
 
-Online book websites are engineered not around reading, but around
+Online book websites are designed not around reading, but around
 surveillance. It is not merely the selection of book that is
 recorded, but exactly what is read, when, and for how long.
 Forever. And this is linked to all other information the website
 holds about you (which in the case of Google and Amazon is likely
-a great deal).
+to be a great deal).
 
 Reading books is one of the holiest acts in our society. Limiting
-our access, and monitoring it closely is a grave act. It is
-censorship, whether done for profit or for any other reason. And
-it is dangerous.
+and monitoring it is a grave act; it is censorship, whether its
+goal is profit or more direct political control. And it is
+dangerous.
 
-The getxbook programs download books anonymously. Your IP address
-will still be logged (use [torify](https://www.torproject.org)
-to stop this), but your reading won't be automatically linked to
-other information websites have about you, as no existing cookies
-are used. Once the book is downloaded, you can read it as you
-please without any further prying.
+The getxbook program downloads books anonymously. Using it will
+still result in your IP address being logged (use
+[torify](https://www.torproject.org) to stop this), but reading
+habits won't be automatically linked to other personal information
+websites hold, as no existing cookies are used. Once the book is
+downloaded, it can be read without any further prying.
 
-Of course, being free to do what you like with it, you can also load
-the book onto any device you have access to, share it, study it, and
-anything else you can do with normal computer files. You can easily
-use OCR software to get text versions of downloaded books, making
-them accessible to people who can't easily read from the page scans.
+Being free to do what you like with a book, you can also load it
+onto any device you have access to, share it, study it, read it
+offline, and do anything else you can do with normal computer files.
+You can easily use OCR software to get text versions of downloaded
+books, making them accessible to people who can't easily read from
+the page scans.
 
 "I have sworn upon the altar of God eternal hostility against every
 form of tyranny over the mind of man."

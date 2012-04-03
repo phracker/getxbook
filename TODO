@@ -6,6 +6,8 @@ in getabook, the web client tries downloading sequentially the first few pages, 
 
 in getgbook, check that downloaded page doesn't match 'page not available' image; if so delete (as may be redownloadable later, perhaps even then with different cookies)
 
+in getgbook, grab the link data (presumably as json somewhere), and add this to pdf
+
 1.0 format and package man pages in win and osx packages
 
 1.0 package for osx - https://github.com/kennethreitz/osx-gcc-installer
