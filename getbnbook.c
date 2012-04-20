@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
 	if(get("www.barnesandnoble.com", "/", NULL, cookies, &tmp))
 		free(tmp);
 
-	if(getpagelist(bookid, pages)) {
+	if(getpagelist()) {
 		fprintf(stderr, "Could not find any pages for %s\n", bookid);
 		return 1;
 	}

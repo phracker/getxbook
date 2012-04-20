@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
 	bookdir = argv[argc-1];
 
 	pages = malloc(sizeof(*pages) * MAXPAGES);
-	if(getpagelist(bookid, pages)) {
+	if(getpagelist()) {
 		fprintf(stderr, "Could not find any pages for %s\n", bookid);
 		return 1;
 	}
