@@ -1,0 +1,33 @@
+.\" See COPYING file for copyright, license and warranty details.
+.TH GETXBOOKGUI 1 getxbookgui\-VERSION
+.SH NAME
+getxbookgui \- a graphical interface to download books
+.SH SYNOPSIS
+.B getxbookgui
+.SH DESCRIPTION
+getxbookgui is a frontend to a set of tools which download books
+from several websites.
+.PP
+Books will be downloaded to the directory that getxbookgui was
+run from. If not run from the command line, this will typically
+be your home directory.
+.SH NOTES
+The getxbook tools will not try to download pages that have
+already been downloaded, so closing it and then starting it
+again later will continue downloading from where it left off.
+.PP
+getxbookgui checks the clipboard, and if a recognised book URL
+is copied into it, it automatically recognises it and sets
+the book id and website ready to start downloading it. This
+behaviour is disabled if the options are manually changed, to
+ensure manually set options aren't accidentally overwritten.
+.PP
+Book pages may vary in availability depending on the book, the
+website, and potentially the location of your IP.
+.PP
+Additional functionality is available by running the individual
+getxbook tools from the command line.
+.SH SEE ALSO
+.IR getgbook (1),
+.IR getabook (1),
+.IR getbnbook (1)
