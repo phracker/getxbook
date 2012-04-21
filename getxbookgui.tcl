@@ -3,7 +3,7 @@
 package require Tk
 
 set bins {{getgbook "Book ID" "Google\nBook Preview"} \
-          {getabook "ISBN 10" "Amazon Look\nInside This Book"} \
+          {getabook "ISBN 10" "Amazon Look\nInside The Book"} \
           {getbnbook "ISBN 13" "Barnes & Noble\nBook Viewer"}}
 set binselected 0
 set dling 0
