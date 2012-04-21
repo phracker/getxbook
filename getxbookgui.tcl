@@ -40,7 +40,7 @@ proc parseurl {url} {
 	set bookid ""
 	if { [string match "http*://books.google.com/*" "$url"] } {
 		selbin 0
-		if {[regexp {bookid=([^&]*)} $url m sub]} {
+		if {[regexp {[&?]id=([^&]*)} $url m sub]} {
 			set bookid $sub
 		}
 	} elseif { [string match "http*://*amazon*/*" "$url"] } {
