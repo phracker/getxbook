@@ -2,49 +2,108 @@
 # See COPYING file for copyright and license details.
 package require Tk
 
-set bin [list getgbook getabook getbnbook]
-set binopts [list "book id" "isbn 10" "isbn 13"]
+set bins {{getgbook "book id" "Google\nBook Preview"} \
+          {getabook "isbn 10" "Amazon Look\nInside This Book"} \
+          {getbnbook "isbn 13" "Barnes & Noble\nBook Viewer"}}
+set binselected 0
+set dling 0
+set manual 0
 
 set env(PATH) "[file dirname $::argv0]:$env(PATH)"
 
 proc updateStatus {chan} {
+	global dling
 	if {![eof $chan]} {
 		set a [gets $chan]
 		if { $a != "" } { .st configure -text $a }
 	} else {
 		if { ! [catch {close $chan}] } {
-			.st configure -text "[.top.id get] done"
+			.st configure -text "[.input.id get] done"
 		}
 		.dl configure -state normal -text "download"
-		.st configure -text ""
+		set dling 0
 	}
 }
 
-proc showopts {} {
-	global binopts
-	.top.lab configure -text [lindex $binopts [.bin curselection]]
-}
-
 proc go {} {
-	if { [.top.id get] == "" } { return }
-	set cmd "[.bin get [.bin curselection]] [.top.id get]"
+	global dling binselected bins
+	if { [.input.id get] == "" } { return }
+	set cmd "[lindex [lindex $bins $binselected] 0] [.input.id get]"
+	set dling 1
 	.dl configure -state disabled -text "downloading"
 	.st configure -text ""
 	set out [open "|$cmd 2>@1" "r"]
 	fileevent $out readable [list updateStatus $out]
 }
 
-frame .top
-label .top.lab
-entry .top.id -width 14
-listbox .bin -listvariable bin -exportselection 0  -height [llength $bin]
-bind .bin <<ListboxSelect>> {showopts}
-.bin selection set 0
+proc parseurl {url} {
+	set bookid ""
+	if { [string match "http*://books.google.com/*" "$url"] } {
+		selbin 0
+		if {[regexp {bookid=([^&]*)} $url m sub]} {
+			set bookid $sub
+		}
+	} elseif { [string match "http*://*amazon*/*" "$url"] } {
+		selbin 1
+		if {[regexp {/([0-9]{10})/} $url m sub]} {
+			set bookid $sub
+		}
+	} elseif { [string match "http*://www.barnesandnoble.com/*" "$url"] } {
+		selbin 2
+		# isbn-13 isn't included in b&n book urls, sadly
+	}
+	.input.id delete 0 end
+	.input.id insert 0 "$bookid"
+}
+
+proc watchsel {} {
+	global dling manual
+
+	if { !$dling && !$manual && \
+	     ! [catch {set sel "[clipboard get -type UTF8_STRING]"}] } {
+		parseurl "$sel"
+	}
+
+	after 500 watchsel
+}
+
+proc selbin {sel} {
+	global bins binselected
+
+	.binfr.$binselected configure -relief flat
+	set binselected $sel
+	.binfr.$binselected configure -relief solid
+
+	.input.lab configure -text [lindex [lindex $bins $sel] 1]
+}
+
+frame .input
+label .input.lab
+entry .input.id -width 14
+
+frame .binfr
+for {set i 0} {$i < [llength $bins]} {incr i} {
+	set b [lindex $bins $i]
+	set binname [lindex $b 0]
+	if { [catch {image create photo im$i -file "icons/$binname.gif"}] } {
+		image create photo im$i -height 64
+	}
+	button .binfr.$i -text [lindex $b 2] -image im$i \
+	       -command "selbin $i" -compound top -relief flat
+	pack .binfr.$i -side left
+	bind .binfr.$i <Key> {set manual 1}
+	bind .binfr.$i <Button> {set manual 1}
+}
+.binfr.$binselected invoke
+
 button .dl -text "download" -command go
 label .st
-showopts
 
-pack .top .bin .dl .st
-pack .top.lab -side left
-pack .top.id
+pack .input.lab -side left
+pack .input.id
+
+pack .binfr .input .dl .st
 bind . <Return> go
+
+bind .input.id <Key> {set manual 1}
+watchsel
