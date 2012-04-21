@@ -2,9 +2,9 @@
 # See COPYING file for copyright and license details.
 package require Tk
 
-set bins {{getgbook "book id" "Google\nBook Preview"} \
-          {getabook "isbn 10" "Amazon Look\nInside This Book"} \
-          {getbnbook "isbn 13" "Barnes & Noble\nBook Viewer"}}
+set bins {{getgbook "Book ID" "Google\nBook Preview"} \
+          {getabook "ISBN 10" "Amazon Look\nInside This Book"} \
+          {getbnbook "ISBN 13" "Barnes & Noble\nBook Viewer"}}
 set binselected 0
 set dling 0
 set manual 0
@@ -18,9 +18,9 @@ proc updateStatus {chan} {
 		if { $a != "" } { .st configure -text $a }
 	} else {
 		if { ! [catch {close $chan}] } {
-			.st configure -text "[.input.id get] done"
+			.st configure -text "[.input.id get] Done"
 		}
-		.dl configure -state normal -text "download"
+		.dl configure -state normal -text "Download"
 		set dling 0
 	}
 }
@@ -30,7 +30,7 @@ proc go {} {
 	if { [.input.id get] == "" } { return }
 	set cmd "[lindex [lindex $bins $binselected] 0] [.input.id get]"
 	set dling 1
-	.dl configure -state disabled -text "downloading"
+	.dl configure -state disabled -text "Downloading"
 	.st configure -text ""
 	set out [open "|$cmd 2>@1" "r"]
 	fileevent $out readable [list updateStatus $out]
@@ -96,7 +96,7 @@ for {set i 0} {$i < [llength $bins]} {incr i} {
 }
 .binfr.$binselected invoke
 
-button .dl -text "download" -command go
+button .dl -text "Download" -command go
 label .st
 
 pack .input.lab -side left
