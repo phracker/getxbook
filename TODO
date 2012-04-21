@@ -20,7 +20,3 @@ write some little tests
 add function to download html text to getabook (just a html request to get kindle version)
 
 add scribd functionality - example is http://www.scribd.com/doc/20448287/Etidorhpa-John-Uri-Lloyd producing urls like http://htmlimg3.scribdassets.com/1qva8jpekgdk0wl/images/1-bfa8361a96.jpg
-
-add to README or getgbook.1 a note recommending checking archive.org as many public domain books scanned by google will be archived there.
-
-mention that google book images aren't watermarked - check others and report on that too.
