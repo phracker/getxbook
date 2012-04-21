@@ -72,7 +72,7 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 	snprintf(m, 256, "Set-Cookie: %%%ds;", COOKIEMAX-1);
 
 	while((res = recv(fd, t, BUFSIZ, 0)) > 0) {
-		strncat(h, t, sizeof(h) - strlen(h) - 1);
+		strncat(h, t, BUFSIZ - strlen(h) - 1);
 		if((t2 = strstr(t, "\r\n\r\n")) != NULL && (t2 - t) < (signed)res) {
 			/* end of header, save rest to buffer */
 			t2+=4;
@@ -91,7 +91,7 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **buf) 
 	t2 = h;
 	if(savecookie != NULL) {
 		while((t2 = strstr(t2, "Set-Cookie: ")) && sscanf(t2, m, c)) {
-			strncat(savecookie, c, sizeof(savecookie) - strlen(savecookie) - 1);
+			strncat(savecookie, c, COOKIEMAX - strlen(savecookie) - 1);
 			t2++;
 		}
 	}

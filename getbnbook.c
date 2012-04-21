@@ -39,7 +39,7 @@ int getpagelist()
 
 	snprintf(url, URLMAX, "/DigBooks/viewer/bookviewmanager.aspx?op=getbookinfo&ean=%s", bookid);
 
-	if(!get("search2.barnesandnoble.com", url, NULL, cookies, &buf))
+	if(!get("search2.barnesandnoble.com", url, cookies, NULL, &buf))
 		return 1;
 
 	/* find page url structure */
