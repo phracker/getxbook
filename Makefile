@@ -10,7 +10,7 @@ DOC = README COPYING INSTALL LEGAL
 EXTRAS = extras/mkpdf.sh extras/mkocrpdf.sh extras/mkdjvu.sh extras/mkocrtxt.sh extras/mkocrdjvu.sh
 
 BIN = $(SRC:.c=)
-MAN = $(SRC:.c=.1)
+MAN = $(SRC:.c=.1) $(GUI:.tcl=.1)
 OBJ = $(SRC:.c=.o) $(LIB)
 
 all: $(BIN)
@@ -35,7 +35,7 @@ install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp -f $(BIN) $(DESTDIR)$(PREFIX)/bin
 	sed "s:^set iconpath .*:set iconpath \"$(DESTDIR)$(PREFIX)/share/$(NAME)\":" < $(GUI) \
-	    > $(DESTDIR)$(PREFIX)/bin/getxbookgui
+	    > $(DESTDIR)$(PREFIX)/bin/$(GUI:.tcl=)
 	chmod +x $(DESTDIR)$(PREFIX)/bin/getxbookgui
 	mkdir -p $(DESTDIR)$(PREFIX)/share/$(NAME)
 	cp icons/* $(DESTDIR)$(PREFIX)/share/$(NAME)/
