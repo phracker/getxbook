@@ -33,7 +33,12 @@ util.a: $(LIB)
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	cp -f $(BIN) $(GUI) $(DESTDIR)$(PREFIX)/bin
+	cp -f $(BIN) $(DESTDIR)$(PREFIX)/bin
+	sed "s:^set iconpath .*:set iconpath \"$(DESTDIR)$(PREFIX)/share/$(NAME)\":" < $(GUI) \
+	    > $(DESTDIR)$(PREFIX)/bin/getxbookgui
+	chmod +x $(DESTDIR)$(PREFIX)/bin/getxbookgui
+	mkdir -p $(DESTDIR)$(PREFIX)/share/$(NAME)
+	cp icons/* $(DESTDIR)$(PREFIX)/share/$(NAME)/
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
 	for f in $(MAN); do sed "s/VERSION/$(VERSION)/g" < $$f > $(DESTDIR)$(MANPREFIX)/man1/$$f; done
 
@@ -47,8 +52,10 @@ clean:
 dist:
 	mkdir -p $(NAME)-$(VERSION)
 	cp $(SRC) $(GUI) $(DOC) $(MAN) util.h util.c Makefile config.mk $(NAME)-$(VERSION)
+	mkdir -p $(NAME)-$(VERSION)/icons
+	cp icons/* $(NAME)-$(VERSION)/icons/
 	mkdir -p $(NAME)-$(VERSION)/extras
-	cp $(EXTRAS) $(NAME)-$(VERSION)/extras
+	cp $(EXTRAS) $(NAME)-$(VERSION)/extras/
 	tar c $(NAME)-$(VERSION) | bzip2 -c > $(NAME)-$(VERSION).tar.bz2
 	gpg -b < $(NAME)-$(VERSION).tar.bz2 > $(NAME)-$(VERSION).tar.bz2.sig
 	rm -rf $(NAME)-$(VERSION)
@@ -72,6 +79,8 @@ getxbookgui: getxbookgui.tcl
 dist-win: $(BIN) $(GUI:.tcl=.exe)
 	mkdir -p $(NAME)-win
 	cp $(OBJ:.o=.exe) $(GUI:.tcl=.exe) $(NAME)-win
+	mkdir -p $(NAME)-win/icons
+	cp icons/* $(NAME)-win/icons/
 	for f in LEGAL README COPYING; do \
 	sed 's/$$/\r/g' < $$f > $(NAME)-win/$$f.txt; done
 	zip -j $(NAME)-$(VERSION)-win.zip $(NAME)-win/*

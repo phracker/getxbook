@@ -10,6 +10,7 @@ set dling 0
 set manual 0
 
 set env(PATH) "[file dirname $::argv0]:$env(PATH)"
+set iconpath "[file dirname $::argv0]/icons"
 
 proc updateStatus {chan} {
 	global dling
@@ -85,7 +86,7 @@ frame .binfr
 for {set i 0} {$i < [llength $bins]} {incr i} {
 	set b [lindex $bins $i]
 	set binname [lindex $b 0]
-	if { [catch {image create photo im$i -file "icons/$binname.gif"}] } {
+	if { [catch {image create photo im$i -file "$iconpath/$binname.gif"}] } {
 		image create photo im$i -height 64
 	}
 	button .binfr.$i -text [lindex $b 2] -image im$i \
