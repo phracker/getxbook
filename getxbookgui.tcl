@@ -87,7 +87,7 @@ for {set i 0} {$i < [llength $bins]} {incr i} {
 	set b [lindex $bins $i]
 	set binname [lindex $b 0]
 	if { [catch {image create photo im$i -file "$iconpath/$binname.gif"}] } {
-		image create photo im$i -height 64
+		image create photo im$i
 	}
 	button .binfr.$i -text [lindex $b 2] -image im$i \
 	       -command "selbin $i" -compound top -relief flat
