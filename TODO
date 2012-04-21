@@ -5,6 +5,7 @@
 in getabook, the web client tries downloading sequentially the first few pages, regardless of whether they're in the available page list. this actually works (some or all of these pages will return), so we should implement something similar too. exactly how it knows when to stop looking is not clear, at least with the one i tried, it just tried all of the first 25 pages.
 
 in getgbook, check that downloaded page doesn't match 'page not available' image; if so delete (as may be redownloadable later, perhaps even then with different cookies)
+in getbnbook, check that downloaded page doesn't match 'page not available' swf; if so delete (as may be redownloadable later, perhaps even then with different cookies)
 
 in getgbook, grab the link data (presumably as json somewhere), and add this to pdf
 
@@ -12,8 +13,14 @@ in getgbook, grab the link data (presumably as json somewhere), and add this to 
 
 1.0 package for osx - https://github.com/kennethreitz/osx-gcc-installer
 
-add https support to get (getabook can use it everywhere, others cannot)
-
 write some little tests
 
 1.0 submit 'pad' file to websites http://padsites.asp-software.org/
+
+add function to download html text to getabook (just a html request to get kindle version)
+
+add scribd functionality - example is http://www.scribd.com/doc/20448287/Etidorhpa-John-Uri-Lloyd producing urls like http://htmlimg3.scribdassets.com/1qva8jpekgdk0wl/images/1-bfa8361a96.jpg
+
+add to README or getgbook.1 a note recommending checking archive.org as many public domain books scanned by google will be archived there.
+
+mention that google book images aren't watermarked - check others and report on that too.
