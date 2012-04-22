@@ -53,8 +53,10 @@ proc parseurl {url} {
 		selbin 2
 		# isbn-13 isn't included in b&n book urls, sadly
 	}
-	.input.id delete 0 end
-	.input.id insert 0 "$bookid"
+	if { "$bookid" != "" } {
+		.input.id delete 0 end
+		.input.id insert 0 "$bookid"
+	}
 }
 
 proc watchsel {} {
