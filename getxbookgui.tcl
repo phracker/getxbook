@@ -42,16 +42,19 @@ proc go {} {
 
 proc parseurl {url} {
 	global bins
-	for {set i 0} {$i < [llength $bins]} {incr i} {
-		set b [lindex $bins $i]
+	set newid ""
+	set i 0
+	foreach b $bins {
 		if { [string match [lindex $b 3] "$url"] } {
 			selbin $i
 			set binregex [lindex $b 4]
 			if {"$binregex" != "" && [regexp "$binregex" $url m sub]} {
-				.input.id delete 0 end
-				.input.id insert 0 "$sub"
+				set newid "$sub"
 			}
+			.input.id delete 0 end
+			.input.id insert 0 "$newid"
 		}
+		incr i
 	}
 }
 
@@ -81,8 +84,8 @@ label .input.lab
 entry .input.id -width 14
 
 frame .binfr
-for {set i 0} {$i < [llength $bins]} {incr i} {
-	set b [lindex $bins $i]
+set i 0
+foreach b $bins {
 	set binname [lindex $b 0]
 	if { [catch {image create photo im$i -file "$iconpath/$binname.gif"}] } {
 		image create photo im$i
@@ -92,6 +95,7 @@ for {set i 0} {$i < [llength $bins]} {incr i} {
 	pack .binfr.$i -side left
 	bind .binfr.$i <Key> {set manual 1}
 	bind .binfr.$i <Button> {set manual 1}
+	incr i
 }
 .binfr.$binselected invoke
 
@@ -105,4 +109,5 @@ pack .binfr .input .dl .st
 bind . <Return> go
 
 bind .input.id <Key> {set manual 1}
+bind .input.id <Button> {set manual 1}
 watchsel
