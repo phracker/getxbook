@@ -2,7 +2,7 @@
 # See COPYING file for copyright and license details.
 package require Tk
 
-set bins {{getgbook "Book ID" "Google\nBook Preview"} \
+set bins {{getgbook "Google Book ID" "Google\nBook Preview"} \
           {getabook "ISBN 10" "Amazon Look\nInside The Book"} \
           {getbnbook "ISBN 13" "Barnes & Noble\nBook Viewer"}}
 set binselected 0
