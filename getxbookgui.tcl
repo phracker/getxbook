@@ -2,13 +2,13 @@
 # See COPYING file for copyright and license details.
 package require Tk
 
-set bins {{getgbook "Google Book ID" "Google\nBook Preview" \
+set cmds {{getgbook "Google Book ID" "Google\nBook Preview" \
            "http*://books.google.com/*" {[&?]id=([^&]*)}} \
           {getabook "ISBN 10" "Amazon Look\nInside The Book" \
            "http*://*amazon*/*" {/([0-9]{10})/}} \
           {getbnbook "ISBN 13" "Barnes & Noble\nBook Viewer" \
            "http*://www.barnesandnoble.com/*" ""}}
-set binselected 0
+set cmdselected 0
 set dling 0
 set manual 0
 
@@ -30,9 +30,9 @@ proc updateStatus {chan} {
 }
 
 proc go {} {
-	global dling binselected bins
+	global dling cmdselected cmds
 	if { [.input.id get] == "" } { return }
-	set cmd "[lindex [lindex $bins $binselected] 0] [.input.id get]"
+	set cmd "[lindex [lindex $cmds $cmdselected] 0] [.input.id get]"
 	set dling 1
 	.dl configure -state disabled -text "Downloading"
 	.st configure -text ""
@@ -41,14 +41,14 @@ proc go {} {
 }
 
 proc parseurl {url} {
-	global bins
+	global cmds
 	set newid ""
 	set i 0
-	foreach b $bins {
+	foreach b $cmds {
 		if { [string match [lindex $b 3] "$url"] } {
-			selbin $i
-			set binregex [lindex $b 4]
-			if {"$binregex" != "" && [regexp "$binregex" $url m sub]} {
+			selcmd $i
+			set cmdregex [lindex $b 4]
+			if {"$cmdregex" != "" && [regexp "$cmdregex" $url m sub]} {
 				set newid "$sub"
 			}
 			.input.id delete 0 end
@@ -69,35 +69,35 @@ proc watchsel {} {
 	after 500 watchsel
 }
 
-proc selbin {sel} {
-	global bins binselected
+proc selcmd {sel} {
+	global cmds cmdselected
 
-	.binfr.$binselected configure -relief flat
-	set binselected $sel
-	.binfr.$binselected configure -relief solid
+	.cmdfr.$cmdselected configure -relief flat
+	set cmdselected $sel
+	.cmdfr.$cmdselected configure -relief solid
 
-	.input.lab configure -text [lindex [lindex $bins $sel] 1]
+	.input.lab configure -text [lindex [lindex $cmds $sel] 1]
 }
 
 frame .input
 label .input.lab
 entry .input.id -width 14
 
-frame .binfr
+frame .cmdfr
 set i 0
-foreach b $bins {
-	set binname [lindex $b 0]
-	if { [catch {image create photo im$i -file "$iconpath/$binname.gif"}] } {
+foreach b $cmds {
+	set cmdname [lindex $b 0]
+	if { [catch {image create photo im$i -file "$iconpath/$cmdname.gif"}] } {
 		image create photo im$i
 	}
-	button .binfr.$i -text [lindex $b 2] -image im$i \
-	       -command "selbin $i" -compound top -relief flat
-	pack .binfr.$i -side left
-	bind .binfr.$i <Key> {set manual 1}
-	bind .binfr.$i <Button> {set manual 1}
+	button .cmdfr.$i -text [lindex $b 2] -image im$i \
+	       -command "selcmd $i" -compound top -relief flat
+	pack .cmdfr.$i -side left
+	bind .cmdfr.$i <Key> {set manual 1}
+	bind .cmdfr.$i <Button> {set manual 1}
 	incr i
 }
-.binfr.$binselected invoke
+.cmdfr.$cmdselected invoke
 
 button .dl -text "Download" -command go
 label .st
@@ -105,7 +105,7 @@ label .st
 pack .input.lab -side left
 pack .input.id
 
-pack .binfr .input .dl .st
+pack .cmdfr .input .dl .st
 bind . <Return> go
 
 bind .input.id <Key> {set manual 1}
