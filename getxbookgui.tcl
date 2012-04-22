@@ -2,9 +2,12 @@
 # See COPYING file for copyright and license details.
 package require Tk
 
-set bins {{getgbook "Google Book ID" "Google\nBook Preview"} \
-          {getabook "ISBN 10" "Amazon Look\nInside The Book"} \
-          {getbnbook "ISBN 13" "Barnes & Noble\nBook Viewer"}}
+set bins {{getgbook "Google Book ID" "Google\nBook Preview" \
+           "http*://books.google.com/*" {[&?]id=([^&]*)}} \
+          {getabook "ISBN 10" "Amazon Look\nInside The Book" \
+           "http*://*amazon*/*" {/([0-9]{10}}} \
+          {getbnbook "ISBN 13" "Barnes & Noble\nBook Viewer" \
+           "http*://www.barnesandnoble.com/*" ""}}
 set binselected 0
 set dling 0
 set manual 0
@@ -38,24 +41,17 @@ proc go {} {
 }
 
 proc parseurl {url} {
-	set bookid ""
-	if { [string match "http*://books.google.com/*" "$url"] } {
-		selbin 0
-		if {[regexp {[&?]id=([^&]*)} $url m sub]} {
-			set bookid $sub
+	global bins
+	for {set i 0} {$i < [llength $bins]} {incr i} {
+		set b [lindex $bins $i]
+		if { [string match [lindex $b 3] "$url"] } {
+			selbin $i
+			set binregex [lindex $b 4]
+			if {"$binregex" != "" && [regexp "$binregex" $url m sub]} {
+				.input.id delete 0 end
+				.input.id insert 0 "$sub"
+			}
 		}
-	} elseif { [string match "http*://*amazon*/*" "$url"] } {
-		selbin 1
-		if {[regexp {/([0-9]{10})/} $url m sub]} {
-			set bookid $sub
-		}
-	} elseif { [string match "http*://www.barnesandnoble.com/*" "$url"] } {
-		selbin 2
-		# isbn-13 isn't included in b&n book urls, sadly
-	}
-	if { "$bookid" != "" } {
-		.input.id delete 0 end
-		.input.id insert 0 "$bookid"
 	}
 }
 
