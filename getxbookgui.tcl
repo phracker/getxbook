@@ -5,7 +5,7 @@ package require Tk
 set bins {{getgbook "Google Book ID" "Google\nBook Preview" \
            "http*://books.google.com/*" {[&?]id=([^&]*)}} \
           {getabook "ISBN 10" "Amazon Look\nInside The Book" \
-           "http*://*amazon*/*" {/([0-9]{10}}} \
+           "http*://*amazon*/*" {/([0-9]{10})/}} \
           {getbnbook "ISBN 13" "Barnes & Noble\nBook Viewer" \
            "http*://www.barnesandnoble.com/*" ""}}
 set binselected 0
