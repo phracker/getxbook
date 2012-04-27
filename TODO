@@ -1,6 +1,6 @@
 # other todos
 
-0.9 - bug in get() & post(): if the \r\n\r\n after http headers is cut off between recv buffers. solution is to get all, then strstr(\n\r\n\r) to find end of header, and memcopy the rest out (so that original memory can be freed)
+bug in get() & post(): if the \r\n\r\n after http headers is cut off between recv buffers. solution is to get all, then strstr(\n\r\n\r) to find end of header, and memcopy the rest out (so that original memory can be freed)
 
 in getabook, the web client tries downloading sequentially the first few pages, regardless of whether they're in the available page list. this actually works (some or all of these pages will return), so we should implement something similar too. exactly how it knows when to stop looking is not clear, at least with the one i tried, it just tried all of the first 25 pages.
 
