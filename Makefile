@@ -109,13 +109,15 @@ index.html: doap.ttl README
 	echo "body {font-family:sans-serif; width:38em; margin:auto; max-width:94%;}" >> $@
 	echo "h1 {font-size:1.6em; text-align:center;}" >> $@
 	echo "a {text-decoration:none; border-bottom:thin dotted;}" >> $@
+	echo "img {margin: auto; border: thin solid; display: block;}" >> $@
 	echo "</style></head><body>" >> $@
-	sed '7q' < README | smu >> $@
+	sed '3q' < README | smu >> $@
+	echo "<p><img src="screenshot1.png" alt="screenshot"/></p>" >> $@
 	echo "<h2>download</h2>" >> $@
 	echo "[$(NAME) $(VERSION) source]($(NAME)-$(VERSION).tar.bz2) ([sig]($(NAME)-$(VERSION).tar.bz2.sig)) ($(RELDATE))" | smu >> $@
 	#echo "[$(NAME) $(VERSION) windows]($(NAME)-$(VERSION)-win.zip) ([sig]($(NAME)-$(VERSION)-win.zip.sig)) ($(RELDATE))" | smu >> $@
 	#echo "[$(NAME) $(VERSION) mac]($(NAME)-$(VERSION)-mac.dmg) ([sig]($(NAME)-$(VERSION)-mac.dmg.sig)) ($(RELDATE))" | smu >> $@
-	sed '1,7d' < README | smu >> $@
+	sed '1,3d' < README | smu >> $@
 	echo '<hr />' >> $@
 	sh websummary.sh doap.ttl | smu >> $@
 	echo '</body></html>' >> $@
