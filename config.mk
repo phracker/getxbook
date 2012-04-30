@@ -10,7 +10,6 @@ CFLAGS = -std=c99 -pedantic -Wall -Wextra -Werror -g -D_POSIX_C_SOURCE=200112L \
          -DVERSION=\"$(VERSION)\"
 
 W32TCLKIT = tclkit-8.5.9-win32.upx.exe
-MACTCLKIT = tclkit-8.5b1-darwin-univ-aqua
 
 # musl static
 #CC = musl-gcc

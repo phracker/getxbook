@@ -68,13 +68,6 @@ getxbookgui.exe: getxbookgui.tcl
 	@sdx wrap $@ -runtime $(W32TCLKIT)
 	@rm -r getxbookgui.kit getxbookgui.vfs
 
-getxbookgui: getxbookgui.tcl
-	@echo STARPACK $@
-	@sdx qwrap getxbookgui.tcl
-	@sdx unwrap getxbookgui.kit
-	@sdx wrap $@ -runtime $(MACTCLKIT)
-	@rm -r getxbookgui.kit getxbookgui.vfs
-
 # needs to be run from a mingw setup
 dist-win: $(BIN) $(GUI:.tcl=.exe)
 	mkdir -p $(NAME)-win
@@ -89,10 +82,11 @@ dist-win: $(BIN) $(GUI:.tcl=.exe)
 	echo $(NAME)-$(VERSION)-win.zip $(NAME)-$(VERSION)-win.zip.sig
 
 # needs to be run from a mac
-dist-mac: $(BIN) $(GUI:.tcl=)
+dist-mac: $(BIN) $(GUI)
 	mkdir -p $(NAME)-$(VERSION)/$(NAME).app/Contents/MacOS
 	mkdir -p $(NAME)-$(VERSION)/$(NAME).app/Contents/Resources
-	cp $(BIN) $(GUI:.tcl=) $(NAME)-$(VERSION)/$(NAME).app/Contents/MacOS/
+	cp $(BIN) $(NAME)-$(VERSION)/$(NAME).app/Contents/MacOS/
+	cp $(GUI) $(NAME)-$(VERSION)/$(NAME).app/Contents/MacOS/$(GUI:.tcl=)
 	for f in $(DOC); do cp $$f $(NAME)-$(VERSION)/$$f.txt; done
 	echo '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict><key>CFBundlePackageType</key><string>APPL</string>'"<key>CFBundleExecutable</key><string>getxbookgui</string><key>CFBundleVersion</key><string>$(VERSION)</string><key>CFBundleName</key><string>$(NAME)</string></dict></plist>" > $(NAME)-$(VERSION)/$(NAME).app/Contents/Info.plist
 	hdiutil create -srcfolder $(NAME) $(NAME)-$(VERSION).dmg
