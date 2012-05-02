@@ -43,7 +43,7 @@ install: all
 	for f in $(MAN); do sed "s/VERSION/$(VERSION)/g" < $$f > $(DESTDIR)$(MANPREFIX)/man1/$$f; done
 
 uninstall:
-	cd $(DESTDIR)$(PREFIX)/bin && rm -f $(BIN) $(GUI)
+	cd $(DESTDIR)$(PREFIX)/bin && rm -f $(BIN) $(GUI:.tcl=)
 	cd $(DESTDIR)$(MANPREFIX)/man1 && rm -f $(MAN)
 
 clean:
