@@ -61,6 +61,20 @@ dist:
 	rm -rf $(NAME)-$(VERSION)
 	echo $(NAME)-$(VERSION).tar.bz2 $(NAME)-$(VERSION).tar.bz2.sig
 
+# needs config.mk set up to build statically
+dist-static: $(BIN)
+	mkdir -p $(NAME)-$(VERSION)
+	cp $(BIN) $(GUI) $(DOC) $(MAN) config.mk $(NAME)-$(VERSION)
+	sed 's/^install: all$$/install:/' < Makefile > $(NAME)-$(VERSION)/Makefile
+	mkdir -p $(NAME)-$(VERSION)/icons
+	cp icons/* $(NAME)-$(VERSION)/icons/
+	mkdir -p $(NAME)-$(VERSION)/extras
+	cp $(EXTRAS) $(NAME)-$(VERSION)/extras/
+	tar c $(NAME)-$(VERSION) | bzip2 -c > $(NAME)-$(VERSION)-static.tar.bz2
+	gpg -b < $(NAME)-$(VERSION)-static.tar.bz2 > $(NAME)-$(VERSION)-static.tar.bz2.sig
+	rm -rf $(NAME)-$(VERSION)
+	echo $(NAME)-$(VERSION)-static.tar.bz2 $(NAME)-$(VERSION)-static.tar.bz2.sig
+
 getxbookgui.exe: getxbookgui.tcl
 	@echo STARPACK $@
 	@sdx qwrap getxbookgui.tcl
