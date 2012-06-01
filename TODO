@@ -11,8 +11,6 @@ in getgbook, grab the link data (presumably as json somewhere), and add this to 
 
 1.0 format and package man pages in win and osx packages
 
-1.0 package for osx - https://github.com/kennethreitz/osx-gcc-installer
-
 write some little tests
 
 1.0 submit 'pad' file to websites http://padsites.asp-software.org/
