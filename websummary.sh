@@ -25,17 +25,17 @@ WHERE {
 
 roqet -q -r csv -e "$q" -D /dev/stdin < $rdf | sed '1d' \
 | while read r; do
-	home=`echo $r | awk -F , '{print $1}'`
-	repo=`echo $r | awk -F , '{print $2}'`
-	licenseuri=`echo $r | awk -F , '{print $3}'`
-	maint=`echo $r | awk -F , '{print $4}'`
-	mainthome=`echo $r | awk -F , '{print $5}'`
-	lang=`echo $r | awk -F , '{print $6}'`
+	home=`echo $r | awk -F , '{print $2}' | sed 's/uri(//;s/)$//'`
+	repo=`echo $r | awk -F , '{print $3}' | sed 's/uri(//;s/)$//'`
+	licenseuri=`echo $r | awk -F , '{print $4}' | sed 's/uri(//;s/)$//'`
+	maint=`echo $r | awk -F , '{print $5}' | sed 's/"//g'`
+	mainthome=`echo $r | awk -F , '{print $6}' | sed 's/uri(//;s/)$//'`
+	lang=`echo $r | awk -F , '{print $7}' | sed 's/"//g'`
 	test "$licenseuri" = "http://www.gnu.org/licenses/gpl.html" && license="GPL"
 	test "$licenseuri" = "http://www.gnu.org/licenses/agpl.html" && license="AGPL"
 	test "$licenseuri" = "http://creativecommons.org/licenses/MIT/" && license="MIT"
 	test "$licenseuri" = "http://www.isc.org/software/license" && license="ISC"
-	repotype=`echo $r | awk -F , '{print $7}'`
+	repotype=`echo $r | awk -F , '{print $8}' | sed 's/uri(//;s/)$//'`
 	test "$repotype" = "http://usefulinc.com/ns/doap#GitRepository" && repocmd="git clone"
 
 	cat <<- _EOF_
