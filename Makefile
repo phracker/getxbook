@@ -47,7 +47,7 @@ uninstall:
 	cd $(DESTDIR)$(MANPREFIX)/man1 && rm -f $(MAN)
 
 clean:
-	rm -f -- $(BIN) $(OBJ) util.a index.html
+	rm -f -- $(BIN) $(OBJ) util.a index.html comparison.html
 
 dist:
 	mkdir -p $(NAME)-$(VERSION)
@@ -127,9 +127,23 @@ index.html: doap.ttl README
 	echo "$(NAME) for mac os x [available from Homebrew](http://mxcl.github.com/homebrew/)" | smu >> $@
 	#echo "[$(NAME) $(VERSION) windows]($(NAME)-$(VERSION)-win.zip) ([sig]($(NAME)-$(VERSION)-win.zip.sig)) ($(RELDATE))" | smu >> $@
 	sed '1,5d' < README | smu >> $@
+	echo "[comparison with similar programs](comparison)" | smu >> $@
 	echo '<hr />' >> $@
 	sh websummary.sh doap.ttl | smu >> $@
 	echo '</body></html>' >> $@
 
+comparison.html: comparison.txt
+	echo making comparison webpage
+	echo "<!DOCTYPE html><html><head><title>$(NAME)</title>" > $@
+	echo '<link rel="alternate" type="text/turtle" title="rdf" href="doap.ttl" />' >> $@
+	echo '<style type="text/css">' >> $@
+	echo "body {font-family:sans-serif; width:38em; margin:auto; max-width:94%;}" >> $@
+	echo "h1 {font-size:1.6em; text-align:center;}" >> $@
+	echo "a {text-decoration:none; border-bottom:thin dotted;}" >> $@
+	echo "img {margin: auto; border: thin solid; display: block;}" >> $@
+	echo "</style></head><body>" >> $@
+	smu < comparison.txt >> $@
+	echo '</body></html>' >> $@
+
 .PHONY: all clean install uninstall dist dist-win dist-mac
-.SILENT: index.html dist
+.SILENT: index.html comparison.html dist

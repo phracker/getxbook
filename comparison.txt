@@ -1,0 +1,19 @@
+# comparison with similar programs
+
+There are several programs that do similar things to [getxbook](http://njw.me.uk/software/getxbook):
+
+* [PySheng](http://code.google.com/p/pysheng/)
+* [Google Book Downloader](http://googlebookdownloader.codeplex.com/)
+* [Google Book Downloader UserScript](http://userscripts.org/scripts/show/37933)
+
+There are also several other programs which are proprietary. By forbidding the free reading, sharing and modification of their code, they deprive their users of important freedoms, and likely also spy on their reading habits. Given that a major goal of getxbook is ensuring the freedom to read, I am disqualifying these from any comparison.
+
+*Google Book Downloader* is Windows only, and depends on lots of proprietary software to run. It is also not clear whether 'preview only' availability books can be downloaded. It can convert the book pages directly into one PDF.
+
+*PySheng* is a free Python program and runs on free platforms. It's much larger and more complex (and hence likely more buggy), and less mature. It also depends on Python and GTK, which are rather slow, large, and heavy.
+
+*Google Book Downloader UserScript* is a GreaseMonkey script, which runs in Firefox. It goes without saying therefore that it has a rather significant dependency. It requires you to download one page at a time, and hence it makes the process of downloading a book very time and labour consuming.
+
+While some of the above programs offer saving to PDF, only *getxbook* offers the ability to save a book as DejaVu, or automatically OCR the pages to extract the text in them, saving it either into a text file, or embedded in a PDF or DejaVu file.
+
+The above programs are all limited to downloading from Google Books, whereas *getxbook* can download from several websites with different book databases. I am not aware of any other programs that offer this.
