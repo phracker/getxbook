@@ -96,6 +96,7 @@ dist-win: $(BIN) $(GUI:.tcl=.exe)
 	echo $(NAME)-$(VERSION)-win.zip $(NAME)-$(VERSION)-win.zip.sig
 
 # needs to be run from a mac
+# currently unused thanks to kind homebrew people packaging it
 dist-mac: $(BIN) $(GUI)
 	mkdir -p $(NAME)-$(VERSION)/$(NAME).app/Contents/MacOS
 	mkdir -p $(NAME)-$(VERSION)/$(NAME).app/Contents/Resources
