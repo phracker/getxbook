@@ -45,6 +45,7 @@ install: all
 uninstall:
 	cd $(DESTDIR)$(PREFIX)/bin && rm -f $(BIN) $(GUI:.tcl=)
 	cd $(DESTDIR)$(MANPREFIX)/man1 && rm -f $(MAN)
+	rm -rf $(DESTDIR)$(PREFIX)/share/$(NAME)
 
 clean:
 	rm -f -- $(BIN) $(OBJ) util.a index.html comparison.html
