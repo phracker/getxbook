@@ -114,7 +114,7 @@ int getpageurls(int pagenum) {
 	strncpy(url, "/gp/search-inside/service-data", URLMAX);
 	snprintf(query, URLMAX, "method=goToPage&asin=%s&page=%d", bookid, pagenum);
 
-	if(!post("www.amazon.com", url, query, &buf))
+	if(!post("www.amazon.com", url, NULL, NULL, query, &buf))
 		return 1;
 
 	fillurls(buf);

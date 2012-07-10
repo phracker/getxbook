@@ -114,6 +114,21 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **body)
 	return request(host, h, savecookie, body);
 }
 
+int post(char *host, char *path, char *sendcookie, char *savecookie, char *data, char **body) {
+	char h[BUFSIZ] = "";
+	char c[COOKIEMAX] = "";
+
+	if(sendcookie && sendcookie[0])
+		snprintf(c, COOKIEMAX, "\r\nCookie: %s", sendcookie);
+	snprintf(h, BUFSIZ, "POST %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
+	                    " (not mozilla)\r\nContent-Length: %d\r\n" \
+	                    "Content-Type: application/x-www-form-urlencoded\r\n" \
+	                    "Host: %s%s\r\n\r\n%s\r\n",
+	                    path, (int)strlen(data), host, c, data);
+
+	return request(host, h, savecookie, body);
+}
+
 int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *savepath) {
 	char *buf = 0;
 	FILE *f;
@@ -138,18 +153,6 @@ int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *s
 	fclose(f);
 
 	return 0;
-}
-
-int post(char *host, char *path, char *data, char **body) {
-	char h[BUFSIZ] = "";
-
-	snprintf(h, BUFSIZ, "POST %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
-	                    " (not mozilla)\r\nContent-Length: %d\r\n" \
-	                    "Content-Type: application/x-www-form-urlencoded\r\n" \
-	                    "Host: %s\r\n\r\n%s\r\n",
-	                    path, (int)strlen(data), host, data);
-
-	return request(host, h, NULL, body);
 }
 
 int renameifjpg(char *path) {
