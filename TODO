@@ -1,7 +1,3 @@
 in getabook, the web client tries downloading sequentially the first few pages, regardless of whether they're in the available page list. this actually works (some or all of these pages will return), so we should implement something similar too. exactly how it knows when to stop looking is not clear, at least with the one i tried, it just tried all of the first 25 pages.
 
 submit 'pad' file to websites http://padsites.asp-software.org/
-
-write some little tests
-
-add scribd functionality - example is http://www.scribd.com/doc/20448287/Etidorhpa-John-Uri-Lloyd producing urls like http://htmlimg3.scribdassets.com/1qva8jpekgdk0wl/images/1-bfa8361a96.jpg
