@@ -91,6 +91,9 @@ dist-win: $(BIN) $(GUI:.tcl=.exe)
 	cp icons/* $(NAME)-win/icons/
 	for f in LEGAL README COPYING; do \
 	sed 's/$$/\r/g' < $$f > $(NAME)-win/$$f.txt; done
+	for f in *1; do \
+	b=`basename $$f .1`; \
+	groff -m man -T utf8 < $$f | col -bx | sed 's/$$/\r/g' > $(NAME)-win/$$b.txt; done
 	zip -j $(NAME)-$(VERSION)-win.zip $(NAME)-win/*
 	gpg -b < $(NAME)-$(VERSION)-win.zip > $(NAME)-$(VERSION)-win.zip.sig
 	rm -rf $(NAME)-win
