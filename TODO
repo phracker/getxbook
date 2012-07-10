@@ -1,5 +1,3 @@
-# other todos
-
 in getabook, the web client tries downloading sequentially the first few pages, regardless of whether they're in the available page list. this actually works (some or all of these pages will return), so we should implement something similar too. exactly how it knows when to stop looking is not clear, at least with the one i tried, it just tried all of the first 25 pages.
 
 in getgbook, check that downloaded page doesn't match 'page not available' image; if so delete (as may be redownloadable later, perhaps even then with different cookies)
