@@ -49,12 +49,11 @@ int dial(char *host, char *port) {
 	return srv;
 }
 
-int get(char *host, char *path, char *sendcookie, char *savecookie, char **body) {
+int request(char *host, char *request, char *savecookie, char **body) {
 	size_t l, res;
 	int fd, i, p;
-	char h[BUFSIZ] = "";
-	char c[COOKIEMAX] = "";
 	char m[256];
+	char c[COOKIEMAX] = "";
 	char *headpos;
 	size_t headsize;
 	char headline[BUFSIZ] = "";
@@ -63,11 +62,7 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **body)
 
 	if((fd = dial(host, "80")) == -1) return 0;
 
-	if(sendcookie && sendcookie[0])
-		snprintf(c, COOKIEMAX, "\r\nCookie: %s", sendcookie);
-	snprintf(h, BUFSIZ, "GET %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
-	                    " (not mozilla)\r\nHost: %s%s\r\n\r\n", path, host, c);
-	if(!send(fd, h, strlen(h), 0)) return 0;
+	if(!send(fd, request, strlen(request), 0)) return 0;
 
 	/* download everything into buf */
 	l = 0;
@@ -108,6 +103,18 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **body)
 	return l;
 }
 
+int get(char *host, char *path, char *sendcookie, char *savecookie, char **body) {
+	char h[BUFSIZ] = "";
+	char c[COOKIEMAX] = "";
+
+	if(sendcookie && sendcookie[0])
+		snprintf(c, COOKIEMAX, "\r\nCookie: %s", sendcookie);
+	snprintf(h, BUFSIZ, "GET %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
+	                    " (not mozilla)\r\nHost: %s%s\r\n\r\n", path, host, c);
+
+	return request(host, h, savecookie, body);
+}
+
 int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *savepath) {
 	char *buf = 0;
 	FILE *f;
@@ -134,58 +141,16 @@ int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *s
 	return 0;
 }
 
-/* TODO: merge this with get(); almost all code is the same */
 int post(char *host, char *path, char *data, char **body) {
-	size_t l, res;
-	int fd, i, p;
 	char h[BUFSIZ] = "";
-	char *headpos;
-	size_t headsize;
-	char headline[BUFSIZ] = "";
-	char *buf;
-	char *cur, *pos;
-
-	if((fd = dial(host, "80")) == -1) return 0;
 
 	snprintf(h, BUFSIZ, "POST %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
 	                    " (not mozilla)\r\nContent-Length: %d\r\n" \
 	                    "Content-Type: application/x-www-form-urlencoded\r\n" \
 	                    "Host: %s\r\n\r\n%s\r\n",
 	                    path, (int)strlen(data), host, data);
-	if(!send(fd, h, strlen(h), 0)) return 0;
 
-	/* download everything into buf */
-	l = 0;
-	buf = malloc(sizeof(char *) * BUFSIZ);
-	for(; buf != NULL && (res = recv(fd, buf+l, BUFSIZ, 0)) > 0; l+=res)
-		buf = realloc(buf, sizeof(char *) * (l+BUFSIZ));
-
-	/* strstr to find end of header */
-	if((headpos = strstr(buf, "\r\n\r\n")) == NULL)
-		return 0;
-	headpos += 4;
-	headsize = headpos - buf;
-
-	/* memcopy from there into a large enough buf */
-	if((*body = malloc(sizeof(char *) * (l - headsize))) == NULL)
-		return 0;
-	memcpy(*body, headpos, sizeof(char *) * (l - headsize));
-
-	/* parse header as needed */
-	cur = buf;
-	while((pos = strstr(cur, "\r\n")) != NULL && cur < (headpos - 4)) {
-		strncpy(headline, cur, pos - cur);
-		headline[pos - cur] = '\0';
-		cur = pos + 2;
-
-		if(sscanf(headline, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200) {
-			if(p == 403)
-				fprintf(stderr, "403 forbidden: your IP address may be temporarily blocked\n");
-			return 0;
-		}
-	}
-
-	return l;
+	return request(host, h, NULL, body);
 }
 
 int renameifjpg(char *path) {
