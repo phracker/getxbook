@@ -57,8 +57,7 @@ int request(char *host, char *request, char *savecookie, char **body) {
 	char *headpos;
 	size_t headsize;
 	char headline[BUFSIZ] = "";
-	char *buf;
-	char *cur, *pos;
+	char *buf, *cur, *pos;
 
 	if((fd = dial(host, "80")) == -1) return 0;
 

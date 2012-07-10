@@ -77,7 +77,8 @@ int getpagelist()
 int getpageurls(char *pagecode, char *cookie)
 {
 	char url[URLMAX], code[STRMAX], m[STRMAX];
-	char *c = NULL, *d, *p, *q, *buf = NULL;
+	char *c = NULL, *buf = NULL;
+	char *d, *p, *q;
 	int i, j;
 
 	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3&q=subject:a&redir_esc=y", bookid, pagecode);

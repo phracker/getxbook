@@ -64,7 +64,8 @@ int fillurls(char *buf) {
 
 int getpagelist()
 {
-	char url[URLMAX], b[STRMAX] = "";
+	char url[URLMAX];
+	char b[STRMAX] = "";
 	char *buf = NULL;
 	char *s, *c;
 	int i;
