@@ -99,6 +99,8 @@ int request(char *host, char *request, char *savecookie, char **body) {
 		}
 	}
 
+	free(buf);
+
 	return l;
 }
 
@@ -163,14 +165,19 @@ int renameifjpg(char *path) {
 		return 1;
 
 	if(fgetc(f) == 255) {
-		if((newpath = malloc(strlen(path) + 1)) == NULL)
+		if((newpath = malloc(strlen(path) + 1)) == NULL) {
+			fclose(f);
 			return 1;
+		}
 		strncpy(newpath, path, strlen(path));
 		c = strrchr(newpath, '.');
 		strncpy(c+1, "jpg\0", 4);
 
-		if(rename(path, newpath))
+		if(rename(path, newpath)) {
+			free(newpath);
+			fclose(f);
 			return 1;
+		}
 		free(newpath);
 	}
 
