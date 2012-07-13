@@ -14,7 +14,8 @@
 #endif
 
 /* plundered from suckless' sic */
-int dial(char *host, char *port) {
+int dial(char *host, char *port)
+{
 	static struct addrinfo hints;
 	int srv;
 	struct addrinfo *res, *r;
@@ -49,7 +50,8 @@ int dial(char *host, char *port) {
 	return srv;
 }
 
-int request(char *host, char *request, char *savecookie, char **body, int istext) {
+int request(char *host, char *request, char *savecookie, char **body, int istext)
+{
 	size_t l, res;
 	int fd, i, p;
 	char m[256];
@@ -117,7 +119,8 @@ int request(char *host, char *request, char *savecookie, char **body, int istext
 	return l;
 }
 
-int get(char *host, char *path, char *sendcookie, char *savecookie, char **body, int istext) {
+int get(char *host, char *path, char *sendcookie, char *savecookie, char **body, int istext)
+{
 	char h[BUFSIZ] = "";
 	char c[COOKIEMAX] = "";
 
@@ -129,7 +132,8 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **body,
 	return request(host, h, savecookie, body, istext);
 }
 
-int post(char *host, char *path, char *sendcookie, char *savecookie, char *data, char **body, int istext) {
+int post(char *host, char *path, char *sendcookie, char *savecookie, char *data, char **body, int istext)
+{
 	char h[BUFSIZ] = "";
 	char c[COOKIEMAX] = "";
 
@@ -144,7 +148,8 @@ int post(char *host, char *path, char *sendcookie, char *savecookie, char *data,
 	return request(host, h, savecookie, body, istext);
 }
 
-int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *savepath, int istext) {
+int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *savepath, int istext)
+{
 	char *buf = 0;
 	FILE *f;
 	size_t i, l;
@@ -170,7 +175,8 @@ int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *s
 	return 0;
 }
 
-int renameifjpg(char *path) {
+int renameifjpg(char *path)
+{
 	FILE *f;
 	char *newpath, *c;
 

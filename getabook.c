@@ -29,7 +29,8 @@ int numpages;
 char bookid[STRMAX];
 char *bookdir;
 
-int fillurls(char *buf) {
+int fillurls(char *buf)
+{
 	char m[STRMAX];
 	char *c, *s;
 	int i;
@@ -122,7 +123,8 @@ int getpagelist()
 	return 0;
 }
 
-int getpageurls(int pagenum) {
+int getpageurls(int pagenum)
+{
 	char url[URLMAX];
 	char query[URLMAX];
 	char *buf = NULL;
