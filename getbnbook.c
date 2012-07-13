@@ -39,7 +39,7 @@ int getpagelist()
 
 	snprintf(url, URLMAX, "/DigBooks/viewer/bookviewmanager.aspx?op=getbookinfo&ean=%s", bookid);
 
-	if(!get("search2.barnesandnoble.com", url, cookies, NULL, &buf))
+	if(!get("search2.barnesandnoble.com", url, cookies, NULL, &buf, 1))
 		return 1;
 
 	/* find page url structure */
@@ -79,7 +79,7 @@ int getpage(int pagenum)
 	s=strchr(urlpath+7, '/');
 	snprintf(pageurl, STRMAX, s, pagenum);
 
-	if(gettofile("search2.barnesandnoble.com", pageurl, cookies, NULL, path)) {
+	if(gettofile("search2.barnesandnoble.com", pageurl, cookies, NULL, path, 0)) {
 		fprintf(stderr, "%d failed\n", pagenum);
 		return 1;
 	}
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 	bookdir = argv[argc-1];
 
 	/* get cookie */
-	if(get("www.barnesandnoble.com", "/", NULL, cookies, &tmp))
+	if(get("www.barnesandnoble.com", "/", NULL, cookies, &tmp, 0))
 		free(tmp);
 
 	if(getpagelist()) {

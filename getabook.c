@@ -73,7 +73,7 @@ int getpagelist()
 
 	snprintf(url, URLMAX, "/gp/search-inside/service-data?method=getBookData&asin=%s", bookid);
 
-	if(!get("www.amazon.com", url, NULL, NULL, &buf))
+	if(!get("www.amazon.com", url, NULL, NULL, &buf, 1))
 		return 1;
 
 	/* amazon have a canonical asin, which is needed to get all available pages */
@@ -114,7 +114,7 @@ int getpageurls(int pagenum) {
 	strncpy(url, "/gp/search-inside/service-data", URLMAX);
 	snprintf(query, URLMAX, "method=goToPage&asin=%s&page=%d", bookid, pagenum);
 
-	if(!post("www.amazon.com", url, NULL, NULL, query, &buf))
+	if(!post("www.amazon.com", url, NULL, NULL, query, &buf, 1))
 		return 1;
 
 	fillurls(buf);
@@ -133,7 +133,7 @@ int getpage(Page *page)
 		return 1;
 	}
 
-	if(gettofile("sitb-images.amazon.com", page->url, NULL, NULL, path)) {
+	if(gettofile("sitb-images.amazon.com", page->url, NULL, NULL, path, 0)) {
 		fprintf(stderr, "%d failed\n", page->num);
 		return 1;
 	}

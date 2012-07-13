@@ -44,7 +44,7 @@ int getpagelist()
 
 	snprintf(url, URLMAX, "/books?id=%s&printsec=frontcover&redir_esc=y", bookid);
 
-	if(!get("books.google.com", url, NULL, NULL, &buf))
+	if(!get("books.google.com", url, NULL, NULL, &buf, 1))
 		return 1;
 
 	if((s = strstr(buf, "_OC_Run({\"page\":[")) == NULL)
@@ -83,7 +83,7 @@ int getpageurls(char *pagecode, char *cookie)
 
 	snprintf(url, URLMAX, "/books?id=%s&pg=%s&jscmd=click3&q=subject:a&redir_esc=y", bookid, pagecode);
 
-	if(!get("books.google.com", url, cookie, NULL, &buf))
+	if(!get("books.google.com", url, cookie, NULL, &buf, 1))
 		return 1;
 
 	c = buf;
@@ -133,7 +133,7 @@ int getpage(Page *page)
 		return 1;
 	}
 
-	if(gettofile("books.google.com", page->url, page->cookie, NULL, path)) {
+	if(gettofile("books.google.com", page->url, page->cookie, NULL, path, 0)) {
 		fprintf(stderr, "%s failed\n", page->name);
 		return 1;
 	}
@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
 
 	/* get cookies */
 	for(i=0;i<COOKIENUM;i++) {
-		if(get("books.google.com", "/", NULL, cookies[i], &tmp))
+		if(get("books.google.com", "/", NULL, cookies[i], &tmp, 0))
 			free(tmp);
 	}
 

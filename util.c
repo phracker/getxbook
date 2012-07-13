@@ -49,13 +49,13 @@ int dial(char *host, char *port) {
 	return srv;
 }
 
-int request(char *host, char *request, char *savecookie, char **body) {
+int request(char *host, char *request, char *savecookie, char **body, int istext) {
 	size_t l, res;
 	int fd, i, p;
 	char m[256];
 	char c[COOKIEMAX] = "";
 	char *headpos;
-	size_t headsize;
+	size_t headsize, bodysize;
 	char headline[BUFSIZ] = "";
 	char *buf, *cur, *pos;
 
@@ -76,13 +76,20 @@ int request(char *host, char *request, char *savecookie, char **body) {
 	}
 	headpos += 4;
 	headsize = headpos - buf;
+	bodysize = l - headsize;
+	if(istext) {
+		bodysize++; /* for null terminator */
+	}
 
 	/* memcopy from there into a large enough buf */
-	if((*body = malloc(sizeof(char *) * (l - headsize))) == NULL) {
+	if((*body = malloc(sizeof(char *) * bodysize)) == NULL) {
 		free(buf);
 		return 0;
 	}
 	memcpy(*body, headpos, sizeof(char *) * (l - headsize));
+	if(istext) {
+		(*body)[bodysize - 1] = '\0';
+	}
 
 	/* parse header as needed */
 	snprintf(m, 256, "Set-Cookie: %%%ds;", COOKIEMAX-1);
@@ -110,7 +117,7 @@ int request(char *host, char *request, char *savecookie, char **body) {
 	return l;
 }
 
-int get(char *host, char *path, char *sendcookie, char *savecookie, char **body) {
+int get(char *host, char *path, char *sendcookie, char *savecookie, char **body, int istext) {
 	char h[BUFSIZ] = "";
 	char c[COOKIEMAX] = "";
 
@@ -119,10 +126,10 @@ int get(char *host, char *path, char *sendcookie, char *savecookie, char **body)
 	snprintf(h, BUFSIZ, "GET %s HTTP/1.0\r\nUser-Agent: getxbook-"VERSION \
 	                    " (not mozilla)\r\nHost: %s%s\r\n\r\n", path, host, c);
 
-	return request(host, h, savecookie, body);
+	return request(host, h, savecookie, body, istext);
 }
 
-int post(char *host, char *path, char *sendcookie, char *savecookie, char *data, char **body) {
+int post(char *host, char *path, char *sendcookie, char *savecookie, char *data, char **body, int istext) {
 	char h[BUFSIZ] = "";
 	char c[COOKIEMAX] = "";
 
@@ -134,15 +141,15 @@ int post(char *host, char *path, char *sendcookie, char *savecookie, char *data,
 	                    "Host: %s%s\r\n\r\n%s\r\n",
 	                    path, (int)strlen(data), host, c, data);
 
-	return request(host, h, savecookie, body);
+	return request(host, h, savecookie, body, istext);
 }
 
-int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *savepath) {
+int gettofile(char *host, char *url, char *sendcookie, char *savecookie, char *savepath, int istext) {
 	char *buf = 0;
 	FILE *f;
 	size_t i, l;
 
-	if(!(l = get(host, url, sendcookie, savecookie, &buf))) {
+	if(!(l = get(host, url, sendcookie, savecookie, &buf, istext))) {
 		fprintf(stderr, "Could not download %s\n", url);
 		return 1;
 	}
