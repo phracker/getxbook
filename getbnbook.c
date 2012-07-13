@@ -69,6 +69,21 @@ int getpagelist()
 	return 0;
 }
 
+int isflash(char *path)
+{
+	FILE *f;
+	int ret;
+
+	if((f = fopen(path, "rb")) == NULL)
+		return 1;
+
+	ret = fgetc(f) == 'F' ? 1 : 0;
+
+	fclose(f);
+
+	return ret;
+}
+
 int getpage(int pagenum)
 {
 	char path[STRMAX], pageurl[STRMAX];
@@ -81,6 +96,11 @@ int getpage(int pagenum)
 
 	if(gettofile("search2.barnesandnoble.com", pageurl, cookies, NULL, path, 0)) {
 		fprintf(stderr, "%d failed\n", pagenum);
+		return 1;
+	}
+	if(isflash(path)) {
+		fprintf(stderr, "%d not found\n", pagenum);
+		remove(path);
 		return 1;
 	}
 	renameifjpg(path);
