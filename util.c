@@ -70,14 +70,18 @@ int request(char *host, char *request, char *savecookie, char **body) {
 		buf = realloc(buf, sizeof(char *) * (l+BUFSIZ));
 
 	/* strstr to find end of header */
-	if((headpos = strstr(buf, "\r\n\r\n")) == NULL)
+	if((headpos = strstr(buf, "\r\n\r\n")) == NULL) {
+		free(buf);
 		return 0;
+	}
 	headpos += 4;
 	headsize = headpos - buf;
 
 	/* memcopy from there into a large enough buf */
-	if((*body = malloc(sizeof(char *) * (l - headsize))) == NULL)
+	if((*body = malloc(sizeof(char *) * (l - headsize))) == NULL) {
+		free(buf);
 		return 0;
+	}
 	memcpy(*body, headpos, sizeof(char *) * (l - headsize));
 
 	/* parse header as needed */
@@ -91,6 +95,8 @@ int request(char *host, char *request, char *savecookie, char **body) {
 		if(sscanf(headline, "HTTP/%d.%d %d", &i, &i, &p) == 3 && p != 200) {
 			if(p == 403)
 				fprintf(stderr, "403 forbidden: your IP address may be temporarily blocked\n");
+			free(buf);
+			free(*body);
 			return 0;
 		}
 
@@ -169,7 +175,7 @@ int renameifjpg(char *path) {
 			fclose(f);
 			return 1;
 		}
-		strncpy(newpath, path, strlen(path));
+		strncpy(newpath, path, strlen(path)+1);
 		c = strrchr(newpath, '.');
 		strncpy(c+1, "jpg\0", 4);
 
