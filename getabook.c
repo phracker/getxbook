@@ -68,7 +68,7 @@ int getpagelist()
 	char b[STRMAX] = "";
 	char *buf = NULL;
 	char *s, *c;
-	int i;
+	int i, n, found;
 	Page *p;
 
 	snprintf(url, URLMAX, "/gp/search-inside/service-data?method=getBookData&asin=%s", bookid);
@@ -103,6 +103,22 @@ int getpagelist()
 	fillurls(buf);
 
 	free(buf);
+
+	/* ensure first 25 pages are included, as sometimes they work
+	 * even if not listed. */
+	for(i=0; i<25 && i<MAXPAGES; i++) {
+		found = 0;
+		for(n=0; n<numpages; n++) {
+			if(pages[n]->num == i)
+				found = 1;
+		}
+		if(!found) {
+			p=pages[numpages++]=malloc(sizeof(**pages));;
+			p->num = i;
+			p->url[0] = '\0';
+		}
+	}
+
 	return 0;
 }
 
@@ -139,7 +155,7 @@ int getpage(Page *page)
 		fprintf(stderr, "can't parse host of %s\n", page->url);
 		return 1;
 	}
-	
+
 	if(gettofile(host, page->url, NULL, NULL, path, 0)) {
 		fprintf(stderr, "%d failed\n", page->num);
 		return 1;
