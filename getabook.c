@@ -55,7 +55,7 @@ int fillurls(char *buf) {
 			continue;
 
 		c += strlen(m);
-		if(!sscanf(c, "\"//sitb-images.amazon.com%[^\"]\"", pages[i]->url))
+		if(!sscanf(c, "\"%[^\"]\"", pages[i]->url))
 			continue;
 	}
 
@@ -126,6 +126,8 @@ int getpageurls(int pagenum) {
 int getpage(Page *page)
 {
 	char path[STRMAX];
+	char host[STRMAX];
+
 	snprintf(path, STRMAX, "%s/%04d.png", bookdir, page->num);
 
 	if(page->url[0] == '\0') {
@@ -133,7 +135,12 @@ int getpage(Page *page)
 		return 1;
 	}
 
-	if(gettofile("sitb-images.amazon.com", page->url, NULL, NULL, path, 0)) {
+	if(!sscanf(page->url, "http://%[^/]/", host)) {
+		fprintf(stderr, "can't parse host of %s\n", page->url);
+		return 1;
+	}
+	
+	if(gettofile(host, page->url, NULL, NULL, path, 0)) {
 		fprintf(stderr, "%d failed\n", page->num);
 		return 1;
 	}
