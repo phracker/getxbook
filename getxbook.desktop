@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Name=getxbook
+Exec=getxbookgui
+Categories=Network
+Comment=Book downloader
+Icon=text-x-generic
