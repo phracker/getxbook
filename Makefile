@@ -34,11 +34,12 @@ util.a: $(LIB)
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp -f $(BIN) $(DESTDIR)$(PREFIX)/bin
-	sed "s:^set iconpath .*:set iconpath \"$(DESTDIR)$(PREFIX)/share/$(NAME)\":" < $(GUI) \
+	sed "s:^set iconpath .*:set iconpath \"$(DESTDIR)$(PREFIX)/share/pixmaps\":" < $(GUI) \
 	    > $(DESTDIR)$(PREFIX)/bin/$(GUI:.tcl=)
 	chmod +x $(DESTDIR)$(PREFIX)/bin/getxbookgui
-	mkdir -p $(DESTDIR)$(PREFIX)/share/$(NAME)
-	cp icons/* $(DESTDIR)$(PREFIX)/share/$(NAME)/
+	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
+	cp icons/* $(DESTDIR)$(PREFIX)/share/pixmaps/
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	cp $(NAME).desktop $(DESTDIR)$(PREFIX)/share/applications/
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
 	for f in $(MAN); do sed "s/VERSION/$(VERSION)/g" < $$f > $(DESTDIR)$(MANPREFIX)/man1/$$f; done
