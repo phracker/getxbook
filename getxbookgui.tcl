@@ -2,9 +2,9 @@
 # See COPYING file for copyright and license details.
 package require Tk
 
-set cmds {{getgbook "Google Book ID" "Google\nBook Preview" \
+set cmds {{getgbook "Google Book ID / URL" "Google\nBook Preview" \
            "http*://books.google.*/*" {[&?]id=([^&]*)}} \
-          {getabook "ISBN 10" "Amazon Look\nInside The Book" \
+          {getabook "ISBN 10 / URL" "Amazon Look\nInside The Book" \
            "http*://*amazon*/*" {/([0-9]{10})/}} \
           {getbnbook "ISBN 13" "Barnes & Noble\nBook Viewer" \
            "http*://www.barnesandnoble.com/*" ""}}
@@ -45,6 +45,8 @@ proc go {} {
 	.dl configure -state disabled -text "Downloading"
 	.input.id configure -state readonly
 	.st configure -text ""
+	.prog configure -bd 1
+	.prog itemconfigure bar -state normal
 	.prog coords bar 0 0 0 20
 	set out [open "|$cmd 2>@1" "r"]
 	fileevent $out readable [list updateStatus $out]
@@ -60,11 +62,17 @@ proc parseurl {url} {
 			set cmdregex [lindex $b 4]
 			if {"$cmdregex" != "" && [regexp "$cmdregex" $url m sub]} {
 				set newid "$sub"
+				.input.id delete 0 end
+				.input.id insert 0 "$newid"
 			}
-			.input.id delete 0 end
-			.input.id insert 0 "$newid"
 		}
 		incr i
+	}
+}
+
+proc checkinput {} {
+	if { [string match "http*" [.input.id get]] } {
+		parseurl [.input.id get]
 	}
 }
 
@@ -112,8 +120,8 @@ foreach b $cmds {
 button .dl -text "Download" -command go
 label .st
 
-canvas .prog -width 200 -height 20 -relief sunken -bd 1
-.prog create rectangle 0 0 0 20 -tags bar -fill black
+canvas .prog -width 200 -height 20 -relief sunken
+.prog create rectangle 0 0 0 20 -tags bar -fill black -state hidden
 
 pack .input.lab -side left
 pack .input.id
@@ -121,6 +129,7 @@ pack .input.id
 pack .cmdfr .input .dl .prog .st
 bind . <Return> go
 
-bind .input.id <Key> {set manual 1}
-bind .input.id <Button> {set manual 1}
+bind .input.id <Key> {set manual 1; checkinput}
+bind .input.id <Button> {set manual 1; checkinput}
+bind .input.id <Motion> {checkinput} ;# needed as middle-click pasting isn't passed with <Button>
 watchsel
