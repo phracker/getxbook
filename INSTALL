@@ -5,6 +5,6 @@ Use these commands to build and install getxbook:
 
 All build settings are stored in config.mk. If you want to change them,
 either edit the file directly, or pass any variables to change to make,
-like this:
+for example:
 
   make PREFIX=/preferred/path install
