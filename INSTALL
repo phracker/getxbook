@@ -1,7 +1,10 @@
-Edit config.mk to match your local setup (getxbook is installed
-into the /usr/local namespace by default).
+Use these commands to build and install getxbook:
 
-Afterwards enter the following command to build and install
-getxbook (if necessary as root):
+  make
+  make install # run as root if you're installing to a system directory
 
-  make clean install
+All build settings are stored in config.mk. If you want to change them,
+either edit the file directly, or pass any variables to change to make,
+like this:
+
+  make PREFIX=/preferred/path install
