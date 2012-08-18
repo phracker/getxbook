@@ -10,7 +10,7 @@ DOC = README COPYING INSTALL LEGAL
 EXTRAS = extras/mkpdf.sh extras/mkocrpdf.sh extras/mkdjvu.sh extras/mkocrtxt.sh extras/mkocrdjvu.sh
 
 BIN = $(SRC:.c=)
-MAN = $(SRC:.c=.1) $(GUI:.tcl=.1)
+MAN = $(SRC:.c=.1) $(GUI:.tcl=.1) $(NAME).1
 OBJ = $(SRC:.c=.o) $(LIB)
 
 all: $(BIN)

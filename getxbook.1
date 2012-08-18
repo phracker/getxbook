@@ -1,0 +1,34 @@
+.\" See COPYING file for copyright and license details.
+.TH GETXBOOK 1 getxbook\-VERSION
+.SH NAME
+getxbook \- a collection of tools to download books
+.SH DESCRIPTION
+getxbook is a collection of tools to download books from
+websites.
+.PP
+It contains one tool per website, plus an optional graphical
+frontend:
+.TP
+.BR getgbook (1)
+Downloads books from Google Books' "Book Preview" service.
+.TP
+.BR getabook (1)
+Downloads books from Amazon's "Look Inside The Book" service.
+.TP
+.BR getbnbook (1)
+Downloads books from Barnes and Noble's "Book Viewer" service.
+.TP
+.BR getxbookgui (1)
+A graphical frontend to the getxbook tools.
+.SH NOTES
+The getxbook tools will not try to download pages that have
+already been downloaded, so closing it and then starting it
+again later will continue downloading from where it left off.
+.PP
+Book pages vary in availability depending on the book, the
+website, and potentially the location of your IP.
+.SH SEE ALSO
+.IR getabook (1),
+.IR getgbook (1),
+.IR getbnbook (1),
+.IR getxbookgui (1)
