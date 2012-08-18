@@ -1,5 +1,3 @@
 getxbookgui, check whether the input box starts http and if so check against url patterns
 
-print number of pages (which may be) available in 1st line of output from tools, and use that to generate a progress bar (even if not perfect, still good).
-
 submit 'pad' file to websites http://padsites.asp-software.org/

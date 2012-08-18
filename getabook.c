@@ -211,6 +211,7 @@ int main(int argc, char *argv[])
 			if(pages[i]->url[0] == '\0')
 				getpageurls(pages[i]->num);
 			getpage(pages[i]);
+			printf("%.0f%% done\n", (float)i / (float)numpages * 100);
 		}
 	} else if(argv[1][0] == '-' && argv[1][1] == 'n') {
 		while(fgets(buf, BUFSIZ, stdin)) {

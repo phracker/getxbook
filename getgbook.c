@@ -214,6 +214,7 @@ int main(int argc, char *argv[])
 			}
 			searchpage(pages[i]);
 			getpage(pages[i]);
+			printf("%.0f%% done\n", (float)i / (float)numpages * 100);
 		}
 	} else if(argv[1][0] == '-') {
 		while(fgets(buf, BUFSIZ, stdin)) {

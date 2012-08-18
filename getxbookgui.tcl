@@ -19,12 +19,20 @@ proc updateStatus {chan} {
 	global dling
 	if {![eof $chan]} {
 		set a [gets $chan]
-		if { $a != "" } { .st configure -text $a }
+		if { $a != "" } {
+			if { [string match "*%*" "$a"] } {
+				if { [regexp {^([0-9]*)} $a m num] } {
+					.prog coords bar 0 0 [expr $num * 2] 20
+				}
+			} else { .st configure -text $a }
+		}
 	} else {
 		if { ! [catch {close $chan}] } {
 			.st configure -text "[.input.id get] Done"
+			.prog coords bar 0 0 200 20
 		}
 		.dl configure -state normal -text "Download"
+		.input.id configure -state normal
 		set dling 0
 	}
 }
@@ -35,7 +43,9 @@ proc go {} {
 	set cmd "[lindex [lindex $cmds $cmdselected] 0] [.input.id get]"
 	set dling 1
 	.dl configure -state disabled -text "Downloading"
+	.input.id configure -state readonly
 	.st configure -text ""
+	.prog coords bar 0 0 0 20
 	set out [open "|$cmd 2>@1" "r"]
 	fileevent $out readable [list updateStatus $out]
 }
@@ -102,10 +112,13 @@ foreach b $cmds {
 button .dl -text "Download" -command go
 label .st
 
+canvas .prog -width 200 -height 20 -relief sunken -bd 1
+.prog create rectangle 0 0 0 20 -tags bar -fill black
+
 pack .input.lab -side left
 pack .input.id
 
-pack .cmdfr .input .dl .st
+pack .cmdfr .input .dl .prog .st
 bind . <Return> go
 
 bind .input.id <Key> {set manual 1}
