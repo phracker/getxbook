@@ -39,8 +39,6 @@ install: all
 	chmod +x $(DESTDIR)$(PREFIX)/bin/getxbookgui
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	cp icons/* $(DESTDIR)$(PREFIX)/share/pixmaps/
-	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
-	cp $(NAME).desktop $(DESTDIR)$(PREFIX)/share/applications/
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
 	for f in $(MAN); do sed "s/VERSION/$(VERSION)/g" < $$f > $(DESTDIR)$(MANPREFIX)/man1/$$f; done
 
