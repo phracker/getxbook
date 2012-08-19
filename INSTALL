@@ -1,7 +1,7 @@
 Use these commands to build and install getxbook:
 
   make
-  make install # run as root if you're installing to a system directory
+  sudo make install
 
 All build settings are stored in config.mk. If you want to change them,
 either edit the file directly, or pass any variables to change to make,
