@@ -11,7 +11,7 @@
 	doap:repository :repo;
 	doap:programming-language "C";
 	doap:license <http://www.isc.org/software/license>;
-	doap:release :v01, :v02, :v03, :v04, :v05, :v06, :v061, :v07, :v08, :v09;
+	doap:release :v01, :v02, :v03, :v04, :v05, :v06, :v061, :v07, :v08, :v09, v10;
 	doap:maintainer <http://njw.me.uk/card#i>.
 
 <http://njw.me.uk/card#i> a foaf:Person;
@@ -71,3 +71,8 @@
 	doap:revision "0.9";
 	doap:created "2012-04-27";
 	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-0.9.tar.bz2>.
+
+:v10 a doap:Version;
+	doap:revision "1.0";
+	doap:created "2012-18-19";
+	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-1.0.tar.bz2>.
