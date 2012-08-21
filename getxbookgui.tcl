@@ -5,7 +5,7 @@ package require Tk
 set cmds {{getgbook "Google Book ID / URL" "Google\nBook Preview" \
            "http*://books.google.*/*" {[&?]id=([^&]*)}} \
           {getabook "ISBN 10 / URL" "Amazon Look\nInside The Book" \
-           "http*://*amazon*/*" {/([0-9]{10})/}} \
+           "http*://*amazon*/*" {/([0-9A-Z]{10})/}} \
           {getbnbook "ISBN 13" "Barnes & Noble\nBook Viewer" \
            "http*://www.barnesandnoble.com/*" ""}}
 set cmdselected 0
