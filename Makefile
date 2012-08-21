@@ -82,12 +82,11 @@ getxbookgui.exe: getxbookgui.tcl
 	@sdx wrap $@ -runtime $(W32TCLKIT)
 	@rm -r getxbookgui.kit getxbookgui.vfs
 
-# needs to be run from a mingw setup
+# needs config.mk set up to use mingw
 dist-win: $(BIN) $(GUI:.tcl=.exe)
 	mkdir -p $(NAME)-win
 	cp $(GUI:.tcl=.exe) $(NAME)-win
-	for f in $(OBJ) ; do \
-	cp $$f $(NAME)-win/$$f.exe
+	for f in $(BIN); do cp $$f $(NAME)-win/$$f.exe; done
 	mkdir -p $(NAME)-win/icons
 	cp icons/* $(NAME)-win/icons/
 	for f in LEGAL README COPYING; do \
@@ -95,25 +94,10 @@ dist-win: $(BIN) $(GUI:.tcl=.exe)
 	for f in *1; do \
 	b=`basename $$f .1`; \
 	groff -m man -T utf8 < $$f | col -bx | sed 's/$$/\r/g' > $(NAME)-win/$$b.txt; done
-	zip -j $(NAME)-$(VERSION)-win.zip $(NAME)-win/*
+	cd $(NAME)-win; zip -r ../$(NAME)-$(VERSION)-win.zip .;cd ..
 	gpg -b < $(NAME)-$(VERSION)-win.zip > $(NAME)-$(VERSION)-win.zip.sig
 	rm -rf $(NAME)-win
 	echo $(NAME)-$(VERSION)-win.zip $(NAME)-$(VERSION)-win.zip.sig
-
-# needs to be run from a mac
-# currently unused thanks to kind homebrew people packaging it
-dist-mac: $(BIN) $(GUI)
-	mkdir -p $(NAME)-$(VERSION)/$(NAME).app/Contents/MacOS
-	mkdir -p $(NAME)-$(VERSION)/$(NAME).app/Contents/Resources
-	cp $(BIN) $(NAME)-$(VERSION)/$(NAME).app/Contents/MacOS/
-	cp $(GUI) $(NAME)-$(VERSION)/$(NAME).app/Contents/MacOS/$(GUI:.tcl=)
-	for f in $(DOC); do cp $$f $(NAME)-$(VERSION)/$$f.txt; done
-	echo '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict><key>CFBundlePackageType</key><string>APPL</string>'"<key>CFBundleExecutable</key><string>getxbookgui</string><key>CFBundleVersion</key><string>$(VERSION)</string><key>CFBundleName</key><string>$(NAME)</string></dict></plist>" > $(NAME)-$(VERSION)/$(NAME).app/Contents/Info.plist
-	hdiutil create -srcfolder $(NAME) $(NAME)-$(VERSION).dmg
-	hdiutil internet-enable -yes $(NAME)-$(VERSION).dmg
-	gpg -b < $(NAME)-$(VERSION)-mac.dmg > $(NAME)-$(VERSION)-mac.dmg.sig
-	rm -rf $(NAME)-$(VERSION)
-	echo $(NAME)-$(VERSION)-mac.dmg $(NAME)-$(VERSION)-mac.dmg.sig
 
 index.html: doap.ttl README
 	echo making webpage
