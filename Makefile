@@ -28,8 +28,7 @@ $(BIN): util.a
 
 util.a: $(LIB)
 	@echo AR $@
-	@$(AR) -r -c $@ $(LIB)
-	@ranlib $@
+	@$(AR) -r -s -c $@ $(LIB)
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
@@ -86,7 +85,9 @@ getxbookgui.exe: getxbookgui.tcl
 # needs to be run from a mingw setup
 dist-win: $(BIN) $(GUI:.tcl=.exe)
 	mkdir -p $(NAME)-win
-	cp $(OBJ:.o=.exe) $(GUI:.tcl=.exe) $(NAME)-win
+	cp $(GUI:.tcl=.exe) $(NAME)-win
+	for f in $(OBJ) ; do \
+	cp $$f $(NAME)-win/$$f.exe
 	mkdir -p $(NAME)-win/icons
 	cp icons/* $(NAME)-win/icons/
 	for f in LEGAL README COPYING; do \

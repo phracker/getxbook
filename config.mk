@@ -11,16 +11,17 @@ CFLAGS = -std=c99 -pedantic -Wall -Wextra -Werror -g -D_POSIX_C_SOURCE=200112L \
 
 W32TCLKIT = tclkit-8.5.9-win32.upx.exe
 
-# musl static
-#CC = musl-gcc
-#LDFLAGS = -static #-s
-
 # glibc dynamic
 CC = cc
 LDFLAGS = 
 
+# musl static
+#CC = musl-gcc
+#LDFLAGS = -static #-s
+
 # mingw
-#CC = gcc
+#CC = i586-mingw32msvc-gcc
+#AR = i586-mingw32msvc-ar
 #CFLAGS = -ansi -Wall -DVERSION=\"$(VERSION)\" -DWINVER=0x0501
 #LDFLAGS = -lws2_32
 
