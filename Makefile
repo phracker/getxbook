@@ -77,7 +77,7 @@ dist-static: $(BIN)
 
 getxbookgui.exe: getxbookgui.tcl
 	@echo STARPACK $@
-	@sed 's/\/icons/\/..\/icons/' < getxbookgui.tcl > getxbookgui-win.tcl
+	@sed 's/\/icons/\/..\/icons/;s/set cmd "/set cmd "tools\//' < getxbookgui.tcl > getxbookgui-win.tcl
 	@sdx qwrap getxbookgui-win.tcl getxbookgui
 	@sdx unwrap getxbookgui.kit
 	@cp -f getxbook.ico getxbookgui.vfs/tclkit.ico
@@ -87,16 +87,17 @@ getxbookgui.exe: getxbookgui.tcl
 
 # needs config.mk set up to use mingw
 dist-win: $(BIN) $(GUI:.tcl=.exe)
-	mkdir -p $(NAME)-win
+	mkdir -p $(NAME)-win/tools
 	cp $(GUI:.tcl=.exe) $(NAME)-win
-	for f in $(BIN); do cp $$f $(NAME)-win/$$f.exe; done
+	for f in $(BIN); do cp $$f $(NAME)-win/tools/$$f.exe; done
 	mkdir -p $(NAME)-win/icons
 	cp icons/* $(NAME)-win/icons/
 	for f in LEGAL README COPYING; do \
 	sed 's/$$/\r/g' < $$f > $(NAME)-win/$$f.txt; done
 	for f in *1; do \
 	b=`basename $$f .1`; \
-	groff -m man -T utf8 < $$f | col -bx | sed 's/$$/\r/g' > $(NAME)-win/$$b.txt; done
+	groff -m man -T utf8 < $$f | col -bx | sed 's/$$/\r/g' > $(NAME)-win/tools/$$b.txt; done
+	mv $(NAME)-win/tools/getxbookgui.txt $(NAME)-win/
 	cd $(NAME)-win; zip -r ../$(NAME)-$(VERSION)-win.zip .;cd ..
 	gpg -b < $(NAME)-$(VERSION)-win.zip > $(NAME)-$(VERSION)-win.zip.sig
 	rm -rf $(NAME)-win
