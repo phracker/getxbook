@@ -65,7 +65,7 @@
 		<Application_XML_File_URL>http://njw.me.uk/software/getxbook/pad.xml</Application_XML_File_URL>
 	</Application_URLs>
 	<Download_URLs>
-		<Primary_Download_URL>http://njw.me.uk/software/getxbook/getxbook-0.6.1-win.zip</Primary_Download_URL>
+		<Primary_Download_URL>http://njw.me.uk/software/getxbook/getxbook-1.0-win.zip</Primary_Download_URL>
 		<Secondary_Download_URL/><Additional_Download_URL_1/><Additional_Download_URL_2/>
 	</Download_URLs>
 </Web_Info>
