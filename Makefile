@@ -77,10 +77,13 @@ dist-static: $(BIN)
 
 getxbookgui.exe: getxbookgui.tcl
 	@echo STARPACK $@
-	@sdx qwrap getxbookgui.tcl
+	@sed 's/\/icons/\/..\/icons/' < getxbookgui.tcl > getxbookgui-win.tcl
+	@sdx qwrap getxbookgui-win.tcl getxbookgui
 	@sdx unwrap getxbookgui.kit
+	@cp -f icons/getxbook.ico getxbookgui.vfs/tclkit.ico
+	@echo 'FileDescription "Book downloader"' > getxbookgui.vfs/tclkit.inf
 	@sdx wrap $@ -runtime $(W32TCLKIT)
-	@rm -r getxbookgui.kit getxbookgui.vfs
+	@rm -r getxbookgui-win.tcl getxbookgui.kit getxbookgui.vfs
 
 # needs config.mk set up to use mingw
 dist-win: $(BIN) $(GUI:.tcl=.exe)
