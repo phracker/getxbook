@@ -20,8 +20,10 @@ proc updateStatus {chan} {
 	if {![eof $chan]} {
 		set a [gets $chan]
 		if { $a != "" } {
+			# this string match appears to return true even when it shouldn't on windows
 			if { [string match "*%*" "$a"] } {
-				if { [regexp {^([0-9]*)} $a m num] } {
+				# can't rely on the return value of regexp
+				if { [regexp {^([0-9]*)} $a m num] && "$num" != "" } {
 					.prog coords bar 0 0 [expr $num * 2] 20
 				}
 			} else { .st configure -text $a }
