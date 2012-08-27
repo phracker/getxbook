@@ -80,7 +80,7 @@ getxbookgui.exe: getxbookgui.tcl
 	@sed 's/\/icons/\/..\/icons/' < getxbookgui.tcl > getxbookgui-win.tcl
 	@sdx qwrap getxbookgui-win.tcl getxbookgui
 	@sdx unwrap getxbookgui.kit
-	@cp -f icons/getxbook.ico getxbookgui.vfs/tclkit.ico
+	@cp -f getxbook.ico getxbookgui.vfs/tclkit.ico
 	@echo 'FileDescription "Book downloader"' > getxbookgui.vfs/tclkit.inf
 	@sdx wrap $@ -runtime $(W32TCLKIT)
 	@rm -r getxbookgui-win.tcl getxbookgui.kit getxbookgui.vfs
@@ -118,7 +118,7 @@ index.html: doap.ttl README
 	echo "[$(NAME) $(VERSION) source]($(NAME)-$(VERSION).tar.bz2) ([sig]($(NAME)-$(VERSION).tar.bz2.sig)) ($(RELDATE))" | smu >> $@
 	echo "[$(NAME) $(VERSION) linux static]($(NAME)-$(VERSION)-static.tar.bz2) ([sig]($(NAME)-$(VERSION)-static.tar.bz2.sig)) ($(RELDATE))" | smu >> $@
 	echo "$(NAME) for mac os x [available from Homebrew](http://mxcl.github.com/homebrew/)" | smu >> $@
-	#echo "[$(NAME) $(VERSION) windows]($(NAME)-$(VERSION)-win.zip) ([sig]($(NAME)-$(VERSION)-win.zip.sig)) ($(RELDATE))" | smu >> $@
+	echo "[$(NAME) $(VERSION) windows]($(NAME)-$(VERSION)-win.zip) ([sig]($(NAME)-$(VERSION)-win.zip.sig)) ($(RELDATE))" | smu >> $@
 	sed '1,5d' < README | smu >> $@
 	echo "[comparison with similar programs](comparison)" | smu >> $@
 	echo '<hr />' >> $@
