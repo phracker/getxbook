@@ -13,7 +13,7 @@ set dling 0
 set manual 0
 
 set env(PATH) "[file dirname $::argv0]:$env(PATH)"
-set iconpath "[file dirname $::argv0]/icons"
+set iconpath [file join [file dirname $::argv0] icons]
 
 proc updateStatus {chan} {
 	global dling
@@ -26,7 +26,9 @@ proc updateStatus {chan} {
 				if { [regexp {^([0-9]*)} $a m num] && "$num" != "" } {
 					.prog coords bar 0 0 [expr $num * 2] 20
 				}
-			} else { .st configure -text $a }
+			} else {
+				.st configure -text $a
+			}
 		}
 	} else {
 		if { ! [catch {close $chan}] } {
@@ -41,7 +43,9 @@ proc updateStatus {chan} {
 
 proc go {} {
 	global dling cmdselected cmds
-	if { [.input.id get] == "" } { return }
+	if { [.input.id get] == "" } {
+		return
+	}
 	set cmd "[lindex [lindex $cmds $cmdselected] 0] [.input.id get]"
 	set dling 1
 	.dl configure -state disabled -text "Downloading"
@@ -107,7 +111,7 @@ frame .cmdfr
 set i 0
 foreach b $cmds {
 	set cmdname [lindex $b 0]
-	if { [catch {image create photo im$i -file "$iconpath/$cmdname.gif"}] } {
+	if { [catch {image create photo im$i -file [file join $iconpath $cmdname.gif]}] } {
 		image create photo im$i
 	}
 	button .cmdfr.$i -text [lindex $b 2] -image im$i \
@@ -133,5 +137,6 @@ bind . <Return> go
 
 bind .input.id <Key> {set manual 1; checkinput}
 bind .input.id <Button> {set manual 1; checkinput}
-bind .input.id <Motion> {checkinput} ;# needed as middle-click pasting isn't passed with <Button>
+# needed as middle-click pasting isn't passed with <Button>
+bind .input.id <Motion> {checkinput}
 watchsel
