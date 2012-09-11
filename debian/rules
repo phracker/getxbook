@@ -1,4 +1,31 @@
 #!/usr/bin/make -f
+
+package = getxbook
+DESTDIR = debian/$(package)
+
+build:
+	$(MAKE)
+
+binary: binary-arch binary-indep
+
+binary-arch: build
+
+binary-indep: build
+	$(MAKE) DESTDIR=$(DESTDIR) PREFIX=/usr
+	mkdir -p $(DESTDIR)/share/applications
+	cp -f $(package).desktop $(DESTDIR)/usr/share/applications/
+	mkdir -p $(DESTDIR)/usr/lib/menu
+	cp -f menu $(DESTDIR)/usr/lib/menu/$(package).menu
+	# TODO: gzip docs
+	# TODO: strip binaries
+	dpkg-deb -b $(DESTDIR) ../
+
+clean:
+	make clean
+	rm -r debian/$(package)
+
+.PHONY: build binary binary-arch binary-indep clean
+
 # -*- makefile -*-
 # Sample debian/rules that uses debhelper.
 # This file was originally written by Joey Hess and Craig Small.
