@@ -1,0 +1,19 @@
+Source: getxbook
+Section: net
+Priority: optional
+Maintainer: Nick White <debian@njw.me.uk>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.8.4
+Homepage: http://njw.me.uk/software/getxbook
+
+Package: getxbook
+Architecture: any
+Depends: tcl, tk
+Description: A collection of tools to download books from websites.
+  getxbook is a collection of tools to download books from
+  Google Books' "Book Preview," Amazon's "Look Inside the
+  Book" and Barnes & Noble's "Book Viewer."
+  .
+  Each tool is written in around 200 lines of portable C code,
+  with no dependencies beyond libc and network sockets. There
+  is an optional graphical interface, using Tcl/Tk.
