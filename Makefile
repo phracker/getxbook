@@ -33,7 +33,7 @@ util.a: $(LIB)
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp -f $(BIN) $(DESTDIR)$(PREFIX)/bin
-	sed "s:^set iconpath .*:set iconpath \"$(DESTDIR)$(PREFIX)/share/pixmaps\":" < $(GUI) \
+	sed "s:^set iconpath .*:set iconpath \"$(PREFIX)/share/pixmaps\":" < $(GUI) \
 	    > $(DESTDIR)$(PREFIX)/bin/$(GUI:.tcl=)
 	chmod +x $(DESTDIR)$(PREFIX)/bin/getxbookgui
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
