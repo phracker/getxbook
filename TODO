@@ -1,1 +1,3 @@
+use a better method than setting PATH in gui
+check whether windows build will still run the tools successfully if run from a shortcut elsewhere
 submit 'pad' file to websites http://padsites.asp-software.org/
