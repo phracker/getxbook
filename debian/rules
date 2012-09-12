@@ -15,7 +15,9 @@ binary-arch: build
 	mkdir -p $(DESTDIR)/usr/share/menu
 	cp -f debian/menu $(DESTDIR)/usr/share/menu/$(package)
 	mkdir -p $(DESTDIR)/usr/share/doc/$(package)
-	cp -f debian/copyright debian/changelog $(DESTDIR)/usr/share/doc/$(package)
+	cp -f debian/copyright $(DESTDIR)/usr/share/doc/$(package)/
+	cp -f debian/changelog $(DESTDIR)/usr/share/doc/$(package)/changelog.Debian
+	gzip -9 $(DESTDIR)/usr/share/doc/$(package)/changelog.Debian
 	for i in getabook getbnbook getgbook; \
 	  do strip $(DESTDIR)/usr/bin/$$i; done
 	for i in getabook getbnbook getgbook getxbook getxbookgui; \
@@ -23,6 +25,8 @@ binary-arch: build
 	mkdir -p $(DESTDIR)/DEBIAN
 	cp -f debian/postinst debian/postrm $(DESTDIR)/DEBIAN/
 	chmod 755 $(DESTDIR)/DEBIAN/post*
+	dpkg-shlibdeps $(DESTDIR)/usr/bin/getabook \
+	  $(DESTDIR)/usr/bin/getbnbook $(DESTDIR)/usr/bin/getgbook
 	dpkg-gencontrol -P$(DESTDIR)
 	dpkg-deb -b $(DESTDIR) ../
 
@@ -30,6 +34,6 @@ binary-indep: build
 
 clean:
 	make clean
-	rm -rf debian/$(package)
+	rm -rf debian/$(package) debian/files debian/substvars
 
 .PHONY: build binary binary-arch binary-indep clean
