@@ -9,36 +9,27 @@ build:
 binary: binary-arch binary-indep
 
 binary-arch: build
+	$(MAKE) DESTDIR=$(DESTDIR) PREFIX=/usr install
+	mkdir -p $(DESTDIR)/usr/share/applications
+	cp -f debian/$(package).desktop $(DESTDIR)/usr/share/applications/
+	mkdir -p $(DESTDIR)/usr/share/menu
+	cp -f debian/menu $(DESTDIR)/usr/share/menu/$(package)
+	mkdir -p $(DESTDIR)/usr/share/doc/$(package)
+	cp -f debian/copyright debian/changelog $(DESTDIR)/usr/share/doc/$(package)
+	for i in getabook getbnbook getgbook; \
+	  do strip $(DESTDIR)/usr/bin/$$i; done
+	for i in getabook getbnbook getgbook getxbook getxbookgui; \
+	  do gzip -9 $(DESTDIR)/usr/share/man/man1/$$i.1; done
+	mkdir -p $(DESTDIR)/DEBIAN
+	cp -f debian/postinst debian/postrm $(DESTDIR)/DEBIAN/
+	chmod 755 $(DESTDIR)/DEBIAN/post*
+	dpkg-gencontrol -P$(DESTDIR)
+	dpkg-deb -b $(DESTDIR) ../
 
 binary-indep: build
-	$(MAKE) DESTDIR=$(DESTDIR) PREFIX=/usr
-	mkdir -p $(DESTDIR)/share/applications
-	cp -f $(package).desktop $(DESTDIR)/usr/share/applications/
-	mkdir -p $(DESTDIR)/usr/lib/menu
-	cp -f menu $(DESTDIR)/usr/lib/menu/$(package).menu
-	# TODO: gzip docs
-	# TODO: strip binaries
-	dpkg-deb -b $(DESTDIR) ../
 
 clean:
 	make clean
-	rm -r debian/$(package)
+	rm -rf debian/$(package)
 
 .PHONY: build binary binary-arch binary-indep clean
-
-# -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# This file was originally written by Joey Hess and Craig Small.
-# As a special exception, when this file is copied by dh-make into a
-# dh-make output file, you may use that output file without restriction.
-# This special exception was added by Craig Small in version 0.37 of dh-make.
-
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
-
-%:
-	dh $@ 
-
-override_dh_auto_install:
-	$(MAKE) DESTDIR=$(CURDIR)/debian/getxbook PREFIX=/usr install
-	dh_install debian/getxbook.desktop usr/share/applications/
