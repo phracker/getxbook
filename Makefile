@@ -64,7 +64,8 @@ dist:
 # needs config.mk set up to build statically
 dist-static: $(BIN)
 	mkdir -p $(NAME)-$(VERSION)
-	cp $(BIN) $(GUI) $(DOC) $(MAN) config.mk $(NAME)-$(VERSION)
+	sed '/^\tset cmd / i set cmdbin [file join ./ $$cmdbin]' < getxbookgui.tcl > $(NAME)-$(VERSION)/getxbookgui.tcl
+	cp $(BIN) $(DOC) $(MAN) config.mk $(NAME)-$(VERSION)
 	sed 's/^install: all$$/install:/' < Makefile > $(NAME)-$(VERSION)/Makefile
 	mkdir -p $(NAME)-$(VERSION)/icons
 	cp icons/* $(NAME)-$(VERSION)/icons/
@@ -76,14 +77,15 @@ dist-static: $(BIN)
 	echo $(NAME)-$(VERSION)-static.tar.bz2 $(NAME)-$(VERSION)-static.tar.bz2.sig
 
 getxbookgui.exe: getxbookgui.tcl
-	@echo STARPACK $@
-	@sed 's/\/icons/\/..\/icons/;s/set cmd "/set cmd "tools\//' < getxbookgui.tcl > getxbookgui-win.tcl
-	@sdx qwrap getxbookgui-win.tcl getxbookgui
-	@sdx unwrap getxbookgui.kit
-	@cp -f getxbook.ico getxbookgui.vfs/tclkit.ico
-	@echo 'FileDescription "Book downloader"' > getxbookgui.vfs/tclkit.inf
-	@sdx wrap $@ -runtime $(W32TCLKIT)
-	@rm -r getxbookgui-win.tcl getxbookgui.kit getxbookgui.vfs
+	echo STARPACK $@
+	sed 's/ icons/ .. icons/' < getxbookgui.tcl > getxbookgui-win.tcl
+	sed -i '/^\tset cmd / i set cmdbin [file join tools $$cmdbin]' getxbookgui-win.tcl
+	sdx qwrap getxbookgui-win.tcl getxbookgui
+	sdx unwrap getxbookgui.kit
+	cp -f getxbook.ico getxbookgui.vfs/tclkit.ico
+	echo 'FileDescription "Book downloader"' > getxbookgui.vfs/tclkit.inf
+	sdx wrap $@ -runtime $(W32TCLKIT)
+	rm -r getxbookgui-win.tcl getxbookgui.kit getxbookgui.vfs
 
 # needs config.mk set up to use mingw
 dist-win: $(BIN) $(GUI:.tcl=.exe)

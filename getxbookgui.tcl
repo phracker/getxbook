@@ -12,7 +12,6 @@ set cmdselected 0
 set dling 0
 set manual 0
 
-set env(PATH) "[file dirname $::argv0]:$env(PATH)"
 set iconpath [file join [file dirname $::argv0] icons]
 
 proc updateStatus {chan} {
@@ -46,7 +45,8 @@ proc go {} {
 	if { [.input.id get] == "" } {
 		return
 	}
-	set cmd "[lindex [lindex $cmds $cmdselected] 0] [.input.id get]"
+	set cmdbin [lindex [lindex $cmds $cmdselected] 0]
+	set cmd "$cmdbin [.input.id get]"
 	set dling 1
 	.dl configure -state disabled -text "Downloading"
 	.input.id configure -state readonly
