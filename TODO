@@ -1,3 +1,5 @@
 use a better method than setting PATH in gui
+release 1.1
+create debian package & post to mentors list
 check whether windows build will still run the tools successfully if run from a shortcut elsewhere
 submit 'pad' file to websites http://padsites.asp-software.org/
