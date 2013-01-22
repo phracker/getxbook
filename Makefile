@@ -107,7 +107,8 @@ dist-win: $(BIN) $(GUI:.tcl=.exe)
 
 index.html: doap.ttl README
 	echo making webpage
-	echo "<!DOCTYPE html><html><head><title>$(NAME)</title>" > $@
+	echo '<?xml version="1.0" encoding="UTF-8"?>' > $@
+	echo "<!DOCTYPE html><html><head><title>$(NAME)</title>" >> $@
 	echo '<link rel="alternate" type="text/turtle" title="rdf" href="doap.ttl" />' >> $@
 	echo '<style type="text/css">' >> $@
 	echo "body {font-family:sans-serif; width:38em; margin:auto; max-width:94%;}" >> $@

@@ -44,6 +44,6 @@ roqet -q -r csv -e "$q" -D /dev/stdin < $rdf | sed '1d' \
 - Maintainer: [$maint]($mainthome)
 - Language: $lang
 - License: [$license]($licenseuri)
-- DOAP: [${home}doap.ttl](${home}doap.ttl)
+- DOAP RDF: [${home}/doap.ttl](${home}/doap.ttl)
 _EOF_
 done

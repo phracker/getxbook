@@ -1,13 +1,13 @@
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix doap: <http://usefulinc.com/ns/doap#>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix :     <http://njw.me.uk/software/getxbook/#>.
+@prefix :     <http://njw.me.uk/getxbook/#>.
 
 :p a doap:Project;
 	doap:name "getxbook";
 	doap:shortdesc "A collection of tools to download books from websites";
 	doap:description "getxbook is a collection of tools to download books from Websites. There are tools to download from Google Books' book preview, Amazon's look inside the book, and Barnes and Noble's book viewer. There is an optional GUI written in Tcl/Tk, and some shell scripts using OCR to create plain text or searchable PDFs and DjVus from the downloaded books.";
-	doap:homepage <http://njw.me.uk/software/getxbook/>;
+	doap:homepage <http://njw.me.uk/getxbook>;
 	doap:repository :repo;
 	doap:programming-language "C";
 	doap:license <http://www.isc.org/software/license>;
@@ -24,55 +24,55 @@
 :v01 a doap:Version;
 	doap:revision "0.1";
 	doap:created "2011-03-27";
-	doap:file-release <http://njw.me.uk/software/getgbook/getgbook-0.1.tar.bz2>.
+	doap:file-release <http://njw.me.uk/getgbook/getgbook-0.1.tar.bz2>.
 
 :v02 a doap:Version;
 	doap:revision "0.2";
 	doap:created "2011-04-11";
-	doap:file-release <http://njw.me.uk/software/getgbook/getgbook-0.2.tar.bz2>.
+	doap:file-release <http://njw.me.uk/getgbook/getgbook-0.2.tar.bz2>.
 
 :v03 a doap:Version;
 	doap:revision "0.3";
 	doap:created "2011-08-07";
-	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-0.3.tar.bz2>.
+	doap:file-release <http://njw.me.uk/getxbook/getxbook-0.3.tar.bz2>.
 
 :v04 a doap:Version;
 	doap:revision "0.4";
 	doap:created "2011-09-08";
-	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-0.4.tar.bz2>.
+	doap:file-release <http://njw.me.uk/getxbook/getxbook-0.4.tar.bz2>.
 
 :v05 a doap:Version;
 	doap:revision "0.5";
 	doap:created "2011-09-29";
-	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-0.5.tar.bz2>.
+	doap:file-release <http://njw.me.uk/getxbook/getxbook-0.5.tar.bz2>.
 
 :v06 a doap:Version;
 	doap:revision "0.6";
 	doap:created "2011-11-19";
-	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-0.6.tar.bz2>.
+	doap:file-release <http://njw.me.uk/getxbook/getxbook-0.6.tar.bz2>.
 
 :v061 a doap:Version;
 	doap:revision "0.6.1";
 	doap:created "2011-11-22";
-	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-0.6.1.tar.bz2>,
-	                  <http://njw.me.uk/software/getxbook/getxbook-0.6.1-win.zip>.
+	doap:file-release <http://njw.me.uk/getxbook/getxbook-0.6.1.tar.bz2>,
+	                  <http://njw.me.uk/getxbook/getxbook-0.6.1-win.zip>.
 
 :v07 a doap:Version;
 	doap:revision "0.7";
 	doap:created "2012-02-12";
-	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-0.7.tar.bz2>.
+	doap:file-release <http://njw.me.uk/getxbook/getxbook-0.7.tar.bz2>.
 
 :v08 a doap:Version;
 	doap:revision "0.8";
 	doap:created "2012-02-14";
-	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-0.8.tar.bz2>.
+	doap:file-release <http://njw.me.uk/getxbook/getxbook-0.8.tar.bz2>.
 
 :v09 a doap:Version;
 	doap:revision "0.9";
 	doap:created "2012-04-27";
-	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-0.9.tar.bz2>.
+	doap:file-release <http://njw.me.uk/getxbook/getxbook-0.9.tar.bz2>.
 
 :v10 a doap:Version;
 	doap:revision "1.0";
 	doap:created "2012-18-19";
-	doap:file-release <http://njw.me.uk/software/getxbook/getxbook-1.0.tar.bz2>.
+	doap:file-release <http://njw.me.uk/getxbook/getxbook-1.0.tar.bz2>.
