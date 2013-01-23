@@ -117,7 +117,7 @@ index.html: doap.ttl README
 	echo "img {margin: auto; border: thin solid; display: block;}" >> $@
 	echo "</style></head><body>" >> $@
 	sed '5q' < README | smu >> $@
-	echo "<p><img src="screenshot1.png" alt="screenshot"/></p>" >> $@
+	echo '<p><img src="screenshot1.png" alt="screenshot"/></p>' >> $@
 	echo "<h2>download</h2>" >> $@
 	echo "[$(NAME) $(VERSION) source]($(NAME)-$(VERSION).tar.bz2) ([sig]($(NAME)-$(VERSION).tar.bz2.sig)) ($(RELDATE))" | smu >> $@
 	echo "[$(NAME) $(VERSION) linux static]($(NAME)-$(VERSION)-static.tar.bz2) ([sig]($(NAME)-$(VERSION)-static.tar.bz2.sig)) ($(RELDATE))" | smu >> $@
