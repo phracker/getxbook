@@ -1,0 +1,10 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Source: http://njw.me.uk/software/getxbook
+
+Files: *
+Copyright: 2011-2012 Nick White <njw.me.uk>
+License: ISC
+  Permission to use, copy, modify, and/or distribute this
+  software for any purpose with or without fee is hereby
+  granted, provided that the above copyright notice and this
+  permission notice appear in all copies.
