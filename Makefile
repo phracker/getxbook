@@ -76,6 +76,15 @@ dist-static: $(BIN)
 	rm -rf $(NAME)-$(VERSION)
 	echo $(NAME)-$(VERSION)-static.tar.bz2 $(NAME)-$(VERSION)-static.tar.bz2.sig
 
+# builds a basic .deb package
+dist-deb:
+	debian/rules clean
+	fakeroot debian/rules binary
+
+# builds package and debian support files (.sig etc)
+dist-debpkg:
+	dpkg-buildpackage
+
 getxbookgui.exe: getxbookgui.tcl
 	echo STARPACK $@
 	sed 's/ icons/ .. icons/' < getxbookgui.tcl > getxbookgui-win.tcl
@@ -142,5 +151,5 @@ comparison.html: comparison.txt
 	smu < comparison.txt >> $@
 	echo '</body></html>' >> $@
 
-.PHONY: all clean install uninstall dist dist-win dist-mac
+.PHONY: all clean install uninstall dist dist-win dist-deb dist-debpkg
 .SILENT: index.html comparison.html dist
