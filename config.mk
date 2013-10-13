@@ -20,8 +20,8 @@ LDFLAGS =
 #LDFLAGS = -static #-s
 
 # mingw
-#CC = i586-mingw32msvc-gcc
-#AR = i586-mingw32msvc-ar
+#CC = i686-w64-mingw32-gcc
+#AR = i686-w64-mingw32-ar
 #CFLAGS = -ansi -Wall -DVERSION=\"$(VERSION)\" -DWINVER=0x0501
 #LDFLAGS = -lws2_32
 
