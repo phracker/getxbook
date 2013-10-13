@@ -103,16 +103,20 @@ int getpageurls(char *pagecode, char *cookie)
 						break;
 					}
 				}
-				if(j == -1) /* TODO: it would be good to add new page on the end */
+				if(j == -1)     /* TODO: it would be good to add new page on the end */
 					break;  /*       of structure rather than throw it away. */
-				for(p=pages[j]->url, q=(pages[j]->url-(STRMAX-13-1)), d=c+strlen("\"src\":")+1; *d && *d != '"' && p != q; d++, p++) {
+				for(p=pages[j]->url, q=(pages[j]->url-(STRMAX-13-1)), d=c+strlen("\"src\":")+1;
+				    *d && *d != '"' && p != q;
+				    d++, p++) {
 					if(!strncmp(d, "\\u0026", 6)) {
 						*p = '&';
 						d+=5;
 					} else
 						*p = *d;
 				}
-				strncpy(p, "&q=subject:a", 13);
+				/* w=2500 gets the best available quality pages  */
+				/* q=subject:a is needed for robots.txt compliance */
+				strncpy(p, "&w=2500&q=subject:a", 20);
 				pages[j]->cookie = cookie;
 				break;
 			}
