@@ -55,6 +55,9 @@ getgbook ta1uaL7RF5g
 .TP
 .B download the first 100 pages of a book
 seq 100 | getgbook -n ta1uaL7RF5g
+.TP
+.B download specific pages from a list with one page number per line
+getgbook -n ta1uaL7RF5g < pagelist.txt
 .SH SEE ALSO
 .IR getabook (1),
 .IR getbnbook (1),
