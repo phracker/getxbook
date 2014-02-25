@@ -130,7 +130,7 @@ index.html: doap.ttl README
 	echo "<h2>download</h2>" >> $@
 	echo "[$(NAME) $(VERSION) source]($(NAME)-$(VERSION).tar.bz2) ([sig]($(NAME)-$(VERSION).tar.bz2.sig)) ($(RELDATE))" | smu >> $@
 	echo "[$(NAME) $(VERSION) linux static]($(NAME)-$(VERSION)-static.tar.bz2) ([sig]($(NAME)-$(VERSION)-static.tar.bz2.sig)) ($(RELDATE))" | smu >> $@
-	echo "$(NAME) for mac os x [available from Homebrew](http://mxcl.github.com/homebrew/)" | smu >> $@
+	echo "$(NAME) for mac os x [available from Homebrew](http://brew.sh/)" | smu >> $@
 	echo "[$(NAME) $(VERSION) windows]($(NAME)-$(VERSION)-win.zip) ([sig]($(NAME)-$(VERSION)-win.zip.sig)) ($(RELDATE))" | smu >> $@
 	sed '1,5d' < README | smu >> $@
 	echo "[comparison with similar programs](comparison)" | smu >> $@
