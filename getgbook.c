@@ -244,6 +244,12 @@ int main(int argc, char *argv[])
 				fprintf(stderr, "%s not found\n", in);
 				continue;
 			}
+			snprintf(pgpath, STRMAX, "%s/%04d.png", bookdir, pages[i]->num);
+			snprintf(pgpath2, STRMAX, "%s/%04d.jpg", bookdir, pages[i]->num);
+			if((f = fopen(pgpath, "r")) != NULL || (f = fopen(pgpath2, "r")) != NULL) {
+				fclose(f);
+				continue;
+			}
 			searchpage(pages[i]);
 			getpage(pages[i]);
 		}
